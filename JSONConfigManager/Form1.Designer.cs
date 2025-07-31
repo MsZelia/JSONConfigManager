@@ -29,19 +29,18 @@ namespace JSONConfigValidator
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButtonAddNewModConfig = new System.Windows.Forms.ToolStripSplitButton();
             this.toolStripComboBoxSelectedMod = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSplitButtonProfile = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripButtonGameLocation = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonRemoveModConfig = new System.Windows.Forms.ToolStripButton();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.userControlContainer = new System.Windows.Forms.Panel();
+            this.toolStripButtonAddNewModConfig = new System.Windows.Forms.ToolStripSplitButton();
+            this.toolStripButtonGameLocation = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonRemoveModConfig = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
@@ -58,7 +57,7 @@ namespace JSONConfigValidator
             this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.richTextBox1.Location = new System.Drawing.Point(0, 0);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(751, 628);
+            this.richTextBox1.Size = new System.Drawing.Size(751, 625);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             // 
@@ -75,21 +74,9 @@ namespace JSONConfigValidator
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(1165, 28);
+            this.toolStrip1.Size = new System.Drawing.Size(1165, 31);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // toolStripButtonAddNewModConfig
-            // 
-            this.toolStripButtonAddNewModConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonAddNewModConfig.Image = global::JSONConfigManager.Properties.Resources.AddFile;
-            this.toolStripButtonAddNewModConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonAddNewModConfig.Name = "toolStripButtonAddNewModConfig";
-            this.toolStripButtonAddNewModConfig.Size = new System.Drawing.Size(39, 28);
-            this.toolStripButtonAddNewModConfig.Text = "Add New Mod Config";
-            this.toolStripButtonAddNewModConfig.ToolTipText = "Add New Mod Config";
-            this.toolStripButtonAddNewModConfig.DropDownOpening += new System.EventHandler(this.toolStripButtonAddNewModConfig_DropDownOpening);
-            this.toolStripButtonAddNewModConfig.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStripButtonAddNewModConfig_DropDownItemClicked);
             // 
             // toolStripComboBoxSelectedMod
             // 
@@ -107,30 +94,8 @@ namespace JSONConfigValidator
             this.toolStripSplitButtonProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toolStripSplitButtonProfile.Name = "toolStripSplitButtonProfile";
             this.toolStripSplitButtonProfile.Size = new System.Drawing.Size(150, 31);
+            this.toolStripSplitButtonProfile.Visible = false;
             this.toolStripSplitButtonProfile.SelectedIndexChanged += new System.EventHandler(this.toolStripSplitButtonProfile_SelectedIndexChanged);
-            // 
-            // toolStripButtonGameLocation
-            // 
-            this.toolStripButtonGameLocation.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButtonGameLocation.AutoToolTip = false;
-            this.toolStripButtonGameLocation.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonGameLocation.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGameLocation.Image")));
-            this.toolStripButtonGameLocation.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonGameLocation.Name = "toolStripButtonGameLocation";
-            this.toolStripButtonGameLocation.Size = new System.Drawing.Size(157, 25);
-            this.toolStripButtonGameLocation.Text = "Select Game Location";
-            this.toolStripButtonGameLocation.ToolTipText = "Directory to your Fallout 76 game folder";
-            this.toolStripButtonGameLocation.Click += new System.EventHandler(this.toolStripButtonGameLocation_Click);
-            // 
-            // toolStripButtonRemoveModConfig
-            // 
-            this.toolStripButtonRemoveModConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonRemoveModConfig.Image = global::JSONConfigManager.Properties.Resources.RemoveFile;
-            this.toolStripButtonRemoveModConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonRemoveModConfig.Name = "toolStripButtonRemoveModConfig";
-            this.toolStripButtonRemoveModConfig.Size = new System.Drawing.Size(29, 28);
-            this.toolStripButtonRemoveModConfig.Text = "Remove Mod Config";
-            this.toolStripButtonRemoveModConfig.Click += new System.EventHandler(this.toolStripButtonRemoveModConfig_Click);
             // 
             // fileSystemWatcher1
             // 
@@ -161,7 +126,7 @@ namespace JSONConfigValidator
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 28);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 31);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -173,7 +138,7 @@ namespace JSONConfigValidator
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.richTextBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(1165, 628);
+            this.splitContainer1.Size = new System.Drawing.Size(1165, 625);
             this.splitContainer1.SplitterDistance = 410;
             this.splitContainer1.TabIndex = 4;
             // 
@@ -184,16 +149,49 @@ namespace JSONConfigValidator
             this.userControlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.userControlContainer.Location = new System.Drawing.Point(0, 0);
             this.userControlContainer.Name = "userControlContainer";
-            this.userControlContainer.Size = new System.Drawing.Size(410, 628);
+            this.userControlContainer.Size = new System.Drawing.Size(410, 625);
             this.userControlContainer.TabIndex = 0;
+            // 
+            // toolStripButtonAddNewModConfig
+            // 
+            this.toolStripButtonAddNewModConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAddNewModConfig.Image = global::JSONConfigManager.Properties.Resources.AddFile;
+            this.toolStripButtonAddNewModConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAddNewModConfig.Name = "toolStripButtonAddNewModConfig";
+            this.toolStripButtonAddNewModConfig.Size = new System.Drawing.Size(39, 28);
+            this.toolStripButtonAddNewModConfig.Text = "Add New Mod Config";
+            this.toolStripButtonAddNewModConfig.ToolTipText = "Add New Mod Config";
+            this.toolStripButtonAddNewModConfig.DropDownOpening += new System.EventHandler(this.toolStripButtonAddNewModConfig_DropDownOpening);
+            this.toolStripButtonAddNewModConfig.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStripButtonAddNewModConfig_DropDownItemClicked);
+            // 
+            // toolStripButtonGameLocation
+            // 
+            this.toolStripButtonGameLocation.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButtonGameLocation.AutoToolTip = false;
+            this.toolStripButtonGameLocation.Image = global::JSONConfigManager.Properties.Resources.Browse;
+            this.toolStripButtonGameLocation.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGameLocation.Name = "toolStripButtonGameLocation";
+            this.toolStripButtonGameLocation.Size = new System.Drawing.Size(177, 28);
+            this.toolStripButtonGameLocation.Text = "Select Game Location";
+            this.toolStripButtonGameLocation.ToolTipText = "Directory to your Fallout 76 game folder";
+            this.toolStripButtonGameLocation.Click += new System.EventHandler(this.toolStripButtonGameLocation_Click);
+            // 
+            // toolStripButtonRemoveModConfig
+            // 
+            this.toolStripButtonRemoveModConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRemoveModConfig.Image = global::JSONConfigManager.Properties.Resources.RemoveFile;
+            this.toolStripButtonRemoveModConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRemoveModConfig.Name = "toolStripButtonRemoveModConfig";
+            this.toolStripButtonRemoveModConfig.Size = new System.Drawing.Size(29, 28);
+            this.toolStripButtonRemoveModConfig.Text = "Remove Mod Config";
+            this.toolStripButtonRemoveModConfig.Click += new System.EventHandler(this.toolStripButtonRemoveModConfig_Click);
             // 
             // toolStripButtonSave
             // 
-            this.toolStripButtonSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonSave.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSave.Image")));
+            this.toolStripButtonSave.Image = global::JSONConfigManager.Properties.Resources.SaveFile;
             this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonSave.Name = "toolStripButtonSave";
-            this.toolStripButtonSave.Size = new System.Drawing.Size(44, 28);
+            this.toolStripButtonSave.Size = new System.Drawing.Size(64, 28);
             this.toolStripButtonSave.Text = "Save";
             this.toolStripButtonSave.Click += new System.EventHandler(this.toolStripButtonSave_Click);
             // 

@@ -50,14 +50,13 @@ namespace JSONConfigValidator
         {
             using (var fbd = new FolderBrowserDialog())
             {
-                fbd.RootFolder = Environment.SpecialFolder.ProgramFilesX86;
                 fbd.ShowNewFolderButton = false;
                 if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     string selectedDir = fbd.SelectedPath;
-                    if (selectedDir.IndexOf("Data") == -1)
+                    if (selectedDir.ToLower().IndexOf("data") == -1)
                     {
-                        selectedDir = selectedDir + "\\Data\\";
+                        selectedDir = selectedDir + "\\data\\";
                     }
 
                     if (!selectedDir.EndsWith("\\") && !selectedDir.EndsWith("/"))
@@ -244,7 +243,7 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                richTextBox1.Text += $"ERROR changing numeric value! {ex.ToString()}{Environment.NewLine}";
+                richTextBox1.Text += $"ERROR changing bool value! {ex.ToString()}{Environment.NewLine}";
             }
 
         }
@@ -259,22 +258,29 @@ namespace JSONConfigValidator
                 string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
                 configEdited = true;
                 string previousValue;
+                string newValue = textBox.Text.Trim();
                 if (token.Parent.Path == "")
                 {
                     previousValue = (string)config[key];
-                    config[key] = textBox.Text.Trim();
-                    richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[key]}{Environment.NewLine}";
+                    if (previousValue != newValue)
+                    {
+                        config[key] = newValue;
+                        richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[key]}{Environment.NewLine}";
+                    }
                 }
                 else
                 {
                     previousValue = (string)config[token.Parent.Path][key];
-                    config[token.Parent.Path][key] = textBox.Text.Trim();
-                    richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[token.Parent.Path][key]}{Environment.NewLine}";
+                    if(previousValue != newValue)
+                    {
+                        config[token.Parent.Path][key] = newValue;
+                        richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[token.Parent.Path][key]}{Environment.NewLine}";
+                    }
                 }
             }
             catch (Exception ex)
             {
-                richTextBox1.Text += $"ERROR changing numeric value! {ex.ToString()}{Environment.NewLine}";
+                richTextBox1.Text += $"ERROR changing string value! {ex.ToString()}{Environment.NewLine}";
             }
         }
 

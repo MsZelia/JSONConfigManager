@@ -151,5 +151,9 @@
     <Resource Include="Icons\AddFile.png" />
     <Resource Include="Icons\RemoveFile.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Browse.png" />
+    <Resource Include="Icons\SaveFile.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -116,7 +116,7 @@ namespace JSONConfigValidator
                     string selectedDir = fbd.SelectedPath;
                     if (selectedDir.ToLower().IndexOf("data") == -1)
                     {
-                        selectedDir = selectedDir + "\\data\\";
+                        selectedDir = selectedDir + "\\Data\\";
                     }
 
                     if (!selectedDir.EndsWith("\\") && !selectedDir.EndsWith("/"))
@@ -129,6 +129,7 @@ namespace JSONConfigValidator
                         dir = selectedDir;
                         logStatus = $"Game dir set: {selectedDir}";
                         richTextBox1.Text += $"Game dir set: {selectedDir}{Environment.NewLine}";
+                        saveSettings();
                     }
                     else
                     {

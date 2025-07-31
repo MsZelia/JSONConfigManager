@@ -1,0 +1,341 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
+
+namespace JSONConfigValidator
+{
+    public partial class Form1 : Form
+    {
+        public String dir = "C:/Program Files (x86)/Steam/steamapps/common/Fallout76/Data/";
+
+        public Dictionary<String, String> modList = new Dictionary<String, String>();
+
+        private int yOffset = 0;
+
+        private JToken config = null;
+
+        public Form1()
+        {
+            InitializeComponent();
+            modList.Add("BuffsMeter.json", "BuffsMeter");
+            modList.Add("HUDChallenges.json", "HUD Challenges");
+            modList.Add("inventOmaticStashConfig.json", "IoM Stash");
+            modList.Add("HudBarPercentWidgets.json", "HudBarPercentWidgets");
+        }
+
+        private void toolStripSplitButtonProfile_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripButtonGameLocation_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listChildren(JToken token)
+        {
+            foreach (var child in token.Children())
+            {
+                if (child.Type == JTokenType.Property)
+                {
+                    listChildren(child);
+                }
+                else if (child.Type == JTokenType.Object)
+                {
+                    yOffset += 20;
+                    listChildren(child);
+                }
+                else if (child.Type == JTokenType.Array)
+                {
+                    var uc = new UserControlString();
+                    uc.Tag = token;
+                    uc.label.Text = token.Path /*.Substring(token.Parent.Path.Length)*/ + ":";
+                    uc.textBox.Text = child.ToString();
+                    uc.textBox.Enabled = false;
+                    uc.Top = yOffset;
+                    yOffset += uc.Height;
+                    userControlContainer.Controls.Add(uc);
+
+                    for (int subChildId = 0; subChildId < child.Children().Count(); subChildId++)
+                    {
+                        var subChild = child.Children().ElementAt(subChildId);
+                        string key = subChild.Parent.Path + "[" + subChild + "]";
+                        var ucChild = new UserControlString();
+                        ucChild.Tag = subChild;
+                        ucChild.label.Text = key /*.Substring(token.Parent.Path.Length)*/ + ":";
+                        ucChild.textBox.Text = subChild.ToString();
+                        ucChild.textBox.LostFocus += TextBox_LostFocus;
+                        ucChild.Top = yOffset;
+                        yOffset += ucChild.Height;
+                        userControlContainer.Controls.Add(ucChild);
+                    }
+                        
+                }
+                else
+                {
+                    switch (child.Type)
+                    {
+                        case JTokenType.Integer:
+                            {
+                                var uc = new UserControlInteger();
+                                uc.Tag = token;
+                                uc.label.Text = token.Path;//.Substring(token.Parent.Path.Length);
+                                uc.numericUpDown.Value = int.Parse(child.ToString());
+                                uc.numericUpDown.ValueChanged += NumericUpDown_ValueChanged;
+                                uc.Top = yOffset;
+                                yOffset += uc.Height;
+                                userControlContainer.Controls.Add(uc);
+                                break;
+                            }
+                        case JTokenType.Float:
+                            {
+                                var uc = new UserControlDecimal();
+                                uc.Tag = token;
+                                uc.label.Text = token.Path;//.Substring(token.Parent.Path.Length);
+                                uc.numericUpDown.Value = decimal.Parse(child.ToString());
+                                uc.numericUpDown.ValueChanged += NumericUpDown_ValueChanged;
+                                uc.Top = yOffset;
+                                yOffset += uc.Height;
+                                userControlContainer.Controls.Add(uc);
+                                break;
+                            }
+                        case JTokenType.Boolean:
+                            {
+                                var uc = new UserControlBoolean();
+                                uc.Tag = token;
+                                uc.checkBox.Text = token.Path;//.Substring(token.Parent.Path.Length);
+                                uc.checkBox.Checked = bool.Parse(child.ToString());
+                                uc.checkBox.CheckedChanged += CheckBox_CheckedChanged;
+                                uc.Top = yOffset;
+                                yOffset += uc.Height;
+                                userControlContainer.Controls.Add(uc);
+                                break;
+                            }
+                        case JTokenType.String:
+                            {
+                                var uc = new UserControlString();
+                                uc.Tag = token;
+                                uc.label.Text = token.Path /*.Substring(token.Parent.Path.Length)*/ + ":";
+                                uc.textBox.Text = child.ToString();
+                                uc.textBox.LostFocus += TextBox_LostFocus;
+                                uc.Top = yOffset;
+                                yOffset += uc.Height;
+                                userControlContainer.Controls.Add(uc);
+                                break;
+                            }
+                        default:
+                            {
+                                richTextBox1.Text += "Control not made for: " + token.Path + " (" + child.Type + ")" + Environment.NewLine;
+                                break;
+                            }
+                    }
+
+                }
+            }
+        }
+
+        private void NumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                NumericUpDown numericUpDown = sender as NumericUpDown;
+                bool isDecimal = numericUpDown.Parent is UserControlDecimal;
+                JToken token = numericUpDown.Parent.Tag as JToken;
+                string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
+                if (token.Parent.Path == "")
+                {
+                    var previousValue = isDecimal ? (float)config[key] : (int)config[key];
+                    config[key] = numericUpDown.Value;
+                    richTextBox1.Text += token.Path + ": " + previousValue + " -> " + config[key] + Environment.NewLine;
+                }
+                else
+                {
+                    var previousValue = isDecimal ? (float)config[token.Parent.Path][key] : (int)config[token.Parent.Path][key];
+                    config[token.Parent.Path][key] = numericUpDown.Value;
+                    richTextBox1.Text += token.Path + ": " + previousValue + " -> " + config[token.Parent.Path][key] + Environment.NewLine;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                richTextBox1.Text += "ERROR changing numeric value! " + ex + Environment.NewLine;
+            }
+        }
+
+        private void CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                CheckBox checkBox = sender as CheckBox;
+                JToken token = checkBox.Parent.Tag as JToken;
+                string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
+                bool previousValue;
+                if (token.Parent.Path == "")
+                {
+                    previousValue = (bool)config[key];
+                    config[key] = checkBox.Checked;
+                    richTextBox1.Text += token.Path + ": " + previousValue + " -> " + config[key] + Environment.NewLine;
+                }
+                else
+                {
+                    previousValue = (bool)config[token.Parent.Path][key];
+                    config[token.Parent.Path][key] = checkBox.Checked;
+                    richTextBox1.Text += token.Path + ": " + previousValue + " -> " + config[token.Parent.Path][key] + Environment.NewLine;
+                }
+            }
+            catch (Exception ex)
+            {
+                richTextBox1.Text += "ERROR changing numeric value! " + ex + Environment.NewLine;
+            }
+
+        }
+
+
+        private void TextBox_LostFocus(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox textBox = sender as TextBox;
+                JToken token = textBox.Parent.Tag as JToken;
+                string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
+                string previousValue;
+                if (token.Parent.Path == "")
+                {
+                    previousValue = (string)config[key];
+                    config[key] = textBox.Text.Trim();
+                    richTextBox1.Text += token.Path + ": " + previousValue + " -> " + config[key] + Environment.NewLine;
+                }
+                else
+                {
+                    previousValue = (string)config[token.Parent.Path][key];
+                    config[token.Parent.Path][key] = textBox.Text.Trim();
+                    richTextBox1.Text += token.Path + ": " + previousValue + " -> " + config[token.Parent.Path][key] + Environment.NewLine;
+                }
+            }
+            catch (Exception ex)
+            {
+                richTextBox1.Text += "ERROR changing numeric value! " + ex + Environment.NewLine;
+            }
+        }
+
+        private void resetConfigControls()
+        {
+            yOffset = 0;
+            richTextBox1.Text = "";
+            foreach (Control uc in userControlContainer.Controls)
+            {
+                if (uc is UserControlInteger)
+                {
+                    (uc as UserControlInteger).numericUpDown.ValueChanged -= NumericUpDown_ValueChanged;
+                }
+                else if (uc is UserControlDecimal)
+                {
+                    (uc as UserControlDecimal).numericUpDown.ValueChanged -= NumericUpDown_ValueChanged;
+                }
+                else if (uc is UserControlBoolean)
+                {
+                    (uc as UserControlBoolean).checkBox.CheckedChanged -= CheckBox_CheckedChanged;
+                }
+                else if (uc is UserControlString)
+                {
+                    (uc as UserControlString).textBox.LostFocus -= TextBox_LostFocus;
+                }
+            }
+            userControlContainer.Controls.Clear();
+        }
+
+        private void toolStripComboBoxSelectedMod_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            resetConfigControls();
+            if (sender == null)
+                return;
+
+            var file = toolStripComboBoxSelectedMod.SelectedItem.ToString();
+            string fileContent = File.ReadAllText(dir + file);
+
+            this.config = JContainer.Parse(fileContent);
+            listChildren(config);
+            toolStripStatusLabel.Text = "Config file " + file + " loaded!";
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.initLoadedModConfigs();
+        }
+
+        private void initLoadedModConfigs(bool clearSelection = false)
+        {
+            toolStripComboBoxSelectedMod.Items.Clear();
+            foreach (var key in modList.Keys)
+            {
+                try
+                {
+                    FileInfo info = new FileInfo(dir + key);
+                    toolStripComboBoxSelectedMod.Items.Add(info.Name);
+                }
+                catch (Exception ex) { }
+            }
+            if (clearSelection)
+            {
+                toolStripComboBoxSelectedMod.Text = toolStripComboBoxSelectedMod.ToolTipText;
+            }
+        }
+
+        private void toolStripButtonAddNewModConfig_DropDownOpening(object sender, EventArgs e)
+        {
+            try
+            {
+                toolStripStatusLabel.Text = "Loading...";
+                foreach (var file in Directory.GetFiles(dir, "*.json"))
+                {
+                    FileInfo info = new FileInfo(file);
+                    if (!modList.ContainsKey(info.Name))
+                    {
+                        toolStripButtonAddNewModConfig.DropDownItems.Add(info.Name);
+                    }
+                }
+                toolStripStatusLabel.Text = "Ready";
+            }
+            catch (Exception ex)
+            {
+                toolStripStatusLabel.Text = "Error loading files: " + ex.ToString();
+            }
+        }
+
+        private void toolStripButtonAddNewModConfig_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            try
+            {
+                string file = e.ClickedItem.Text;
+                FileInfo info = new FileInfo(dir + file);
+                modList.Add(file, file);
+                initLoadedModConfigs();
+                toolStripStatusLabel.Text = "Config file " + file + " added!";
+            }
+            catch (Exception ex)
+            {
+                toolStripStatusLabel.Text = "Error adding config: " + ex.ToString();
+            }
+        }
+
+        private void toolStripButtonRemoveModConfig_Click(object sender, EventArgs e)
+        {
+            if (modList.ContainsKey(toolStripComboBoxSelectedMod.Text))
+            {
+                modList.Remove(toolStripComboBoxSelectedMod.Text);
+                toolStripStatusLabel.Text = "Config " + toolStripComboBoxSelectedMod.Text + " removed!";
+                toolStripComboBoxSelectedMod_SelectedIndexChanged(null, null);
+                initLoadedModConfigs(true);
+            }
+        }
+    }
+}

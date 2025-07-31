@@ -1,0 +1,231 @@
+﻿
+namespace JSONConfigValidator
+{
+    partial class Form1
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonAddNewModConfig = new System.Windows.Forms.ToolStripSplitButton();
+            this.toolStripComboBoxSelectedMod = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripSplitButtonProfile = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripButtonGameLocation = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonRemoveModConfig = new System.Windows.Forms.ToolStripButton();
+            this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.userControlContainer = new System.Windows.Forms.Panel();
+            this.toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
+            this.statusStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(751, 625);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = "";
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonAddNewModConfig,
+            this.toolStripComboBoxSelectedMod,
+            this.toolStripSplitButtonProfile,
+            this.toolStripButtonGameLocation,
+            this.toolStripButtonRemoveModConfig});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.toolStrip1.Size = new System.Drawing.Size(1165, 31);
+            this.toolStrip1.TabIndex = 2;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripButtonAddNewModConfig
+            // 
+            this.toolStripButtonAddNewModConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAddNewModConfig.Image = global::JSONConfigManager.Properties.Resources.AddFile;
+            this.toolStripButtonAddNewModConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAddNewModConfig.Name = "toolStripButtonAddNewModConfig";
+            this.toolStripButtonAddNewModConfig.Size = new System.Drawing.Size(39, 28);
+            this.toolStripButtonAddNewModConfig.Text = "Add New Mod Config";
+            this.toolStripButtonAddNewModConfig.ToolTipText = "Add New Mod Config";
+            this.toolStripButtonAddNewModConfig.DropDownOpening += new System.EventHandler(this.toolStripButtonAddNewModConfig_DropDownOpening);
+            this.toolStripButtonAddNewModConfig.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStripButtonAddNewModConfig_DropDownItemClicked);
+            // 
+            // toolStripComboBoxSelectedMod
+            // 
+            this.toolStripComboBoxSelectedMod.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
+            this.toolStripComboBoxSelectedMod.MaxDropDownItems = 32;
+            this.toolStripComboBoxSelectedMod.Name = "toolStripComboBoxSelectedMod";
+            this.toolStripComboBoxSelectedMod.Size = new System.Drawing.Size(350, 31);
+            this.toolStripComboBoxSelectedMod.Text = "Select Mod Config";
+            this.toolStripComboBoxSelectedMod.ToolTipText = "Select Mod Config file to load";
+            this.toolStripComboBoxSelectedMod.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBoxSelectedMod_SelectedIndexChanged);
+            // 
+            // toolStripSplitButtonProfile
+            // 
+            this.toolStripSplitButtonProfile.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripSplitButtonProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStripSplitButtonProfile.Name = "toolStripSplitButtonProfile";
+            this.toolStripSplitButtonProfile.Size = new System.Drawing.Size(150, 31);
+            this.toolStripSplitButtonProfile.SelectedIndexChanged += new System.EventHandler(this.toolStripSplitButtonProfile_SelectedIndexChanged);
+            // 
+            // toolStripButtonGameLocation
+            // 
+            this.toolStripButtonGameLocation.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButtonGameLocation.AutoToolTip = false;
+            this.toolStripButtonGameLocation.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonGameLocation.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGameLocation.Image")));
+            this.toolStripButtonGameLocation.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGameLocation.Name = "toolStripButtonGameLocation";
+            this.toolStripButtonGameLocation.Size = new System.Drawing.Size(157, 28);
+            this.toolStripButtonGameLocation.Text = "Select Game Location";
+            this.toolStripButtonGameLocation.ToolTipText = "Directory to your Fallout 76 game folder";
+            this.toolStripButtonGameLocation.Click += new System.EventHandler(this.toolStripButtonGameLocation_Click);
+            // 
+            // toolStripButtonRemoveModConfig
+            // 
+            this.toolStripButtonRemoveModConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRemoveModConfig.Image = global::JSONConfigManager.Properties.Resources.RemoveFile;
+            this.toolStripButtonRemoveModConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRemoveModConfig.Name = "toolStripButtonRemoveModConfig";
+            this.toolStripButtonRemoveModConfig.Size = new System.Drawing.Size(29, 28);
+            this.toolStripButtonRemoveModConfig.Text = "Remove Mod Config";
+            this.toolStripButtonRemoveModConfig.Click += new System.EventHandler(this.toolStripButtonRemoveModConfig_Click);
+            // 
+            // fileSystemWatcher1
+            // 
+            this.fileSystemWatcher1.EnableRaisingEvents = true;
+            this.fileSystemWatcher1.SynchronizingObject = this;
+            // 
+            // statusStrip
+            // 
+            this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel});
+            this.statusStrip.Location = new System.Drawing.Point(0, 656);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(1165, 26);
+            this.statusStrip.TabIndex = 3;
+            this.statusStrip.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel
+            // 
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
+            this.toolStripStatusLabel.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(49, 20);
+            this.toolStripStatusLabel.Text = "Status";
+            this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.IsSplitterFixed = true;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 31);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.userControlContainer);
+            this.splitContainer1.Panel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.splitContainer1.Panel1MinSize = 410;
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.richTextBox1);
+            this.splitContainer1.Size = new System.Drawing.Size(1165, 625);
+            this.splitContainer1.SplitterDistance = 410;
+            this.splitContainer1.TabIndex = 4;
+            // 
+            // userControlContainer
+            // 
+            this.userControlContainer.AutoScroll = true;
+            this.userControlContainer.AutoSize = true;
+            this.userControlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.userControlContainer.Location = new System.Drawing.Point(0, 0);
+            this.userControlContainer.Name = "userControlContainer";
+            this.userControlContainer.Size = new System.Drawing.Size(410, 625);
+            this.userControlContainer.TabIndex = 0;
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1165, 682);
+            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.statusStrip);
+            this.Controls.Add(this.toolStrip1);
+            this.MinimumSize = new System.Drawing.Size(700, 400);
+            this.Name = "Form1";
+            this.Text = "JSONConfigManager";
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxSelectedMod;
+        private System.Windows.Forms.ToolStripButton toolStripButtonGameLocation;
+        private System.IO.FileSystemWatcher fileSystemWatcher1;
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+        private System.Windows.Forms.ToolStripComboBox toolStripSplitButtonProfile;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Panel userControlContainer;
+        private System.Windows.Forms.ToolStripSplitButton toolStripButtonAddNewModConfig;
+        private System.Windows.Forms.ToolStripButton toolStripButtonRemoveModConfig;
+    }
+}
+

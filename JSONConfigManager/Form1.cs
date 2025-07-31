@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace JSONConfigValidator
@@ -24,13 +25,14 @@ namespace JSONConfigValidator
         private JToken config = null;
         private bool configEdited = false;
 
+
+        private JToken settings = null;
+
+
         public Form1()
         {
             InitializeComponent();
-            modList.Add("BuffsMeter.json", "BuffsMeter");
-            modList.Add("HUDChallenges.json", "HUD Challenges");
-            modList.Add("inventOmaticStashConfig.json", "IoM Stash");
-            modList.Add("HudBarPercentWidgets.json", "HudBarPercentWidgets");
+            loadConfig();
         }
 
         public string logStatus {
@@ -38,6 +40,64 @@ namespace JSONConfigValidator
             set
             {
                 toolStripStatusLabel.Text = value;
+            }
+        }
+
+        private void loadConfig()
+        {
+            string file = AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".json";
+            try
+            {
+                string fileContent = File.ReadAllText(file);
+                settings = JContainer.Parse(fileContent);
+                if(settings["modList"] != null)
+                {
+                    foreach (var mod in settings["modList"].ToArray())
+                    {
+                        modList.Add((string)mod, (string)mod);
+                    }
+                }
+                if (settings["gameDir"] != null)
+                {
+                    dir = (string)settings["gameDir"];
+                }
+                logStatus = $"Settings loaded!";
+            }
+            catch (FileNotFoundException ex)
+            {
+                saveSettings();
+            }
+            catch (JsonReaderException ex)
+            {
+                saveSettings();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"ERROR loading settings: {ex.ToString()}");
+            }
+        }
+
+        private void saveSettings()
+        {
+            string file = AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".json";
+            try
+            {
+                if (settings == null)
+                {
+                    settings = JToken.Parse("{}");
+                }
+
+                settings["gameDir"] = dir;
+                var keys = modList.Keys.ToArray();
+                Array.Sort(keys);
+                settings["modList"] = JToken.FromObject(keys);
+                
+                File.WriteAllText(file, settings.ToString());
+                logStatus = $"Settings loaded!";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"ERROR saving settings: {ex.ToString()}");
             }
         }
 
@@ -326,13 +386,21 @@ namespace JSONConfigValidator
                 return;
             }
 
-            configEdited = false;
-            var file = toolStripComboBoxSelectedMod.SelectedItem.ToString();
-            string fileContent = File.ReadAllText(dir + file);
+            string file = "";
+            try
+            {
+                configEdited = false;
+                file = toolStripComboBoxSelectedMod.SelectedItem.ToString();
+                string fileContent = File.ReadAllText(dir + file);
 
-            this.config = JContainer.Parse(fileContent);
-            listChildren(config);
-            logStatus = $"Config file {file} loaded!";
+                this.config = JContainer.Parse(fileContent);
+                listChildren(config);
+                logStatus = $"Config file {file} loaded!";
+            }
+            catch (Exception ex)
+            {
+                logStatus = $"ERROR loading config {file}: {ex.ToString()}";
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -362,6 +430,7 @@ namespace JSONConfigValidator
         {
             try
             {
+                toolStripButtonAddNewModConfig.DropDownItems.Clear();
                 logStatus = "Loading...";
                 foreach (var file in Directory.GetFiles(dir, "*.json"))
                 {
@@ -388,6 +457,7 @@ namespace JSONConfigValidator
                 modList.Add(file, file);
                 initLoadedModConfigs();
                 logStatus = $"Config file {file} added!";
+                saveSettings();
             }
             catch (Exception ex)
             {
@@ -403,6 +473,7 @@ namespace JSONConfigValidator
                 logStatus = $"Config file {toolStripComboBoxSelectedMod.Text} removed!";
                 toolStripComboBoxSelectedMod_SelectedIndexChanged(null, null);
                 initLoadedModConfigs(true);
+                saveSettings();
             }
         }
 

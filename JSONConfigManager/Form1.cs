@@ -14,6 +14,7 @@ namespace JSONConfigValidator
 {
     public partial class Form1 : Form
     {
+        public String initDir = "C:/Program Files (x86)/Steam/steamapps/common/Fallout76/Data";
         public String dir = "C:/Program Files (x86)/Steam/steamapps/common/Fallout76/Data/";
 
         public Dictionary<String, String> modList = new Dictionary<String, String>();
@@ -21,6 +22,7 @@ namespace JSONConfigValidator
         private int yOffset = 0;
 
         private JToken config = null;
+        private bool configEdited = false;
 
         public Form1()
         {
@@ -31,6 +33,14 @@ namespace JSONConfigValidator
             modList.Add("HudBarPercentWidgets.json", "HudBarPercentWidgets");
         }
 
+        public string logStatus {
+            get => toolStripStatusLabel.Text;
+            set
+            {
+                toolStripStatusLabel.Text = value;
+            }
+        }
+
         private void toolStripSplitButtonProfile_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -38,7 +48,36 @@ namespace JSONConfigValidator
 
         private void toolStripButtonGameLocation_Click(object sender, EventArgs e)
         {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                fbd.RootFolder = Environment.SpecialFolder.ProgramFilesX86;
+                fbd.ShowNewFolderButton = false;
+                if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    string selectedDir = fbd.SelectedPath;
+                    if (selectedDir.IndexOf("Data") == -1)
+                    {
+                        selectedDir = selectedDir + "\\Data\\";
+                    }
 
+                    if (!selectedDir.EndsWith("\\") && !selectedDir.EndsWith("/"))
+                    {
+                        selectedDir = selectedDir + "\\";
+                    }
+
+                    if (Directory.Exists(selectedDir))
+                    {
+                        dir = selectedDir;
+                        logStatus = $"Game dir set: {selectedDir}";
+                        richTextBox1.Text += $"Game dir set: {selectedDir}{Environment.NewLine}";
+                    }
+                    else
+                    {
+                        logStatus = $"ERROR Selected game dir invalid: {selectedDir}";
+                        richTextBox1.Text += $"ERROR Selected game dir invalid: {selectedDir}{Environment.NewLine}";
+                    }
+                }
+            }
         }
 
         private void listChildren(JToken token)
@@ -71,14 +110,23 @@ namespace JSONConfigValidator
                         string key = subChild.Parent.Path + "[" + subChild + "]";
                         var ucChild = new UserControlString();
                         ucChild.Tag = subChild;
-                        ucChild.label.Text = key /*.Substring(token.Parent.Path.Length)*/ + ":";
+                        if (subChild.Type == JTokenType.String)
+                        {
+
+                            ucChild.label.Text = $"{key}:" /*.Substring(token.Parent.Path.Length)*/;
+                        }
+                        else
+                        {
+                            ucChild.label.Text = $"NOT_STRING ({subChild.Type})"/*.Substring(token.Parent.Path.Length)*/ + ":";
+                            ucChild.label.ForeColor = Color.Red;
+                        }
                         ucChild.textBox.Text = subChild.ToString();
                         ucChild.textBox.LostFocus += TextBox_LostFocus;
                         ucChild.Top = yOffset;
                         yOffset += ucChild.Height;
                         userControlContainer.Controls.Add(ucChild);
                     }
-                        
+
                 }
                 else
                 {
@@ -134,7 +182,7 @@ namespace JSONConfigValidator
                             }
                         default:
                             {
-                                richTextBox1.Text += "Control not made for: " + token.Path + " (" + child.Type + ")" + Environment.NewLine;
+                                richTextBox1.Text += $"Control not made for: {token.Path} ({child.Type}){Environment.NewLine}";
                                 break;
                             }
                     }
@@ -151,23 +199,24 @@ namespace JSONConfigValidator
                 bool isDecimal = numericUpDown.Parent is UserControlDecimal;
                 JToken token = numericUpDown.Parent.Tag as JToken;
                 string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
+                configEdited = true;
                 if (token.Parent.Path == "")
                 {
-                    var previousValue = isDecimal ? (float)config[key] : (int)config[key];
-                    config[key] = numericUpDown.Value;
-                    richTextBox1.Text += token.Path + ": " + previousValue + " -> " + config[key] + Environment.NewLine;
+                    var previousValue = isDecimal ? (decimal)config[key] : (int)config[key];
+                    config[key] = isDecimal ? (decimal)numericUpDown.Value : (int)numericUpDown.Value;
+                    richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[key]}{Environment.NewLine}";
                 }
                 else
                 {
-                    var previousValue = isDecimal ? (float)config[token.Parent.Path][key] : (int)config[token.Parent.Path][key];
-                    config[token.Parent.Path][key] = numericUpDown.Value;
-                    richTextBox1.Text += token.Path + ": " + previousValue + " -> " + config[token.Parent.Path][key] + Environment.NewLine;
+                    var previousValue = isDecimal ? (decimal)config[token.Parent.Path][key] : (int)config[token.Parent.Path][key];
+                    config[token.Parent.Path][key] = isDecimal ? (decimal)numericUpDown.Value : (int)numericUpDown.Value;
+                    richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[token.Parent.Path][key]}{Environment.NewLine}";
                 }
 
             }
             catch (Exception ex)
             {
-                richTextBox1.Text += "ERROR changing numeric value! " + ex + Environment.NewLine;
+                richTextBox1.Text += $"ERROR changing numeric value! {ex.ToString()}{Environment.NewLine}";
             }
         }
 
@@ -178,23 +227,24 @@ namespace JSONConfigValidator
                 CheckBox checkBox = sender as CheckBox;
                 JToken token = checkBox.Parent.Tag as JToken;
                 string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
+                configEdited = true;
                 bool previousValue;
                 if (token.Parent.Path == "")
                 {
                     previousValue = (bool)config[key];
                     config[key] = checkBox.Checked;
-                    richTextBox1.Text += token.Path + ": " + previousValue + " -> " + config[key] + Environment.NewLine;
+                    richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[key]}{Environment.NewLine}";
                 }
                 else
                 {
                     previousValue = (bool)config[token.Parent.Path][key];
                     config[token.Parent.Path][key] = checkBox.Checked;
-                    richTextBox1.Text += token.Path + ": " + previousValue + " -> " + config[token.Parent.Path][key] + Environment.NewLine;
+                    richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[token.Parent.Path][key]}{Environment.NewLine}";
                 }
             }
             catch (Exception ex)
             {
-                richTextBox1.Text += "ERROR changing numeric value! " + ex + Environment.NewLine;
+                richTextBox1.Text += $"ERROR changing numeric value! {ex.ToString()}{Environment.NewLine}";
             }
 
         }
@@ -207,23 +257,24 @@ namespace JSONConfigValidator
                 TextBox textBox = sender as TextBox;
                 JToken token = textBox.Parent.Tag as JToken;
                 string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
+                configEdited = true;
                 string previousValue;
                 if (token.Parent.Path == "")
                 {
                     previousValue = (string)config[key];
                     config[key] = textBox.Text.Trim();
-                    richTextBox1.Text += token.Path + ": " + previousValue + " -> " + config[key] + Environment.NewLine;
+                    richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[key]}{Environment.NewLine}";
                 }
                 else
                 {
                     previousValue = (string)config[token.Parent.Path][key];
                     config[token.Parent.Path][key] = textBox.Text.Trim();
-                    richTextBox1.Text += token.Path + ": " + previousValue + " -> " + config[token.Parent.Path][key] + Environment.NewLine;
+                    richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[token.Parent.Path][key]}{Environment.NewLine}";
                 }
             }
             catch (Exception ex)
             {
-                richTextBox1.Text += "ERROR changing numeric value! " + ex + Environment.NewLine;
+                richTextBox1.Text += $"ERROR changing numeric value! {ex.ToString()}{Environment.NewLine}";
             }
         }
 
@@ -255,16 +306,27 @@ namespace JSONConfigValidator
 
         private void toolStripComboBoxSelectedMod_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (configEdited)
+            {
+                if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and switch to selected config?", "Discard Changes and Switch?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    return;
+                }
+            }
+
             resetConfigControls();
             if (sender == null)
+            {
                 return;
+            }
 
+            configEdited = false;
             var file = toolStripComboBoxSelectedMod.SelectedItem.ToString();
             string fileContent = File.ReadAllText(dir + file);
 
             this.config = JContainer.Parse(fileContent);
             listChildren(config);
-            toolStripStatusLabel.Text = "Config file " + file + " loaded!";
+            logStatus = $"Config file {file} loaded!";
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -294,7 +356,7 @@ namespace JSONConfigValidator
         {
             try
             {
-                toolStripStatusLabel.Text = "Loading...";
+                logStatus = "Loading...";
                 foreach (var file in Directory.GetFiles(dir, "*.json"))
                 {
                     FileInfo info = new FileInfo(file);
@@ -303,11 +365,11 @@ namespace JSONConfigValidator
                         toolStripButtonAddNewModConfig.DropDownItems.Add(info.Name);
                     }
                 }
-                toolStripStatusLabel.Text = "Ready";
+                logStatus = "Ready";
             }
             catch (Exception ex)
             {
-                toolStripStatusLabel.Text = "Error loading files: " + ex.ToString();
+                logStatus = $"Error loading files: {ex.ToString()}";
             }
         }
 
@@ -319,11 +381,11 @@ namespace JSONConfigValidator
                 FileInfo info = new FileInfo(dir + file);
                 modList.Add(file, file);
                 initLoadedModConfigs();
-                toolStripStatusLabel.Text = "Config file " + file + " added!";
+                logStatus = $"Config file {file} added!";
             }
             catch (Exception ex)
             {
-                toolStripStatusLabel.Text = "Error adding config: " + ex.ToString();
+                logStatus = $"Error adding config: {ex.ToString()}";
             }
         }
 
@@ -332,9 +394,36 @@ namespace JSONConfigValidator
             if (modList.ContainsKey(toolStripComboBoxSelectedMod.Text))
             {
                 modList.Remove(toolStripComboBoxSelectedMod.Text);
-                toolStripStatusLabel.Text = "Config " + toolStripComboBoxSelectedMod.Text + " removed!";
+                logStatus = $"Config file {toolStripComboBoxSelectedMod.Text} removed!";
                 toolStripComboBoxSelectedMod_SelectedIndexChanged(null, null);
                 initLoadedModConfigs(true);
+            }
+        }
+
+        private void toolStripButtonSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string file = "TestEdit.json";
+                string cnf = config.ToString();
+                File.WriteAllText(dir + file, cnf);
+                logStatus = $"Saved all changes to {file}";
+                configEdited = false;
+            }
+            catch (Exception ex)
+            {
+                logStatus = $"ERROR Saving file {ex.ToString()}";
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (configEdited)
+            {
+                if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and exit?", "Discard Changes and Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    e.Cancel = true;
+                }
             }
         }
     }

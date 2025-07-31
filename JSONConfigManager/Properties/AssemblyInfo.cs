@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("JSONConfigValidator")]
+[assembly: AssemblyTitle("JSONConfigManager")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("JSONConfigValidator")]
-[assembly: AssemblyCopyright("Copyright ©  2025")]
+[assembly: AssemblyProduct("JSONConfigManager")]
+[assembly: AssemblyCopyright("Copyright ©  2025  Zelia")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

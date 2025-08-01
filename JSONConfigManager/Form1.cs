@@ -173,7 +173,7 @@ namespace JSONConfigValidator
                         if (subChild.Type == JTokenType.String)
                         {
 
-                            ucChild.label.Text = $"{key}:" /*.Substring(token.Parent.Path.Length)*/;
+                            ucChild.label.Text = $"{key} {subChildId}:" /*.Substring(token.Parent.Path.Length)*/;
                         }
                         else
                         {
@@ -251,28 +251,39 @@ namespace JSONConfigValidator
             }
         }
 
+        private void setConfigValue(object value, JToken token)
+        {
+            string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
+            string parentKey = token.Parent.Path;
+            if (parentKey == "")
+            {
+                var previousValue = config[key];
+                if(value is int) config[key] = (int)value;
+                else if (value is decimal) config[key] = (decimal)value;
+                else if (value is bool) config[key] = (bool)value;
+                else if (value is string) config[key] = (string)value;
+                richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[key]}{Environment.NewLine}";
+            }
+            else
+            {
+                var previousValue = config[parentKey][key];
+                if (value is int) config[parentKey][key] = (int)value;
+                else if (value is decimal) config[parentKey][key] = (decimal)value;
+                else if (value is bool) config[parentKey][key] = (bool)value;
+                else if (value is string) config[parentKey][key] = (string)value;
+                richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[parentKey][key]}{Environment.NewLine}";
+            }
+        }
+
         private void NumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             try
             {
                 NumericUpDown numericUpDown = sender as NumericUpDown;
-                bool isDecimal = numericUpDown.Parent is UserControlDecimal;
                 JToken token = numericUpDown.Parent.Tag as JToken;
-                string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
+                bool isDecimal = numericUpDown.Parent is UserControlDecimal;
+                setConfigValue(isDecimal ? numericUpDown.Value : (int)numericUpDown.Value, token);
                 configEdited = true;
-                if (token.Parent.Path == "")
-                {
-                    var previousValue = isDecimal ? (decimal)config[key] : (int)config[key];
-                    config[key] = isDecimal ? (decimal)numericUpDown.Value : (int)numericUpDown.Value;
-                    richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[key]}{Environment.NewLine}";
-                }
-                else
-                {
-                    var previousValue = isDecimal ? (decimal)config[token.Parent.Path][key] : (int)config[token.Parent.Path][key];
-                    config[token.Parent.Path][key] = isDecimal ? (decimal)numericUpDown.Value : (int)numericUpDown.Value;
-                    richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[token.Parent.Path][key]}{Environment.NewLine}";
-                }
-
             }
             catch (Exception ex)
             {
@@ -286,21 +297,8 @@ namespace JSONConfigValidator
             {
                 CheckBox checkBox = sender as CheckBox;
                 JToken token = checkBox.Parent.Tag as JToken;
-                string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
+                setConfigValue(checkBox.Checked, token);
                 configEdited = true;
-                bool previousValue;
-                if (token.Parent.Path == "")
-                {
-                    previousValue = (bool)config[key];
-                    config[key] = checkBox.Checked;
-                    richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[key]}{Environment.NewLine}";
-                }
-                else
-                {
-                    previousValue = (bool)config[token.Parent.Path][key];
-                    config[token.Parent.Path][key] = checkBox.Checked;
-                    richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[token.Parent.Path][key]}{Environment.NewLine}";
-                }
             }
             catch (Exception ex)
             {
@@ -309,35 +307,14 @@ namespace JSONConfigValidator
 
         }
 
-
         private void TextBox_LostFocus(object sender, EventArgs e)
         {
             try
             {
                 TextBox textBox = sender as TextBox;
                 JToken token = textBox.Parent.Tag as JToken;
-                string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
+                setConfigValue(textBox.Text.Trim(), token);
                 configEdited = true;
-                string previousValue;
-                string newValue = textBox.Text.Trim();
-                if (token.Parent.Path == "")
-                {
-                    previousValue = (string)config[key];
-                    if (previousValue != newValue)
-                    {
-                        config[key] = newValue;
-                        richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[key]}{Environment.NewLine}";
-                    }
-                }
-                else
-                {
-                    previousValue = (string)config[token.Parent.Path][key];
-                    if(previousValue != newValue)
-                    {
-                        config[token.Parent.Path][key] = newValue;
-                        richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[token.Parent.Path][key]}{Environment.NewLine}";
-                    }
-                }
             }
             catch (Exception ex)
             {
@@ -345,7 +322,25 @@ namespace JSONConfigValidator
             }
         }
 
-        private void resetConfigControls()
+        private void initLoadedModConfigs(bool clearSelection = false)
+        {
+            toolStripComboBoxSelectedMod.Items.Clear();
+            foreach (var key in modList.Keys)
+            {
+                try
+                {
+                    FileInfo info = new FileInfo(dir + key);
+                    toolStripComboBoxSelectedMod.Items.Add(info.Name);
+                }
+                catch (Exception ex) { }
+            }
+            if (clearSelection)
+            {
+                toolStripComboBoxSelectedMod.Text = toolStripComboBoxSelectedMod.ToolTipText;
+            }
+        }
+
+        private void resetSelectedConfigControls()
         {
             yOffset = 0;
             richTextBox1.Text = "";
@@ -371,6 +366,22 @@ namespace JSONConfigValidator
             userControlContainer.Controls.Clear();
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.initLoadedModConfigs();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (configEdited)
+            {
+                if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and exit?", "Discard Changes and Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+
         private void toolStripComboBoxSelectedMod_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (configEdited)
@@ -381,7 +392,7 @@ namespace JSONConfigValidator
                 }
             }
 
-            resetConfigControls();
+            resetSelectedConfigControls();
             if (sender == null)
             {
                 return;
@@ -401,29 +412,6 @@ namespace JSONConfigValidator
             catch (Exception ex)
             {
                 logStatus = $"ERROR loading config {file}: {ex.ToString()}";
-            }
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            this.initLoadedModConfigs();
-        }
-
-        private void initLoadedModConfigs(bool clearSelection = false)
-        {
-            toolStripComboBoxSelectedMod.Items.Clear();
-            foreach (var key in modList.Keys)
-            {
-                try
-                {
-                    FileInfo info = new FileInfo(dir + key);
-                    toolStripComboBoxSelectedMod.Items.Add(info.Name);
-                }
-                catch (Exception ex) { }
-            }
-            if (clearSelection)
-            {
-                toolStripComboBoxSelectedMod.Text = toolStripComboBoxSelectedMod.ToolTipText;
             }
         }
 
@@ -491,17 +479,6 @@ namespace JSONConfigValidator
             catch (Exception ex)
             {
                 logStatus = $"ERROR Saving file {ex.ToString()}";
-            }
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (configEdited)
-            {
-                if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and exit?", "Discard Changes and Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                {
-                    e.Cancel = true;
-                }
             }
         }
     }

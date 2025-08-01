@@ -454,24 +454,23 @@ namespace JSONConfigValidator
         {
             string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
             string parentKey = token.Parent.Path;
+
+            JToken parent;
             if (parentKey == "")
             {
-                var previousValue = config[key];
-                if (value is int) config[key] = (int)value;
-                else if (value is decimal) config[key] = (decimal)value;
-                else if (value is bool) config[key] = (bool)value;
-                else if (value is string) config[key] = (string)value;
-                richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[key]}{Environment.NewLine}";
+                parent = config;
             }
             else
             {
-                var previousValue = config[parentKey][key];
-                if (value is int) config[parentKey][key] = (int)value;
-                else if (value is decimal) config[parentKey][key] = (decimal)value;
-                else if (value is bool) config[parentKey][key] = (bool)value;
-                else if (value is string) config[parentKey][key] = (string)value;
-                richTextBox1.Text += $"{token.Path}: {previousValue} -> {config[parentKey][key]}{Environment.NewLine}";
+                parent = config[parentKey];
             }
+
+            var previousValue = parent[key];
+            if (value is int) parent[key] = (int)value;
+            else if (value is decimal) parent[key] = (decimal)value;
+            else if (value is bool) parent[key] = (bool)value;
+            else if (value is string) parent[key] = (string)value;
+            richTextBox1.Text += $"{token.Path}: {previousValue} -> {parent[key]}{Environment.NewLine}";
         }
 
         private void NumericUpDown_ValueChanged(object sender, EventArgs e)

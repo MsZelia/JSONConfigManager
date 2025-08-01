@@ -17,8 +17,11 @@ namespace JSONConfigValidator
     public partial class Form1 : Form
     {
         public string initDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Fallout76\\Data\\";
+
         public string backupDir = ".\\Backups\\";
+
         public string gameDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Fallout76\\Data\\";
+
         public string nexusURL = "https://www.nexusmods.com/fallout76/mods/";
 
         public Dictionary<string, string> modList = new Dictionary<string, string>();
@@ -194,7 +197,7 @@ namespace JSONConfigValidator
 
         }
 
-        private void toolStripButtonGameLocation_Click(object sender, EventArgs e)
+        private void btnSelectGameLocation_Click(object sender, EventArgs e)
         {
             using (var fbd = new FolderBrowserDialog())
             {
@@ -472,7 +475,7 @@ namespace JSONConfigValidator
             }
         }
 
-        private void toolStripComboBoxSelectedMod_SelectedIndexChanged(object sender, EventArgs e)
+        private void ddlSelectedMod_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (configEdited)
             {
@@ -506,7 +509,7 @@ namespace JSONConfigValidator
             }
         }
 
-        private void toolStripButtonAddNewModConfig_DropDownOpening(object sender, EventArgs e)
+        private void btnAddNewModConfig_DropDownOpening(object sender, EventArgs e)
         {
             try
             {
@@ -545,19 +548,19 @@ namespace JSONConfigValidator
             }
         }
 
-        private void toolStripButtonRemoveModConfig_Click(object sender, EventArgs e)
+        private void btnRemoveModConfig_Click(object sender, EventArgs e)
         {
             if (modList.ContainsKey(ddlSelectedMod.Text))
             {
                 modList.Remove(ddlSelectedMod.Text);
                 logStatus = $"Config file {ddlSelectedMod.Text} removed!";
-                toolStripComboBoxSelectedMod_SelectedIndexChanged(null, null);
+                ddlSelectedMod_SelectedIndexChanged(null, null);
                 initLoadedModConfigs(true);
                 saveSettings();
             }
         }
 
-        private void toolStripButtonSave_Click(object sender, EventArgs e)
+        private void btnSave_Click(object sender, EventArgs e)
         {
             try
             {
@@ -578,7 +581,7 @@ namespace JSONConfigValidator
             backup();
         }
 
-        private void tsbtnBackupAll_Click(object sender, EventArgs e)
+        private void btnBackupAll_Click(object sender, EventArgs e)
         {
             backup(true);
         }

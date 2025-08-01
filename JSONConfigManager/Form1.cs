@@ -18,9 +18,9 @@ namespace JSONConfigValidator
     {
         public string initDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Fallout76\\Data\\";
 
-        public string backupDir = ".\\Backups\\";
-
         public string gameDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Fallout76\\Data\\";
+
+        public string backupDir = ".\\Backups\\";
 
         public string nexusURL = "https://www.nexusmods.com/fallout76/mods/";
 
@@ -152,7 +152,7 @@ namespace JSONConfigValidator
                     {
                         backupFile(item.ToString(), backupTimeStampDir);
                     }
-                    MessageBox.Show($"{Directory.GetFiles(backupTimeStampDir).Length} config files backed up!", "Backup All", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Backing up finished!{Environment.NewLine}{Directory.GetFiles(backupTimeStampDir).Length} config files backed up.", "Backup All", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -192,7 +192,90 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                logStatus = $"ERROR Backing Up File: {ex.ToString()}";
+                logStatus = $"ERROR backing up file {file}: {ex.ToString()}";
+                MessageBox.Show($"Error backing up file {file}:{Environment.NewLine}{ex.ToString()}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return false;
+        }
+
+        private void listBackups()
+        {
+            try
+            {
+                foreach (ToolStripMenuItem tsmi in ddlRestoreBackup.DropDownItems)
+                {
+                    tsmi.DropDownItemClicked -= restoreBackup_DropDownItemClicked;
+                }
+                ddlRestoreBackup.DropDownItems.Clear();
+                if (Directory.Exists(backupDir))
+                {
+                    foreach (string directory in Directory.GetDirectories(backupDir))
+                    {
+                        ToolStripMenuItem tsmi = new ToolStripMenuItem(directory.Substring(directory.LastIndexOf("\\")));
+                        tsmi.DropDownItems.Add(new ToolStripMenuItem("RESTORE ALL") { Tag = (directory, true) });
+                        foreach (var file in Directory.GetFiles(directory))
+                        {
+                            tsmi.DropDownItems.Add(new ToolStripMenuItem(file.Substring(file.LastIndexOf("\\"))) { Tag = (file, false) });
+                        }
+                        tsmi.DropDownItemClicked += restoreBackup_DropDownItemClicked;
+                        ddlRestoreBackup.DropDownItems.Add(tsmi);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logStatus = $"ERROR Loading backups: {ex.ToString()}";
+            }
+        }
+
+        private void restoreBackup_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            ValueTuple<string, bool> fileToRestore = (ValueTuple<string, bool>)(e.ClickedItem as ToolStripMenuItem).Tag;
+            restore(fileToRestore.Item1, fileToRestore.Item2);
+        }
+
+        private void restore(string dir, bool isDir)
+        {
+            try
+            {
+                if (isDir)
+                {
+                    foreach (var file in Directory.GetFiles(dir))
+                    {
+                        restoreFile(file);
+                    }
+                    logStatus = "Config file restoration finished!";
+                    MessageBox.Show("Config file restoration finished!", "Restore All", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    if (restoreFile(dir))
+                    {
+                        logStatus = $"{dir} restored!";
+                        MessageBox.Show($"{dir} restored!", "Restore File", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error restoring files:{Environment.NewLine}{ex.ToString()}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private bool restoreFile(string file)
+        {
+            try
+            {
+                if (File.Exists(file))
+                {
+                    File.Copy(file, gameDir + file.Substring(file.LastIndexOf('\\') + 1), true);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                logStatus = $"ERROR Restoring file {file}: {ex.ToString()}";
+                MessageBox.Show($"Error restoring file {file}:{Environment.NewLine}{ex.ToString()}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return false;
         }
@@ -666,6 +749,11 @@ namespace JSONConfigValidator
         private void btnWeb_Click(object sender, EventArgs e)
         {
             openNexusUrl();
+        }
+
+        private void ddlRestoreBackup_DropDownOpened(object sender, EventArgs e)
+        {
+            listBackups();
         }
     }
 }

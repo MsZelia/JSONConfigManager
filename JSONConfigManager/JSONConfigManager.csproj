@@ -162,5 +162,8 @@
   <ItemGroup>
     <Resource Include="Icons\Backup.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\Restore.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

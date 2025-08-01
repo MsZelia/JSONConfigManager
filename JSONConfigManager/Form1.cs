@@ -197,6 +197,110 @@ namespace JSONConfigValidator
             return false;
         }
 
+        private void saveFile()
+        {
+            try
+            {
+                if (ddlSelectedMod.SelectedIndex == -1)
+                {
+                    return;
+                }
+                string file = "TestEdit.json";
+                string cnf = config.ToString();
+                File.WriteAllText(gameDir + file, cnf);
+                logStatus = $"Saved all changes to {file}";
+                configEdited = false;
+            }
+            catch (Exception ex)
+            {
+                logStatus = $"Error Saving file {ex.ToString()}";
+                MessageBox.Show($"Error Saving file:{Environment.NewLine}{ex.ToString()}", "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void openBackupDirectory()
+        {
+            try
+            {
+                if (Directory.Exists(backupDir))
+                {
+                    Process.Start("explorer.exe", backupDir);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening backup directory:{Environment.NewLine}{ex.ToString()}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void openNexusUrl()
+        {
+            try
+            {
+                string file = ddlSelectedMod.Text.ToLower();
+                if (nexusLinks.ContainsKey(file))
+                {
+                    Process.Start(nexusURL + nexusLinks[file]);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening nexus url:{Environment.NewLine}{ex.ToString()}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void addModConfigFile(string file)
+        {
+            try
+            {
+                FileInfo info = new FileInfo(gameDir + file);
+                modList.Add(file, file);
+                initLoadedModConfigs();
+                logStatus = $"Config file {file} added!";
+                saveSettings();
+            }
+            catch (Exception ex)
+            {
+                logStatus = $"Error adding config: {ex.ToString()}";
+                MessageBox.Show($"Error adding config file:{Environment.NewLine}{ex.ToString()}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void removeModConfigFile()
+        {
+            if (!modList.ContainsKey(ddlSelectedMod.Text))
+            {
+                return;
+            }
+            modList.Remove(ddlSelectedMod.Text);
+            logStatus = $"Config file {ddlSelectedMod.Text} removed!";
+            ddlSelectedMod_SelectedIndexChanged(null, null);
+            initLoadedModConfigs(true);
+            saveSettings();
+        }
+
+        private void loadModConfigFiles()
+        {
+            try
+            {
+                btnAddNewModConfig.DropDownItems.Clear();
+                logStatus = "Loading...";
+                foreach (var file in Directory.GetFiles(gameDir, "*.json"))
+                {
+                    FileInfo info = new FileInfo(file);
+                    if (!modList.ContainsKey(info.Name))
+                    {
+                        btnAddNewModConfig.DropDownItems.Add(info.Name);
+                    }
+                }
+                logStatus = "Ready";
+            }
+            catch (Exception ex)
+            {
+                logStatus = $"Error loading files: {ex.ToString()}";
+            }
+        }
+
         private void toolStripSplitButtonProfile_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -459,9 +563,23 @@ namespace JSONConfigValidator
             userControlContainer.Controls.Clear();
         }
 
+        private void updateToolbarButtons()
+        {
+            bool isModSelected = ddlSelectedMod.SelectedIndex != -1;
+            btnRemoveModConfig.Enabled = isModSelected;
+            btnSave.Enabled = isModSelected;
+            btnBackupSingle.Enabled = isModSelected;
+            btnWeb.Enabled = isModSelected && nexusLinks.ContainsKey(ddlSelectedMod.SelectedItem.ToString().ToLower());
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             initLoadedModConfigs();
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            updateToolbarButtons();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -473,11 +591,6 @@ namespace JSONConfigValidator
                     e.Cancel = true;
                 }
             }
-        }
-
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            updateToolbarButtons();
         }
 
         private void ddlSelectedMod_SelectedIndexChanged(object sender, EventArgs e)
@@ -513,82 +626,24 @@ namespace JSONConfigValidator
             }
         }
 
-        private void updateToolbarButtons()
-        {
-            bool isModSelected = ddlSelectedMod.SelectedIndex != -1;
-            btnRemoveModConfig.Enabled = isModSelected;
-            btnSave.Enabled = isModSelected;
-            btnBackupSingle.Enabled = isModSelected;
-            btnWeb.Enabled = isModSelected && nexusLinks.ContainsKey(ddlSelectedMod.SelectedItem.ToString().ToLower());
-        }
-
         private void btnAddNewModConfig_DropDownOpening(object sender, EventArgs e)
         {
-            try
-            {
-                btnAddNewModConfig.DropDownItems.Clear();
-                logStatus = "Loading...";
-                foreach (var file in Directory.GetFiles(gameDir, "*.json"))
-                {
-                    FileInfo info = new FileInfo(file);
-                    if (!modList.ContainsKey(info.Name))
-                    {
-                        btnAddNewModConfig.DropDownItems.Add(info.Name);
-                    }
-                }
-                logStatus = "Ready";
-            }
-            catch (Exception ex)
-            {
-                logStatus = $"Error loading files: {ex.ToString()}";
-            }
+            loadModConfigFiles();
         }
 
         private void btnAddNewModConfig_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            try
-            {
-                string file = e.ClickedItem.Text;
-                FileInfo info = new FileInfo(gameDir + file);
-                modList.Add(file, file);
-                initLoadedModConfigs();
-                logStatus = $"Config file {file} added!";
-                saveSettings();
-            }
-            catch (Exception ex)
-            {
-                logStatus = $"Error adding config: {ex.ToString()}";
-                MessageBox.Show($"Error adding config file:{Environment.NewLine}{ex.ToString()}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            addModConfigFile(e.ClickedItem.Text);
         }
 
         private void btnRemoveModConfig_Click(object sender, EventArgs e)
         {
-            if (modList.ContainsKey(ddlSelectedMod.Text))
-            {
-                modList.Remove(ddlSelectedMod.Text);
-                logStatus = $"Config file {ddlSelectedMod.Text} removed!";
-                ddlSelectedMod_SelectedIndexChanged(null, null);
-                initLoadedModConfigs(true);
-                saveSettings();
-            }
+            removeModConfigFile();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            try
-            {
-                string file = "TestEdit.json";
-                string cnf = config.ToString();
-                File.WriteAllText(gameDir + file, cnf);
-                logStatus = $"Saved all changes to {file}";
-                configEdited = false;
-            }
-            catch (Exception ex)
-            {
-                logStatus = $"Error Saving file {ex.ToString()}";
-                MessageBox.Show($"Error Saving file:{Environment.NewLine}{ex.ToString()}", "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            saveFile();
         }
 
         private void btnBackup_ButtonClick(object sender, EventArgs e)
@@ -606,33 +661,12 @@ namespace JSONConfigValidator
 
         private void btnOpenBackupDirectory_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (Directory.Exists(backupDir))
-                {
-                    Process.Start("explorer.exe", backupDir);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error opening backup directory:{Environment.NewLine}{ex.ToString()}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            openBackupDirectory();
         }
 
         private void btnWeb_Click(object sender, EventArgs e)
         {
-            try
-            {
-                string file = ddlSelectedMod.Text.ToLower();
-                if (nexusLinks.ContainsKey(file))
-                {
-                    Process.Start(nexusURL + nexusLinks[file]);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error opening nexus url:{Environment.NewLine}{ex.ToString()}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            openNexusUrl();
         }
     }
 }

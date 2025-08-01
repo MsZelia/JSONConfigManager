@@ -211,11 +211,11 @@ namespace JSONConfigValidator
                 {
                     foreach (string directory in Directory.GetDirectories(backupDir))
                     {
-                        ToolStripMenuItem tsmi = new ToolStripMenuItem(directory.Substring(directory.LastIndexOf("\\")));
+                        ToolStripMenuItem tsmi = new ToolStripMenuItem(directory.Substring(directory.LastIndexOf("\\") + 1));
                         tsmi.DropDownItems.Add(new ToolStripMenuItem("RESTORE ALL") { Tag = (directory, true) });
                         foreach (var file in Directory.GetFiles(directory))
                         {
-                            tsmi.DropDownItems.Add(new ToolStripMenuItem(file.Substring(file.LastIndexOf("\\"))) { Tag = (file, false) });
+                            tsmi.DropDownItems.Add(new ToolStripMenuItem(file.Substring(file.LastIndexOf("\\") + 1)) { Tag = (file, false) });
                         }
                         tsmi.DropDownItemClicked += restoreBackup_DropDownItemClicked;
                         ddlRestoreBackup.DropDownItems.Add(tsmi);

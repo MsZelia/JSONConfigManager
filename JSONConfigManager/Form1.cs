@@ -238,6 +238,7 @@ namespace JSONConfigValidator
         {
             try
             {
+                btnBackup.DropDown.Close();
                 if (isDir)
                 {
                     foreach (var file in Directory.GetFiles(dir))

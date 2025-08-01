@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace JSONConfigValidator
+namespace JSONConfigManager
 {
     public partial class UserControlDecimal : UserControl
     {

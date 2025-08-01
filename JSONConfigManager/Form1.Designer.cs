@@ -1,5 +1,5 @@
 ﻿
-namespace JSONConfigValidator
+namespace JSONConfigManager
 {
     partial class Form1
     {
@@ -29,7 +29,7 @@ namespace JSONConfigValidator
         /// </summary>
         private void InitializeComponent()
         {
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.tbLog = new System.Windows.Forms.RichTextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAddNewModConfig = new System.Windows.Forms.ToolStripSplitButton();
             this.btnWeb = new System.Windows.Forms.ToolStripButton();
@@ -58,15 +58,16 @@ namespace JSONConfigValidator
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // richTextBox1
+            // tbLog
             // 
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(751, 629);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
+            this.tbLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.tbLog.Location = new System.Drawing.Point(0, 0);
+            this.tbLog.Name = "tbLog";
+            this.tbLog.Size = new System.Drawing.Size(751, 629);
+            this.tbLog.TabIndex = 0;
+            this.tbLog.Text = "";
+            this.tbLog.TextChanged += new System.EventHandler(this.tbLog_TextChanged);
             // 
             // toolStrip1
             // 
@@ -161,6 +162,7 @@ namespace JSONConfigValidator
             // 
             // btnBackup
             // 
+            this.btnBackup.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.btnBackup.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnBackupSingle,
             this.btnBackupAll,
@@ -208,7 +210,7 @@ namespace JSONConfigValidator
             // dummyToolStripMenuItem
             // 
             this.dummyToolStripMenuItem.Name = "dummyToolStripMenuItem";
-            this.dummyToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.dummyToolStripMenuItem.Size = new System.Drawing.Size(128, 24);
             this.dummyToolStripMenuItem.Text = "dummy";
             // 
             // fileSystemWatcher1
@@ -252,7 +254,7 @@ namespace JSONConfigValidator
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.richTextBox1);
+            this.splitContainer1.Panel2.Controls.Add(this.tbLog);
             this.splitContainer1.Size = new System.Drawing.Size(1165, 629);
             this.splitContainer1.SplitterDistance = 410;
             this.splitContainer1.TabIndex = 4;
@@ -298,7 +300,7 @@ namespace JSONConfigValidator
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox tbLog;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripComboBox ddlSelectedMod;
         private System.Windows.Forms.ToolStripButton btnSelectGameLocation;

@@ -1,5 +1,5 @@
 ﻿
-namespace JSONConfigValidator
+namespace JSONConfigManager
 {
     partial class UserControlBoolean
     {

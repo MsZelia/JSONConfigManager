@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace JSONConfigManager
 {
-    public partial class UserControlString : UserControl
+    public partial class UserControlArray : UserControlString
     {
-        public UserControlString()
+        public UserControlArray()
         {
             InitializeComponent();
         }

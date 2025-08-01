@@ -12,7 +12,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace JSONConfigValidator
+namespace JSONConfigManager
 {
     public partial class Form1 : Form
     {
@@ -245,8 +245,8 @@ namespace JSONConfigValidator
                     {
                         RestoreFile(file);
                     }
-                    logStatus = "Config file restoration finished!";
-                    MessageBox.Show("Config file restoration finished!", "Restore All", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    logStatus = "Backup restoration finished!";
+                    MessageBox.Show("Backup restoration finished!", "Restore All", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -436,11 +436,11 @@ namespace JSONConfigValidator
                     yOffset += 20;
                     ListChildren(child);
                 }
-                else if (child.Type == JTokenType.Array)
+                /*else if (child.Type == JTokenType.Array)
                 {
                     var uc = new UserControlString();
                     uc.Tag = token;
-                    uc.label.Text = token.Path /*.Substring(token.Parent.Path.Length)*/ + ":";
+                    uc.label.Text = token.Path + ":";
                     uc.textBox.Text = child.ToString();
                     uc.textBox.Enabled = false;
                     uc.Top = yOffset;
@@ -456,11 +456,11 @@ namespace JSONConfigValidator
                         if (subChild.Type == JTokenType.String)
                         {
 
-                            ucChild.label.Text = $"{key} {subChildId}:" /*.Substring(token.Parent.Path.Length)*/;
+                        ucChild.label.Text = $"{key} {subChildId}:";
                         }
                         else
                         {
-                            ucChild.label.Text = $"NOT_STRING ({subChild.Type})"/*.Substring(token.Parent.Path.Length)*/ + ":";
+                        ucChild.label.Text = $"NOT_STRING ({subChild.Type})";
                             ucChild.label.ForeColor = Color.Red;
                         }
                         ucChild.textBox.Text = subChild.ToString();
@@ -470,7 +470,7 @@ namespace JSONConfigValidator
                         userControlContainer.Controls.Add(ucChild);
                     }
 
-                }
+                }*/
                 else
                 {
                     switch (child.Type)
@@ -515,7 +515,7 @@ namespace JSONConfigValidator
                             {
                                 var uc = new UserControlString();
                                 uc.Tag = token;
-                                uc.label.Text = token.Path /*.Substring(token.Parent.Path.Length)*/ + ":";
+                                uc.label.Text = token.Path + ":"; //.Substring(token.Parent.Path.Length);
                                 uc.textBox.Text = child.ToString();
                                 uc.textBox.LostFocus += TextBox_LostFocus;
                                 uc.Top = yOffset;
@@ -523,9 +523,21 @@ namespace JSONConfigValidator
                                 userControlContainer.Controls.Add(uc);
                                 break;
                             }
+                        case JTokenType.Array:
+                            {
+                                var uc = new UserControlArray();
+                                uc.Tag = token;
+                                uc.label.Text = token.Path + ":";
+                                uc.textBox.Text = string.Join(",", child.Children());
+                                uc.textBox.LostFocus += ArrayTextBox_LostFocus;
+                                uc.Top = yOffset;
+                                yOffset += uc.Height;
+                                userControlContainer.Controls.Add(uc);
+                                break;
+                            }
                         default:
                             {
-                                richTextBox1.Text += $"Control not made for: {token.Path} ({child.Type}){Environment.NewLine}";
+                                tbLog.Text += $"Control not made for: {token.Path} ({child.Type}){Environment.NewLine}";
                                 break;
                             }
                     }
@@ -554,7 +566,8 @@ namespace JSONConfigValidator
             else if (value is decimal d) parent[key] = d;
             else if (value is bool b) parent[key] = b;
             else if (value is string s) parent[key] = s;
-            richTextBox1.Text += $"{token.Path}: {previousValue} -> {parent[key]}{Environment.NewLine}";
+            else if (value is Array arr) parent[key] = JToken.FromObject(arr);
+            tbLog.Text += $"{token.Path}: {previousValue} -> {parent[key]}{Environment.NewLine}";
         }
 
         private void NumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -569,7 +582,7 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                richTextBox1.Text += $"ERROR changing numeric value! {ex}{Environment.NewLine}";
+                tbLog.Text += $"ERROR changing numeric value! {ex}{Environment.NewLine}";
             }
         }
 
@@ -584,7 +597,7 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                richTextBox1.Text += $"ERROR changing bool value! {ex}{Environment.NewLine}";
+                tbLog.Text += $"ERROR changing bool value! {ex}{Environment.NewLine}";
             }
 
         }
@@ -595,12 +608,27 @@ namespace JSONConfigValidator
             {
                 TextBox textBox = sender as TextBox;
                 JToken token = textBox.Parent.Tag as JToken;
-                SetConfigValue(textBox.Text.Trim(), token);
+                SetConfigValue(textBox.Text, token);
                 configEdited = true;
             }
             catch (Exception ex)
             {
-                richTextBox1.Text += $"ERROR changing string value! {ex}{Environment.NewLine}";
+                tbLog.Text += $"ERROR changing string value! {ex}{Environment.NewLine}";
+            }
+        }
+
+        private void ArrayTextBox_LostFocus(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox textBox = sender as TextBox;
+                JToken token = textBox.Parent.Tag as JToken;
+                SetConfigValue(textBox.Text.Trim().Split(','), token);
+                configEdited = true;
+            }
+            catch (Exception ex)
+            {
+                tbLog.Text += $"ERROR changing string value! {ex}{Environment.NewLine}";
             }
         }
 
@@ -623,7 +651,7 @@ namespace JSONConfigValidator
         private void ResetSelectedConfigControls()
         {
             yOffset = 0;
-            richTextBox1.Text = "";
+            tbLog.Text = "";
             foreach (Control uc in userControlContainer.Controls)
             {
                 if (uc is UserControlInteger)
@@ -641,6 +669,10 @@ namespace JSONConfigValidator
                 else if (uc is UserControlString)
                 {
                     (uc as UserControlString).textBox.LostFocus -= TextBox_LostFocus;
+                }
+                else if (uc is UserControlArray)
+                {
+                    (uc as UserControlArray).textBox.LostFocus -= ArrayTextBox_LostFocus;
                 }
             }
             userControlContainer.Controls.Clear();
@@ -706,6 +738,7 @@ namespace JSONConfigValidator
             catch (Exception ex)
             {
                 logStatus = $"ERROR loading config {file}: {ex}";
+                MessageBox.Show($"Error loading config {file}:{Environment.NewLine}{ex}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -755,6 +788,12 @@ namespace JSONConfigValidator
         private void ddlRestoreBackup_DropDownOpened(object sender, EventArgs e)
         {
             ListBackups();
+        }
+
+        private void tbLog_TextChanged(object sender, EventArgs e)
+        {
+            tbLog.SelectionStart = tbLog.Text.Length;
+            tbLog.ScrollToCaret();
         }
     }
 }

@@ -57,7 +57,7 @@ namespace JSONConfigValidator
         public Form1()
         {
             InitializeComponent();
-            loadSettings();
+            LoadSettings();
         }
 
         public string logStatus
@@ -69,7 +69,7 @@ namespace JSONConfigValidator
             }
         }
 
-        private void loadSettings()
+        private void LoadSettings()
         {
             string file = AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".json";
             try
@@ -89,20 +89,20 @@ namespace JSONConfigValidator
                 }
                 logStatus = $"Settings loaded!";
             }
-            catch (FileNotFoundException ex)
+            catch (FileNotFoundException)
             {
-                saveSettings();
+                SaveSettings();
             }
             catch (Exception ex)
             {
-                if (MessageBox.Show($"ERROR loading settings:{Environment.NewLine}{ex.ToString()}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}Do you want to restore default settings?", "Restore Default Settings?", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+                if (MessageBox.Show($"ERROR loading settings:{Environment.NewLine}{ex}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}Do you want to restore default settings?", "Restore Default Settings?", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
                 {
-                    saveSettings();
+                    SaveSettings();
                 }
             }
         }
 
-        private void saveSettings()
+        private void SaveSettings()
         {
             string file = AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".json";
             try
@@ -122,11 +122,11 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving settings:{Environment.NewLine}{ex.ToString()}", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error saving settings:{Environment.NewLine}{ex}", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void backup(bool backupAll = false)
+        private void Backup(bool backupAll = false)
         {
             string file = ddlSelectedMod.Text;
             string backupTimeStampDir = backupDir + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + "\\";
@@ -140,7 +140,7 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error making backup directory:{Environment.NewLine}{ex.ToString()}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error making backup directory:{Environment.NewLine}{ex}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -150,13 +150,13 @@ namespace JSONConfigValidator
                 {
                     foreach (var item in ddlSelectedMod.Items)
                     {
-                        backupFile(item.ToString(), backupTimeStampDir);
+                        BackupFile(item.ToString(), backupTimeStampDir);
                     }
                     MessageBox.Show($"Backing up finished!{Environment.NewLine}{Directory.GetFiles(backupTimeStampDir).Length} config files backed up.", "Backup All", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    if (backupFile(file, backupTimeStampDir))
+                    if (BackupFile(file, backupTimeStampDir))
                     {
                         MessageBox.Show($"{file} backed up!", "Backup File", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -164,7 +164,7 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error making backup:{Environment.NewLine}{ex.ToString()}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error making backup:{Environment.NewLine}{ex}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 try
                 {
                     if (Directory.GetFiles(backupTimeStampDir).Length == 0)
@@ -176,7 +176,7 @@ namespace JSONConfigValidator
             }
         }
 
-        private bool backupFile(string file, string directory)
+        private bool BackupFile(string file, string directory)
         {
             try
             {
@@ -192,13 +192,13 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                logStatus = $"ERROR backing up file {file}: {ex.ToString()}";
-                MessageBox.Show($"Error backing up file {file}:{Environment.NewLine}{ex.ToString()}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logStatus = $"ERROR backing up file {file}: {ex}";
+                MessageBox.Show($"Error backing up file {file}:{Environment.NewLine}{ex}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return false;
         }
 
-        private void listBackups()
+        private void ListBackups()
         {
             try
             {
@@ -224,17 +224,17 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                logStatus = $"ERROR Loading backups: {ex.ToString()}";
+                logStatus = $"ERROR Loading backups: {ex}";
             }
         }
 
         private void restoreBackup_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             ValueTuple<string, bool> fileToRestore = (ValueTuple<string, bool>)(e.ClickedItem as ToolStripMenuItem).Tag;
-            restore(fileToRestore.Item1, fileToRestore.Item2);
+            Restore(fileToRestore.Item1, fileToRestore.Item2);
         }
 
-        private void restore(string dir, bool isDir)
+        private void Restore(string dir, bool isDir)
         {
             try
             {
@@ -243,14 +243,14 @@ namespace JSONConfigValidator
                 {
                     foreach (var file in Directory.GetFiles(dir))
                     {
-                        restoreFile(file);
+                        RestoreFile(file);
                     }
                     logStatus = "Config file restoration finished!";
                     MessageBox.Show("Config file restoration finished!", "Restore All", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    if (restoreFile(dir))
+                    if (RestoreFile(dir))
                     {
                         logStatus = $"{dir} restored!";
                         MessageBox.Show($"{dir} restored!", "Restore File", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -259,11 +259,11 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error restoring files:{Environment.NewLine}{ex.ToString()}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error restoring files:{Environment.NewLine}{ex}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private bool restoreFile(string file)
+        private bool RestoreFile(string file)
         {
             try
             {
@@ -275,13 +275,13 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                logStatus = $"ERROR Restoring file {file}: {ex.ToString()}";
-                MessageBox.Show($"Error restoring file {file}:{Environment.NewLine}{ex.ToString()}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logStatus = $"ERROR Restoring file {file}: {ex}";
+                MessageBox.Show($"Error restoring file {file}:{Environment.NewLine}{ex}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return false;
         }
 
-        private void saveFile()
+        private void SaveFile()
         {
             try
             {
@@ -297,12 +297,12 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                logStatus = $"Error Saving file {ex.ToString()}";
-                MessageBox.Show($"Error Saving file:{Environment.NewLine}{ex.ToString()}", "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logStatus = $"Error Saving file {ex}";
+                MessageBox.Show($"Error Saving file:{Environment.NewLine}{ex}", "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void openBackupDirectory()
+        private void OpenBackupDirectory()
         {
             try
             {
@@ -313,11 +313,11 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error opening backup directory:{Environment.NewLine}{ex.ToString()}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error opening backup directory:{Environment.NewLine}{ex}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void openNexusUrl()
+        private void OpenNexusUrl()
         {
             try
             {
@@ -329,28 +329,28 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error opening nexus url:{Environment.NewLine}{ex.ToString()}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error opening nexus url:{Environment.NewLine}{ex}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void addModConfigFile(string file)
+        private void AddModConfigFile(string file)
         {
             try
             {
                 FileInfo info = new FileInfo(gameDir + file);
                 modList.Add(file, file);
-                initLoadedModConfigs();
+                InitLoadedModConfigs();
                 logStatus = $"Config file {file} added!";
-                saveSettings();
+                SaveSettings();
             }
             catch (Exception ex)
             {
-                logStatus = $"Error adding config: {ex.ToString()}";
-                MessageBox.Show($"Error adding config file:{Environment.NewLine}{ex.ToString()}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logStatus = $"Error adding config: {ex}";
+                MessageBox.Show($"Error adding config file:{Environment.NewLine}{ex}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void removeModConfigFile()
+        private void RemoveModConfigFile()
         {
             if (!modList.ContainsKey(ddlSelectedMod.Text))
             {
@@ -359,11 +359,11 @@ namespace JSONConfigValidator
             modList.Remove(ddlSelectedMod.Text);
             logStatus = $"Config file {ddlSelectedMod.Text} removed!";
             ddlSelectedMod_SelectedIndexChanged(null, null);
-            initLoadedModConfigs(true);
-            saveSettings();
+            InitLoadedModConfigs(true);
+            SaveSettings();
         }
 
-        private void loadModConfigFiles()
+        private void LoadModConfigFiles()
         {
             try
             {
@@ -381,7 +381,7 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                logStatus = $"Error loading files: {ex.ToString()}";
+                logStatus = $"Error loading files: {ex}";
             }
         }
 
@@ -412,7 +412,7 @@ namespace JSONConfigValidator
                     {
                         gameDir = selectedDir;
                         logStatus = $"Game dir set: {selectedDir}";
-                        saveSettings();
+                        SaveSettings();
                     }
                     else
                     {
@@ -423,18 +423,18 @@ namespace JSONConfigValidator
             }
         }
 
-        private void listChildren(JToken token)
+        private void ListChildren(JToken token)
         {
             foreach (var child in token.Children())
             {
                 if (child.Type == JTokenType.Property)
                 {
-                    listChildren(child);
+                    ListChildren(child);
                 }
                 else if (child.Type == JTokenType.Object)
                 {
                     yOffset += 20;
-                    listChildren(child);
+                    ListChildren(child);
                 }
                 else if (child.Type == JTokenType.Array)
                 {
@@ -534,7 +534,7 @@ namespace JSONConfigValidator
             }
         }
 
-        private void setConfigValue(object value, JToken token)
+        private void SetConfigValue(object value, JToken token)
         {
             string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
             string parentKey = token.Parent.Path;
@@ -550,10 +550,10 @@ namespace JSONConfigValidator
             }
 
             var previousValue = parent[key];
-            if (value is int) parent[key] = (int)value;
-            else if (value is decimal) parent[key] = (decimal)value;
-            else if (value is bool) parent[key] = (bool)value;
-            else if (value is string) parent[key] = (string)value;
+            if (value is int i) parent[key] = i;
+            else if (value is decimal d) parent[key] = d;
+            else if (value is bool b) parent[key] = b;
+            else if (value is string s) parent[key] = s;
             richTextBox1.Text += $"{token.Path}: {previousValue} -> {parent[key]}{Environment.NewLine}";
         }
 
@@ -564,12 +564,12 @@ namespace JSONConfigValidator
                 NumericUpDown numericUpDown = sender as NumericUpDown;
                 JToken token = numericUpDown.Parent.Tag as JToken;
                 bool isDecimal = numericUpDown.Parent is UserControlDecimal;
-                setConfigValue(isDecimal ? numericUpDown.Value : (int)numericUpDown.Value, token);
+                SetConfigValue(isDecimal ? numericUpDown.Value : (int)numericUpDown.Value, token);
                 configEdited = true;
             }
             catch (Exception ex)
             {
-                richTextBox1.Text += $"ERROR changing numeric value! {ex.ToString()}{Environment.NewLine}";
+                richTextBox1.Text += $"ERROR changing numeric value! {ex}{Environment.NewLine}";
             }
         }
 
@@ -579,12 +579,12 @@ namespace JSONConfigValidator
             {
                 CheckBox checkBox = sender as CheckBox;
                 JToken token = checkBox.Parent.Tag as JToken;
-                setConfigValue(checkBox.Checked, token);
+                SetConfigValue(checkBox.Checked, token);
                 configEdited = true;
             }
             catch (Exception ex)
             {
-                richTextBox1.Text += $"ERROR changing bool value! {ex.ToString()}{Environment.NewLine}";
+                richTextBox1.Text += $"ERROR changing bool value! {ex}{Environment.NewLine}";
             }
 
         }
@@ -595,16 +595,16 @@ namespace JSONConfigValidator
             {
                 TextBox textBox = sender as TextBox;
                 JToken token = textBox.Parent.Tag as JToken;
-                setConfigValue(textBox.Text.Trim(), token);
+                SetConfigValue(textBox.Text.Trim(), token);
                 configEdited = true;
             }
             catch (Exception ex)
             {
-                richTextBox1.Text += $"ERROR changing string value! {ex.ToString()}{Environment.NewLine}";
+                richTextBox1.Text += $"ERROR changing string value! {ex}{Environment.NewLine}";
             }
         }
 
-        private void initLoadedModConfigs(bool clearSelection = false)
+        private void InitLoadedModConfigs(bool clearSelection = false)
         {
             ddlSelectedMod.Items.Clear();
             foreach (var key in modList.Keys)
@@ -620,7 +620,7 @@ namespace JSONConfigValidator
             }
         }
 
-        private void resetSelectedConfigControls()
+        private void ResetSelectedConfigControls()
         {
             yOffset = 0;
             richTextBox1.Text = "";
@@ -646,7 +646,7 @@ namespace JSONConfigValidator
             userControlContainer.Controls.Clear();
         }
 
-        private void updateToolbarButtons()
+        private void UpdateToolbarButtons()
         {
             bool isModSelected = ddlSelectedMod.SelectedIndex != -1;
             btnRemoveModConfig.Enabled = isModSelected;
@@ -657,12 +657,12 @@ namespace JSONConfigValidator
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            initLoadedModConfigs();
+            InitLoadedModConfigs();
         }
 
         private void Form1_Shown(object sender, EventArgs e)
         {
-            updateToolbarButtons();
+            UpdateToolbarButtons();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -685,8 +685,8 @@ namespace JSONConfigValidator
                     return;
                 }
             }
-            updateToolbarButtons();
-            resetSelectedConfigControls();
+            UpdateToolbarButtons();
+            ResetSelectedConfigControls();
             if (sender == null)
             {
                 return;
@@ -700,61 +700,61 @@ namespace JSONConfigValidator
                 string fileContent = File.ReadAllText(gameDir + file);
 
                 this.config = JContainer.Parse(fileContent);
-                listChildren(config);
+                ListChildren(config);
                 logStatus = $"Config file {file} loaded!";
             }
             catch (Exception ex)
             {
-                logStatus = $"ERROR loading config {file}: {ex.ToString()}";
+                logStatus = $"ERROR loading config {file}: {ex}";
             }
         }
 
         private void btnAddNewModConfig_DropDownOpening(object sender, EventArgs e)
         {
-            loadModConfigFiles();
+            LoadModConfigFiles();
         }
 
         private void btnAddNewModConfig_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            addModConfigFile(e.ClickedItem.Text);
+            AddModConfigFile(e.ClickedItem.Text);
         }
 
         private void btnRemoveModConfig_Click(object sender, EventArgs e)
         {
-            removeModConfigFile();
+            RemoveModConfigFile();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            saveFile();
+            SaveFile();
         }
 
         private void btnBackup_ButtonClick(object sender, EventArgs e)
         {
             if (ddlSelectedMod.SelectedIndex != -1)
             {
-                backup();
+                Backup();
             }
         }
 
         private void btnBackupAll_Click(object sender, EventArgs e)
         {
-            backup(true);
+            Backup(true);
         }
 
         private void btnOpenBackupDirectory_Click(object sender, EventArgs e)
         {
-            openBackupDirectory();
+            OpenBackupDirectory();
         }
 
         private void btnWeb_Click(object sender, EventArgs e)
         {
-            openNexusUrl();
+            OpenNexusUrl();
         }
 
         private void ddlRestoreBackup_DropDownOpened(object sender, EventArgs e)
         {
-            listBackups();
+            ListBackups();
         }
     }
 }

@@ -45,19 +45,19 @@ namespace JSONConfigValidator
             { "vatspriorityconfig.json", "3297" }
         };
 
-        private int yOffset = 0;
+        private JToken settings = null;
 
         private JToken config = null;
+
         private bool configEdited = false;
 
-
-        private JToken settings = null;
+        private int yOffset = 0;
 
 
         public Form1()
         {
             InitializeComponent();
-            loadConfig();
+            loadSettings();
         }
 
         public string logStatus
@@ -69,7 +69,7 @@ namespace JSONConfigValidator
             }
         }
 
-        private void loadConfig()
+        private void loadSettings()
         {
             string file = AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".json";
             try
@@ -93,13 +93,12 @@ namespace JSONConfigValidator
             {
                 saveSettings();
             }
-            catch (JsonReaderException ex)
-            {
-                saveSettings();
-            }
             catch (Exception ex)
             {
-                MessageBox.Show($"ERROR loading settings: {ex.ToString()}");
+                if (MessageBox.Show($"ERROR loading settings:{Environment.NewLine}{ex.ToString()}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}Do you want to restore default settings?", "Restore Default Settings?", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+                {
+                    saveSettings();
+                }
             }
         }
 
@@ -123,14 +122,14 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"ERROR saving settings: {ex.ToString()}");
+                MessageBox.Show($"Error saving settings:{Environment.NewLine}{ex.ToString()}", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void backup(bool backupAll = false)
         {
             string file = ddlSelectedMod.Text;
-            string backupTimeStampDir = backupDir + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss").Replace(':', '-') + "\\";
+            string backupTimeStampDir = backupDir + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + "\\";
 
             try
             {
@@ -141,7 +140,7 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                logStatus = $"ERROR Making Backup Directory: {ex.ToString()}";
+                MessageBox.Show($"Error making backup directory:{Environment.NewLine}{ex.ToString()}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -153,15 +152,19 @@ namespace JSONConfigValidator
                     {
                         backupFile(item.ToString(), backupTimeStampDir);
                     }
+                    MessageBox.Show($"{Directory.GetFiles(backupTimeStampDir).Length} config files backed up!", "Backup All", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    backupFile(file, backupTimeStampDir);
+                    if (backupFile(file, backupTimeStampDir))
+                    {
+                        MessageBox.Show($"{file} backed up!", "Backup File", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                logStatus = $"ERROR Making Backup: {ex.ToString()}";
+                MessageBox.Show($"Error making backup:{Environment.NewLine}{ex.ToString()}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 try
                 {
                     if (Directory.GetFiles(backupTimeStampDir).Length == 0)
@@ -173,7 +176,7 @@ namespace JSONConfigValidator
             }
         }
 
-        private void backupFile(string file, string directory)
+        private bool backupFile(string file, string directory)
         {
             try
             {
@@ -185,11 +188,13 @@ namespace JSONConfigValidator
                     }
                     File.Copy(gameDir + file, directory + file, false);
                 }
+                return true;
             }
             catch (Exception ex)
             {
                 logStatus = $"ERROR Backing Up File: {ex.ToString()}";
             }
+            return false;
         }
 
         private void toolStripSplitButtonProfile_SelectedIndexChanged(object sender, EventArgs e)
@@ -219,13 +224,12 @@ namespace JSONConfigValidator
                     {
                         gameDir = selectedDir;
                         logStatus = $"Game dir set: {selectedDir}";
-                        richTextBox1.Text += $"Game dir set: {selectedDir}{Environment.NewLine}";
                         saveSettings();
                     }
                     else
                     {
                         logStatus = $"ERROR Selected game dir invalid: {selectedDir}";
-                        richTextBox1.Text += $"ERROR Selected game dir invalid: {selectedDir}{Environment.NewLine}";
+                        MessageBox.Show($"Invalid game directory, folder does not exist!{Environment.NewLine}{selectedDir}", "Game dir error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -418,14 +422,10 @@ namespace JSONConfigValidator
             ddlSelectedMod.Items.Clear();
             foreach (var key in modList.Keys)
             {
-                try
+                if (File.Exists(gameDir + key))
                 {
-                    if (File.Exists(gameDir + key))
-                    {
-                        ddlSelectedMod.Items.Add(key);
-                    }
+                    ddlSelectedMod.Items.Add(key);
                 }
-                catch (Exception ex) { }
             }
             if (clearSelection)
             {
@@ -461,30 +461,35 @@ namespace JSONConfigValidator
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.initLoadedModConfigs();
+            initLoadedModConfigs();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (configEdited)
             {
-                if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and exit?", "Discard Changes and Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and exit?", "Discard Changes and Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
                 {
                     e.Cancel = true;
                 }
             }
         }
 
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            updateToolbarButtons();
+        }
+
         private void ddlSelectedMod_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (configEdited)
             {
-                if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and switch to selected config?", "Discard Changes and Switch?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and switch to selected config?", "Discard Changes and Switch?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
                 {
                     return;
                 }
             }
-
+            updateToolbarButtons();
             resetSelectedConfigControls();
             if (sender == null)
             {
@@ -496,7 +501,6 @@ namespace JSONConfigValidator
             {
                 configEdited = false;
                 file = ddlSelectedMod.SelectedItem.ToString();
-                btnWeb.Visible = nexusLinks.ContainsKey(file.ToLower());
                 string fileContent = File.ReadAllText(gameDir + file);
 
                 this.config = JContainer.Parse(fileContent);
@@ -507,6 +511,15 @@ namespace JSONConfigValidator
             {
                 logStatus = $"ERROR loading config {file}: {ex.ToString()}";
             }
+        }
+
+        private void updateToolbarButtons()
+        {
+            bool isModSelected = ddlSelectedMod.SelectedIndex != -1;
+            btnRemoveModConfig.Enabled = isModSelected;
+            btnSave.Enabled = isModSelected;
+            btnBackupSingle.Enabled = isModSelected;
+            btnWeb.Enabled = isModSelected && nexusLinks.ContainsKey(ddlSelectedMod.SelectedItem.ToString().ToLower());
         }
 
         private void btnAddNewModConfig_DropDownOpening(object sender, EventArgs e)
@@ -531,7 +544,7 @@ namespace JSONConfigValidator
             }
         }
 
-        private void toolStripButtonAddNewModConfig_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void btnAddNewModConfig_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             try
             {
@@ -545,6 +558,7 @@ namespace JSONConfigValidator
             catch (Exception ex)
             {
                 logStatus = $"Error adding config: {ex.ToString()}";
+                MessageBox.Show($"Error adding config file:{Environment.NewLine}{ex.ToString()}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -572,13 +586,17 @@ namespace JSONConfigValidator
             }
             catch (Exception ex)
             {
-                logStatus = $"ERROR Saving file {ex.ToString()}";
+                logStatus = $"Error Saving file {ex.ToString()}";
+                MessageBox.Show($"Error Saving file:{Environment.NewLine}{ex.ToString()}", "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnBackup_ButtonClick(object sender, EventArgs e)
         {
-            backup();
+            if (ddlSelectedMod.SelectedIndex != -1)
+            {
+                backup();
+            }
         }
 
         private void btnBackupAll_Click(object sender, EventArgs e)
@@ -588,18 +606,32 @@ namespace JSONConfigValidator
 
         private void btnOpenBackupDirectory_Click(object sender, EventArgs e)
         {
-            if (Directory.Exists(backupDir))
+            try
             {
-                Process.Start("explorer.exe", backupDir);
+                if (Directory.Exists(backupDir))
+                {
+                    Process.Start("explorer.exe", backupDir);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening backup directory:{Environment.NewLine}{ex.ToString()}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnWeb_Click(object sender, EventArgs e)
         {
-            string file = ddlSelectedMod.Text.ToLower();
-            if (nexusLinks.ContainsKey(file))
+            try
             {
-                Process.Start(nexusURL + nexusLinks[file]);
+                string file = ddlSelectedMod.Text.ToLower();
+                if (nexusLinks.ContainsKey(file))
+                {
+                    Process.Start(nexusURL + nexusLinks[file]);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening nexus url:{Environment.NewLine}{ex.ToString()}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

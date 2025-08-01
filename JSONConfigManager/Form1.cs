@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -15,10 +16,31 @@ namespace JSONConfigValidator
 {
     public partial class Form1 : Form
     {
-        public String initDir = "C:/Program Files (x86)/Steam/steamapps/common/Fallout76/Data";
-        public String dir = "C:/Program Files (x86)/Steam/steamapps/common/Fallout76/Data/";
+        public string initDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Fallout76\\Data\\";
+        public string backupDir = ".\\Backups\\";
+        public string gameDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Fallout76\\Data\\";
+        public string nexusURL = "https://www.nexusmods.com/fallout76/mods/";
 
-        public Dictionary<String, String> modList = new Dictionary<String, String>();
+        public Dictionary<string, string> modList = new Dictionary<string, string>();
+
+        public Dictionary<string, string> nexusLinks = new Dictionary<string, string>()
+        {
+            { "buffsmeter.json", "2821" },
+            { "campswaplock.json", "3267" },
+            { "customradios.json", "2901" },
+            { "hudbarpercentwidgets.json", "3124" },
+            { "hudchallenges.json", "2860" },
+            { "hudcondition.json", "3114" },
+            { "hudplayerlist.json", "2811" },
+            { "improvedpipboystatsconfig.json", "3080" },
+            { "improvedsocialmenuconfig.json", "2915" },
+            { "improvedworkbenchconfig.json", "2576" },
+            { "inventomaticpipboyconfig.json", "2324" },
+            { "inventomaticstashconfig.json", "2335" },
+            { "radialmenuloadoutconfig.json", "3166" },
+            { "skipmessagesconfig.json", "3007" },
+            { "vatspriorityconfig.json", "3297" }
+        };
 
         private int yOffset = 0;
 
@@ -35,11 +57,12 @@ namespace JSONConfigValidator
             loadConfig();
         }
 
-        public string logStatus {
-            get => toolStripStatusLabel.Text;
+        public string logStatus
+        {
+            get => lblStatus.Text;
             set
             {
-                toolStripStatusLabel.Text = value;
+                lblStatus.Text = value;
             }
         }
 
@@ -50,7 +73,7 @@ namespace JSONConfigValidator
             {
                 string fileContent = File.ReadAllText(file);
                 settings = JContainer.Parse(fileContent);
-                if(settings["modList"] != null)
+                if (settings["modList"] != null)
                 {
                     foreach (var mod in settings["modList"].ToArray())
                     {
@@ -59,7 +82,7 @@ namespace JSONConfigValidator
                 }
                 if (settings["gameDir"] != null)
                 {
-                    dir = (string)settings["gameDir"];
+                    gameDir = (string)settings["gameDir"];
                 }
                 logStatus = $"Settings loaded!";
             }
@@ -87,17 +110,82 @@ namespace JSONConfigValidator
                     settings = JToken.Parse("{}");
                 }
 
-                settings["gameDir"] = dir;
+                settings["gameDir"] = gameDir;
                 var keys = modList.Keys.ToArray();
                 Array.Sort(keys);
                 settings["modList"] = JToken.FromObject(keys);
-                
+
                 File.WriteAllText(file, settings.ToString());
                 logStatus = $"Settings loaded!";
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"ERROR saving settings: {ex.ToString()}");
+            }
+        }
+
+        private void backup(bool backupAll = false)
+        {
+            string file = ddlSelectedMod.Text;
+            string backupTimeStampDir = backupDir + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss").Replace(':', '-') + "\\";
+
+            try
+            {
+                if (!Directory.Exists(backupDir))
+                {
+                    Directory.CreateDirectory(backupDir);
+                }
+            }
+            catch (Exception ex)
+            {
+                logStatus = $"ERROR Making Backup Directory: {ex.ToString()}";
+                return;
+            }
+
+            try
+            {
+                if (backupAll)
+                {
+                    foreach (var item in ddlSelectedMod.Items)
+                    {
+                        backupFile(item.ToString(), backupTimeStampDir);
+                    }
+                }
+                else
+                {
+                    backupFile(file, backupTimeStampDir);
+                }
+            }
+            catch (Exception ex)
+            {
+                logStatus = $"ERROR Making Backup: {ex.ToString()}";
+                try
+                {
+                    if (Directory.GetFiles(backupTimeStampDir).Length == 0)
+                    {
+                        Directory.Delete(backupTimeStampDir);
+                    }
+                }
+                catch (Exception) { }
+            }
+        }
+
+        private void backupFile(string file, string directory)
+        {
+            try
+            {
+                if (File.Exists(gameDir + file))
+                {
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+                    File.Copy(gameDir + file, directory + file, false);
+                }
+            }
+            catch (Exception ex)
+            {
+                logStatus = $"ERROR Backing Up File: {ex.ToString()}";
             }
         }
 
@@ -126,7 +214,7 @@ namespace JSONConfigValidator
 
                     if (Directory.Exists(selectedDir))
                     {
-                        dir = selectedDir;
+                        gameDir = selectedDir;
                         logStatus = $"Game dir set: {selectedDir}";
                         richTextBox1.Text += $"Game dir set: {selectedDir}{Environment.NewLine}";
                         saveSettings();
@@ -258,7 +346,7 @@ namespace JSONConfigValidator
             if (parentKey == "")
             {
                 var previousValue = config[key];
-                if(value is int) config[key] = (int)value;
+                if (value is int) config[key] = (int)value;
                 else if (value is decimal) config[key] = (decimal)value;
                 else if (value is bool) config[key] = (bool)value;
                 else if (value is string) config[key] = (string)value;
@@ -324,19 +412,21 @@ namespace JSONConfigValidator
 
         private void initLoadedModConfigs(bool clearSelection = false)
         {
-            toolStripComboBoxSelectedMod.Items.Clear();
+            ddlSelectedMod.Items.Clear();
             foreach (var key in modList.Keys)
             {
                 try
                 {
-                    FileInfo info = new FileInfo(dir + key);
-                    toolStripComboBoxSelectedMod.Items.Add(info.Name);
+                    if (File.Exists(gameDir + key))
+                    {
+                        ddlSelectedMod.Items.Add(key);
+                    }
                 }
                 catch (Exception ex) { }
             }
             if (clearSelection)
             {
-                toolStripComboBoxSelectedMod.Text = toolStripComboBoxSelectedMod.ToolTipText;
+                ddlSelectedMod.Text = ddlSelectedMod.ToolTipText;
             }
         }
 
@@ -402,8 +492,9 @@ namespace JSONConfigValidator
             try
             {
                 configEdited = false;
-                file = toolStripComboBoxSelectedMod.SelectedItem.ToString();
-                string fileContent = File.ReadAllText(dir + file);
+                file = ddlSelectedMod.SelectedItem.ToString();
+                btnWeb.Visible = nexusLinks.ContainsKey(file.ToLower());
+                string fileContent = File.ReadAllText(gameDir + file);
 
                 this.config = JContainer.Parse(fileContent);
                 listChildren(config);
@@ -419,14 +510,14 @@ namespace JSONConfigValidator
         {
             try
             {
-                toolStripButtonAddNewModConfig.DropDownItems.Clear();
+                btnAddNewModConfig.DropDownItems.Clear();
                 logStatus = "Loading...";
-                foreach (var file in Directory.GetFiles(dir, "*.json"))
+                foreach (var file in Directory.GetFiles(gameDir, "*.json"))
                 {
                     FileInfo info = new FileInfo(file);
                     if (!modList.ContainsKey(info.Name))
                     {
-                        toolStripButtonAddNewModConfig.DropDownItems.Add(info.Name);
+                        btnAddNewModConfig.DropDownItems.Add(info.Name);
                     }
                 }
                 logStatus = "Ready";
@@ -442,7 +533,7 @@ namespace JSONConfigValidator
             try
             {
                 string file = e.ClickedItem.Text;
-                FileInfo info = new FileInfo(dir + file);
+                FileInfo info = new FileInfo(gameDir + file);
                 modList.Add(file, file);
                 initLoadedModConfigs();
                 logStatus = $"Config file {file} added!";
@@ -456,10 +547,10 @@ namespace JSONConfigValidator
 
         private void toolStripButtonRemoveModConfig_Click(object sender, EventArgs e)
         {
-            if (modList.ContainsKey(toolStripComboBoxSelectedMod.Text))
+            if (modList.ContainsKey(ddlSelectedMod.Text))
             {
-                modList.Remove(toolStripComboBoxSelectedMod.Text);
-                logStatus = $"Config file {toolStripComboBoxSelectedMod.Text} removed!";
+                modList.Remove(ddlSelectedMod.Text);
+                logStatus = $"Config file {ddlSelectedMod.Text} removed!";
                 toolStripComboBoxSelectedMod_SelectedIndexChanged(null, null);
                 initLoadedModConfigs(true);
                 saveSettings();
@@ -472,13 +563,40 @@ namespace JSONConfigValidator
             {
                 string file = "TestEdit.json";
                 string cnf = config.ToString();
-                File.WriteAllText(dir + file, cnf);
+                File.WriteAllText(gameDir + file, cnf);
                 logStatus = $"Saved all changes to {file}";
                 configEdited = false;
             }
             catch (Exception ex)
             {
                 logStatus = $"ERROR Saving file {ex.ToString()}";
+            }
+        }
+
+        private void btnBackup_ButtonClick(object sender, EventArgs e)
+        {
+            backup();
+        }
+
+        private void tsbtnBackupAll_Click(object sender, EventArgs e)
+        {
+            backup(true);
+        }
+
+        private void btnOpenBackupDirectory_Click(object sender, EventArgs e)
+        {
+            if (Directory.Exists(backupDir))
+            {
+                Process.Start("explorer.exe", backupDir);
+            }
+        }
+
+        private void btnWeb_Click(object sender, EventArgs e)
+        {
+            string file = ddlSelectedMod.Text.ToLower();
+            if (nexusLinks.ContainsKey(file))
+            {
+                Process.Start(nexusURL + nexusLinks[file]);
             }
         }
     }

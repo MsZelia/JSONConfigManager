@@ -98,6 +98,7 @@
     </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -154,6 +155,12 @@
   <ItemGroup>
     <Resource Include="Icons\Browse.png" />
     <Resource Include="Icons\SaveFile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Web.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Backup.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

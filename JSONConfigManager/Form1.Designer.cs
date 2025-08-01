@@ -29,19 +29,25 @@ namespace JSONConfigValidator
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripComboBoxSelectedMod = new System.Windows.Forms.ToolStripComboBox();
+            this.ddlSelectedMod = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSplitButtonProfile = new System.Windows.Forms.ToolStripComboBox();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.userControlContainer = new System.Windows.Forms.Panel();
-            this.toolStripButtonAddNewModConfig = new System.Windows.Forms.ToolStripSplitButton();
-            this.toolStripButtonGameLocation = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonRemoveModConfig = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
+            this.btnAddNewModConfig = new System.Windows.Forms.ToolStripSplitButton();
+            this.btnSelectGameLocation = new System.Windows.Forms.ToolStripButton();
+            this.btnRemoveModConfig = new System.Windows.Forms.ToolStripButton();
+            this.btnSave = new System.Windows.Forms.ToolStripButton();
+            this.btnBackup = new System.Windows.Forms.ToolStripSplitButton();
+            this.tsbtnBackup = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnBackupAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnOpenBackupDirectory = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnWeb = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.statusStrip.SuspendLayout();
@@ -65,12 +71,14 @@ namespace JSONConfigValidator
             // 
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButtonAddNewModConfig,
-            this.toolStripComboBoxSelectedMod,
+            this.btnAddNewModConfig,
+            this.btnWeb,
+            this.ddlSelectedMod,
             this.toolStripSplitButtonProfile,
-            this.toolStripButtonGameLocation,
-            this.toolStripButtonRemoveModConfig,
-            this.toolStripButtonSave});
+            this.btnSelectGameLocation,
+            this.btnRemoveModConfig,
+            this.btnSave,
+            this.btnBackup});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -78,22 +86,22 @@ namespace JSONConfigValidator
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripComboBoxSelectedMod
+            // ddlSelectedMod
             // 
-            this.toolStripComboBoxSelectedMod.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
-            this.toolStripComboBoxSelectedMod.MaxDropDownItems = 32;
-            this.toolStripComboBoxSelectedMod.Name = "toolStripComboBoxSelectedMod";
-            this.toolStripComboBoxSelectedMod.Size = new System.Drawing.Size(350, 31);
-            this.toolStripComboBoxSelectedMod.Text = "Select Mod Config";
-            this.toolStripComboBoxSelectedMod.ToolTipText = "Select Mod Config file to load";
-            this.toolStripComboBoxSelectedMod.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBoxSelectedMod_SelectedIndexChanged);
+            this.ddlSelectedMod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlSelectedMod.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
+            this.ddlSelectedMod.MaxDropDownItems = 32;
+            this.ddlSelectedMod.Name = "ddlSelectedMod";
+            this.ddlSelectedMod.Size = new System.Drawing.Size(350, 28);
+            this.ddlSelectedMod.ToolTipText = "Select Mod Config file to load";
+            this.ddlSelectedMod.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBoxSelectedMod_SelectedIndexChanged);
             // 
             // toolStripSplitButtonProfile
             // 
             this.toolStripSplitButtonProfile.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripSplitButtonProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toolStripSplitButtonProfile.Name = "toolStripSplitButtonProfile";
-            this.toolStripSplitButtonProfile.Size = new System.Drawing.Size(150, 31);
+            this.toolStripSplitButtonProfile.Size = new System.Drawing.Size(150, 28);
             this.toolStripSplitButtonProfile.Visible = false;
             this.toolStripSplitButtonProfile.SelectedIndexChanged += new System.EventHandler(this.toolStripSplitButtonProfile_SelectedIndexChanged);
             // 
@@ -106,20 +114,20 @@ namespace JSONConfigValidator
             // 
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel});
+            this.lblStatus});
             this.statusStrip.Location = new System.Drawing.Point(0, 656);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(1165, 26);
             this.statusStrip.TabIndex = 3;
             this.statusStrip.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel
+            // lblStatus
             // 
-            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(49, 20);
-            this.toolStripStatusLabel.Text = "Status";
-            this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.lblStatus.Size = new System.Drawing.Size(49, 20);
+            this.lblStatus.Text = "Status";
+            this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // splitContainer1
             // 
@@ -152,48 +160,94 @@ namespace JSONConfigValidator
             this.userControlContainer.Size = new System.Drawing.Size(410, 625);
             this.userControlContainer.TabIndex = 0;
             // 
-            // toolStripButtonAddNewModConfig
+            // btnAddNewModConfig
             // 
-            this.toolStripButtonAddNewModConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonAddNewModConfig.Image = global::JSONConfigManager.Properties.Resources.AddFile;
-            this.toolStripButtonAddNewModConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonAddNewModConfig.Name = "toolStripButtonAddNewModConfig";
-            this.toolStripButtonAddNewModConfig.Size = new System.Drawing.Size(39, 28);
-            this.toolStripButtonAddNewModConfig.Text = "Add New Mod Config";
-            this.toolStripButtonAddNewModConfig.ToolTipText = "Add New Mod Config";
-            this.toolStripButtonAddNewModConfig.DropDownOpening += new System.EventHandler(this.toolStripButtonAddNewModConfig_DropDownOpening);
-            this.toolStripButtonAddNewModConfig.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStripButtonAddNewModConfig_DropDownItemClicked);
+            this.btnAddNewModConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnAddNewModConfig.Image = global::JSONConfigManager.Properties.Resources.AddFile;
+            this.btnAddNewModConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAddNewModConfig.Name = "btnAddNewModConfig";
+            this.btnAddNewModConfig.Size = new System.Drawing.Size(39, 25);
+            this.btnAddNewModConfig.Text = "Add New Mod Config";
+            this.btnAddNewModConfig.ToolTipText = "Add New Mod Config";
+            this.btnAddNewModConfig.DropDownOpening += new System.EventHandler(this.toolStripButtonAddNewModConfig_DropDownOpening);
+            this.btnAddNewModConfig.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStripButtonAddNewModConfig_DropDownItemClicked);
             // 
-            // toolStripButtonGameLocation
+            // btnSelectGameLocation
             // 
-            this.toolStripButtonGameLocation.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButtonGameLocation.AutoToolTip = false;
-            this.toolStripButtonGameLocation.Image = global::JSONConfigManager.Properties.Resources.Browse;
-            this.toolStripButtonGameLocation.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonGameLocation.Name = "toolStripButtonGameLocation";
-            this.toolStripButtonGameLocation.Size = new System.Drawing.Size(177, 28);
-            this.toolStripButtonGameLocation.Text = "Select Game Location";
-            this.toolStripButtonGameLocation.ToolTipText = "Directory to your Fallout 76 game folder";
-            this.toolStripButtonGameLocation.Click += new System.EventHandler(this.toolStripButtonGameLocation_Click);
+            this.btnSelectGameLocation.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnSelectGameLocation.AutoToolTip = false;
+            this.btnSelectGameLocation.Image = global::JSONConfigManager.Properties.Resources.Browse;
+            this.btnSelectGameLocation.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSelectGameLocation.Name = "btnSelectGameLocation";
+            this.btnSelectGameLocation.Size = new System.Drawing.Size(177, 25);
+            this.btnSelectGameLocation.Text = "Select Game Location";
+            this.btnSelectGameLocation.ToolTipText = "Directory to your Fallout 76 game folder";
+            this.btnSelectGameLocation.Click += new System.EventHandler(this.toolStripButtonGameLocation_Click);
             // 
-            // toolStripButtonRemoveModConfig
+            // btnRemoveModConfig
             // 
-            this.toolStripButtonRemoveModConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonRemoveModConfig.Image = global::JSONConfigManager.Properties.Resources.RemoveFile;
-            this.toolStripButtonRemoveModConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonRemoveModConfig.Name = "toolStripButtonRemoveModConfig";
-            this.toolStripButtonRemoveModConfig.Size = new System.Drawing.Size(29, 28);
-            this.toolStripButtonRemoveModConfig.Text = "Remove Mod Config";
-            this.toolStripButtonRemoveModConfig.Click += new System.EventHandler(this.toolStripButtonRemoveModConfig_Click);
+            this.btnRemoveModConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnRemoveModConfig.Image = global::JSONConfigManager.Properties.Resources.RemoveFile;
+            this.btnRemoveModConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRemoveModConfig.Name = "btnRemoveModConfig";
+            this.btnRemoveModConfig.Size = new System.Drawing.Size(29, 25);
+            this.btnRemoveModConfig.Text = "Remove Mod Config";
+            this.btnRemoveModConfig.Click += new System.EventHandler(this.toolStripButtonRemoveModConfig_Click);
             // 
-            // toolStripButtonSave
+            // btnSave
             // 
-            this.toolStripButtonSave.Image = global::JSONConfigManager.Properties.Resources.SaveFile;
-            this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonSave.Name = "toolStripButtonSave";
-            this.toolStripButtonSave.Size = new System.Drawing.Size(64, 28);
-            this.toolStripButtonSave.Text = "Save";
-            this.toolStripButtonSave.Click += new System.EventHandler(this.toolStripButtonSave_Click);
+            this.btnSave.Image = global::JSONConfigManager.Properties.Resources.SaveFile;
+            this.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(64, 25);
+            this.btnSave.Text = "Save";
+            this.btnSave.Click += new System.EventHandler(this.toolStripButtonSave_Click);
+            // 
+            // btnBackup
+            // 
+            this.btnBackup.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnBackup.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbtnBackup,
+            this.btnBackupAll,
+            this.btnOpenBackupDirectory});
+            this.btnBackup.Image = ((System.Drawing.Image)(resources.GetObject("btnBackup.Image")));
+            this.btnBackup.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnBackup.Name = "btnBackup";
+            this.btnBackup.Size = new System.Drawing.Size(76, 28);
+            this.btnBackup.Text = "Backup";
+            this.btnBackup.ButtonClick += new System.EventHandler(this.btnBackup_ButtonClick);
+            // 
+            // tsbtnBackup
+            // 
+            this.tsbtnBackup.Name = "tsbtnBackup";
+            this.tsbtnBackup.Size = new System.Drawing.Size(224, 26);
+            this.tsbtnBackup.Text = "Backup";
+            this.tsbtnBackup.Click += new System.EventHandler(this.btnBackup_ButtonClick);
+            // 
+            // btnBackupAll
+            // 
+            this.btnBackupAll.Name = "btnBackupAll";
+            this.btnBackupAll.Size = new System.Drawing.Size(224, 26);
+            this.btnBackupAll.Text = "Backup All";
+            this.btnBackupAll.Click += new System.EventHandler(this.tsbtnBackupAll_Click);
+            // 
+            // btnOpenBackupDirectory
+            // 
+            this.btnOpenBackupDirectory.Name = "btnOpenBackupDirectory";
+            this.btnOpenBackupDirectory.Size = new System.Drawing.Size(224, 26);
+            this.btnOpenBackupDirectory.Text = "Open Directory";
+            this.btnOpenBackupDirectory.Click += new System.EventHandler(this.btnOpenBackupDirectory_Click);
+            // 
+            // btnWeb
+            // 
+            this.btnWeb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnWeb.Image = global::JSONConfigManager.Properties.Resources.Web;
+            this.btnWeb.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnWeb.Name = "btnWeb";
+            this.btnWeb.Size = new System.Drawing.Size(29, 28);
+            this.btnWeb.Text = "Open Nexus Mod Page";
+            this.btnWeb.Visible = false;
+            this.btnWeb.Click += new System.EventHandler(this.btnWeb_Click);
             // 
             // Form1
             // 
@@ -227,17 +281,22 @@ namespace JSONConfigValidator
 
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxSelectedMod;
-        private System.Windows.Forms.ToolStripButton toolStripButtonGameLocation;
+        private System.Windows.Forms.ToolStripComboBox ddlSelectedMod;
+        private System.Windows.Forms.ToolStripButton btnSelectGameLocation;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.StatusStrip statusStrip;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel lblStatus;
         private System.Windows.Forms.ToolStripComboBox toolStripSplitButtonProfile;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Panel userControlContainer;
-        private System.Windows.Forms.ToolStripSplitButton toolStripButtonAddNewModConfig;
-        private System.Windows.Forms.ToolStripButton toolStripButtonRemoveModConfig;
-        private System.Windows.Forms.ToolStripButton toolStripButtonSave;
+        private System.Windows.Forms.ToolStripSplitButton btnAddNewModConfig;
+        private System.Windows.Forms.ToolStripButton btnRemoveModConfig;
+        private System.Windows.Forms.ToolStripButton btnSave;
+        private System.Windows.Forms.ToolStripSplitButton btnBackup;
+        private System.Windows.Forms.ToolStripMenuItem tsbtnBackup;
+        private System.Windows.Forms.ToolStripMenuItem btnBackupAll;
+        private System.Windows.Forms.ToolStripMenuItem btnOpenBackupDirectory;
+        private System.Windows.Forms.ToolStripButton btnWeb;
     }
 }
 

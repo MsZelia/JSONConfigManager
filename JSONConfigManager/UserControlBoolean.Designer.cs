@@ -35,11 +35,10 @@ namespace JSONConfigManager
             // checkBox
             // 
             this.checkBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkBox.Dock = System.Windows.Forms.DockStyle.Left;
             this.checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.checkBox.Location = new System.Drawing.Point(0, 0);
+            this.checkBox.Location = new System.Drawing.Point(3, 0);
             this.checkBox.Name = "checkBox";
-            this.checkBox.Size = new System.Drawing.Size(370, 30);
+            this.checkBox.Size = new System.Drawing.Size(349, 27);
             this.checkBox.TabIndex = 3;
             this.checkBox.Text = "checkBox1";
             this.checkBox.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -51,7 +50,7 @@ namespace JSONConfigManager
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.checkBox);
             this.Name = "UserControlBoolean";
-            this.Size = new System.Drawing.Size(370, 30);
+            this.Size = new System.Drawing.Size(355, 27);
             this.ResumeLayout(false);
 
         }

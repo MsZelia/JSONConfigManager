@@ -78,8 +78,10 @@ namespace JSONConfigManager
             this.txtLog.Location = new System.Drawing.Point(0, 0);
             this.txtLog.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtLog.Name = "txtLog";
-            this.txtLog.Size = new System.Drawing.Size(266, 345);
+            this.txtLog.ReadOnly = true;
+            this.txtLog.Size = new System.Drawing.Size(355, 346);
             this.txtLog.TabIndex = 0;
+            this.txtLog.TabStop = false;
             this.txtLog.Text = "";
             this.txtLog.TextChanged += new System.EventHandler(this.tbLog_TextChanged);
             // 
@@ -98,7 +100,7 @@ namespace JSONConfigManager
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(874, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(984, 27);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -238,10 +240,10 @@ namespace JSONConfigManager
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus});
-            this.statusStrip.Location = new System.Drawing.Point(0, 532);
+            this.statusStrip.Location = new System.Drawing.Point(0, 611);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
-            this.statusStrip.Size = new System.Drawing.Size(874, 22);
+            this.statusStrip.Size = new System.Drawing.Size(984, 22);
             this.statusStrip.TabIndex = 3;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -270,8 +272,8 @@ namespace JSONConfigManager
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(874, 505);
-            this.splitContainer1.SplitterDistance = 410;
+            this.splitContainer1.Size = new System.Drawing.Size(984, 584);
+            this.splitContainer1.SplitterDistance = 400;
             this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 4;
             // 
@@ -287,7 +289,7 @@ namespace JSONConfigManager
             this.jsonTreeView.MinimumSize = new System.Drawing.Size(264, 4);
             this.jsonTreeView.Name = "jsonTreeView1";
             this.jsonTreeView.SelectedImageIndex = 0;
-            this.jsonTreeView.Size = new System.Drawing.Size(410, 505);
+            this.jsonTreeView.Size = new System.Drawing.Size(400, 584);
             this.jsonTreeView.TabIndex = 0;
             this.jsonTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.jsonTreeView_NodeMouseClick);
             // 
@@ -301,16 +303,17 @@ namespace JSONConfigManager
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Panel1MinSize = 355;
+            this.splitContainer2.Panel1MinSize = 0;
             // 
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.txtJson);
-            this.splitContainer2.Panel2MinSize = 300;
-            this.splitContainer2.Size = new System.Drawing.Size(461, 505);
+            this.splitContainer2.Panel2MinSize = 0;
+            this.splitContainer2.Size = new System.Drawing.Size(581, 584);
             this.splitContainer2.SplitterDistance = 355;
             this.splitContainer2.SplitterWidth = 3;
             this.splitContainer2.TabIndex = 2;
+            this.splitContainer2.TabStop = false;
             // 
             // splitContainer3
             // 
@@ -327,10 +330,11 @@ namespace JSONConfigManager
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.txtLog);
-            this.splitContainer3.Size = new System.Drawing.Size(266, 510);
-            this.splitContainer3.SplitterDistance = 162;
+            this.splitContainer3.Size = new System.Drawing.Size(355, 512);
+            this.splitContainer3.SplitterDistance = 163;
             this.splitContainer3.SplitterWidth = 3;
             this.splitContainer3.TabIndex = 0;
+            this.splitContainer3.TabStop = false;
             // 
             // userControlContainer
             // 
@@ -339,7 +343,7 @@ namespace JSONConfigManager
             this.userControlContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.userControlContainer.MinimumSize = new System.Drawing.Size(0, 81);
             this.userControlContainer.Name = "userControlContainer";
-            this.userControlContainer.Size = new System.Drawing.Size(266, 162);
+            this.userControlContainer.Size = new System.Drawing.Size(355, 163);
             this.userControlContainer.TabIndex = 1;
             // 
             // txtJson
@@ -348,22 +352,22 @@ namespace JSONConfigManager
             this.txtJson.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.txtJson.Location = new System.Drawing.Point(0, 0);
             this.txtJson.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.txtJson.MinimumSize = new System.Drawing.Size(264, 4);
             this.txtJson.Name = "txtJson";
-            this.txtJson.Size = new System.Drawing.Size(294, 510);
+            this.txtJson.Size = new System.Drawing.Size(339, 512);
             this.txtJson.TabIndex = 0;
             this.txtJson.Text = "";
+            this.txtJson.Leave += new System.EventHandler(this.txtJson_Leave);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(874, 554);
+            this.ClientSize = new System.Drawing.Size(984, 633);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.toolStrip1);
             this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.MinimumSize = new System.Drawing.Size(529, 332);
+            this.MinimumSize = new System.Drawing.Size(1000, 600);
             this.Name = "Form1";
             this.Text = "JSONConfigManager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);

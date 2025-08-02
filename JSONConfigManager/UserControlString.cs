@@ -16,5 +16,13 @@ namespace JSONConfigManager
         {
             InitializeComponent();
         }
+
+        private void textBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                InvokeLostFocus(textBox, null);
+            }
+        }
     }
 }

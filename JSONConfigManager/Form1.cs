@@ -20,6 +20,9 @@ namespace JSONConfigManager
         private const string SETTING_Y = "y";
         private const string SETTING_W = "w";
         private const string SETTING_H = "h";
+        private const string SETTING_SPLIT_1 = "split1";
+        private const string SETTING_SPLIT_2 = "split2";
+        private const string SETTING_SPLIT_3 = "split3";
         private const string SETTING_MOD_LIST = "modList";
         private const string SETTING_GAME_DIR = "gameDir";
 
@@ -63,6 +66,9 @@ namespace JSONConfigManager
         private JToken selectedNodeToken;
 
         private UserControl nodeEditUserControl;
+
+        private string lastJsonText = "";
+
         public Form1()
         {
             InitializeComponent();
@@ -129,6 +135,10 @@ namespace JSONConfigManager
                 settings[SETTING_Y] = this.Top;
                 settings[SETTING_W] = this.Width;
                 settings[SETTING_H] = this.Height;
+                settings[SETTING_SPLIT_1] = splitContainer1.SplitterDistance;
+                settings[SETTING_SPLIT_2] = splitContainer2.SplitterDistance;
+                settings[SETTING_SPLIT_3] = splitContainer3.SplitterDistance;
+
 
                 File.WriteAllText(file, settings.ToString());
                 logStatus = $"Settings saved!";
@@ -438,17 +448,30 @@ namespace JSONConfigManager
 
         private void SetConfigValue(object value, JToken token)
         {
-            if (token.Parent is JProperty || token.Parent is JArray && token is JValue)
+            if (token.Type == JTokenType.Array && value is Array)
+            {
+                var prop = token as JArray;
+                foreach (var item in value as Array)
+                {
+                    var newElement = JToken.FromObject(item);
+                    prop.Add(newElement);
+                    txtLog.Text += $"{token.Path}: added element {item.ToString().Replace(',', '.')} ({newElement.Type}){Environment.NewLine}";
+                }
+                RefreshConfigTree();
+            }
+            else if (token.Parent is JProperty || token.Parent is JArray && token is JValue)
             {
                 var prop = token as JValue;
                 var prevValue = prop.Value;
                 if (value is int i) prop.Value = i;
                 else if (value is decimal d) prop.Value = d;
                 else if (value is bool b) prop.Value = b;
-                else if (value is string s) prop.Value = s;
-
-                txtLog.Text += $"{token.Path}: {prevValue} -> {prop.Value}{Environment.NewLine}";
-                RefreshConfigTree();
+                else if (value is string s && (string)prevValue != s) prop.Value = s;
+                if (prevValue != prop.Value)
+                {
+                    txtLog.Text += $"{token.Path}: {prevValue} -> {prop.Value}{Environment.NewLine}";
+                    RefreshConfigTree();
+                }
             }
             else
             {
@@ -481,10 +504,15 @@ namespace JSONConfigManager
                     selectedNode.EnsureVisible();
                     selectedNodeToken = selectedNode.Tag as JToken;
                     jsonTreeView_NodeMouseClick(null, new TreeNodeMouseClickEventArgs(selectedNode, MouseButtons.Left, 1, 0, 0));
+                    if (selectedNodeToken != null && selectedNodeToken.Type == JTokenType.Array)
+                    {
+                        selectedNode.Expand();
+                    }
                 }
             }
             config = jsonTreeView.JSON;
             txtJson.Text = config.ToString();
+            lastJsonText = txtJson.Text;
         }
 
         private TreeNode GetNodeFromPath(TreeNode node, string path)
@@ -570,14 +598,62 @@ namespace JSONConfigManager
             }
         }
 
-        private void ArrayTextBox_LostFocus(object sender, EventArgs e)
+        private void TextBoxArray_LostFocus(object sender, EventArgs e)
         {
             try
             {
                 TextBox textBox = sender as TextBox;
                 JToken token = textBox.Parent.Tag as JToken;
-                SetConfigValue(textBox.Text.Trim().Split(','), token);
+                string type = (textBox.Parent as UserControlArray).ddlType.SelectedItem as string;
+                object[] array = null;
+                if (type == "array")
+                {
+                    object[] arr = { };
+                    array = new object[] { arr };
+                }
+                else if (textBox.Text.Length > 0)
+                {
+                    array = textBox.Text.Split(',')
+                        .Select<string, object>(x =>
+                        {
+                            if (type == "string")
+                            {
+                                return x.Trim();
+                            }
+                            else if (type == "int")
+                            {
+                                if (int.TryParse(x, out int result))
+                                {
+                                    return result;
+                                }
+                                return 0;
+                            }
+                            else if (type == "decimal")
+                            {
+                                if (decimal.TryParse(x.Replace('.', ','), out decimal result))
+                                {
+                                    return result;
+                                }
+                                return (decimal)0;
+                            }
+                            else if (type == "bool")
+                            {
+                                if (bool.TryParse(x, out bool result))
+                                {
+                                    return result;
+                                }
+                                return false;
+                            }
+                            return "";
+                        }).ToArray();
+                }
+                else
+                {
+                    return;
+                }
+                SetConfigValue(array, token);
                 configEdited = true;
+                textBox.Text = "";
             }
             catch (Exception ex)
             {
@@ -623,7 +699,7 @@ namespace JSONConfigManager
                 }
                 else if (uc is UserControlArray)
                 {
-                    (uc as UserControlArray).textBox.LostFocus -= ArrayTextBox_LostFocus;
+                    (uc as UserControlArray).textBox.LostFocus -= TextBoxArray_LostFocus;
                 }
             }
             userControlContainer.Controls.Clear();
@@ -643,8 +719,12 @@ namespace JSONConfigManager
             InitLoadedModConfigs();
             if (settings[SETTING_X] != null) this.Left = (int)settings[SETTING_X];
             if (settings[SETTING_Y] != null) this.Top = (int)settings[SETTING_Y];
-            if (settings[SETTING_W] != null) this.Width = (int)settings[SETTING_W];
-            if (settings[SETTING_H] != null) this.Height = (int)settings[SETTING_H];
+            if (settings[SETTING_W] != null) this.Width = Math.Max((int)settings[SETTING_W], this.MinimumSize.Width);
+            if (settings[SETTING_H] != null) this.Height = Math.Max((int)settings[SETTING_H], this.MinimumSize.Height);
+
+            if (settings[SETTING_SPLIT_1] != null) splitContainer1.SplitterDistance = (int)settings[SETTING_SPLIT_1];
+            if (settings[SETTING_SPLIT_2] != null) splitContainer2.SplitterDistance = (int)settings[SETTING_SPLIT_2];
+            if (settings[SETTING_SPLIT_3] != null) splitContainer3.SplitterDistance = (int)settings[SETTING_SPLIT_3];
         }
 
         private void Form1_Shown(object sender, EventArgs e)
@@ -771,7 +851,14 @@ namespace JSONConfigManager
                 case JTokenType.Object:
                     break;
                 case JTokenType.Array:
-                    break;
+                    {
+                        var uc = new UserControlArray();
+                        uc.Tag = selectedNodeToken;
+                        uc.textBox.LostFocus += TextBoxArray_LostFocus;
+                        userControlContainer.Controls.Add(uc);
+                        nodeEditUserControl = uc;
+                        break;
+                    }
                 case JTokenType.Integer:
                     {
                         var uc = new UserControlInteger();
@@ -826,6 +913,24 @@ namespace JSONConfigManager
         {
             LoadModConfigFiles();
             btnAddNewModConfig.DropDown.Show(btnAddNewModConfig.DropDown.Left, btnAddNewModConfig.DropDown.Top);
+        }
+
+        private void txtJson_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lastJsonText != txtJson.Text)
+                {
+                    configEdited = true;
+                    JObject.Parse(txtJson.Text);
+                    RefreshConfigTree(txtJson.Text);
+                    txtLog.Text += $"Changes from manual edit applied!{Environment.NewLine}";
+                }
+            }
+            catch (Exception ex)
+            {
+                txtLog.Text += $"Invalid Json from manual changes!{Environment.NewLine}{ex.Message}{Environment.NewLine}";
+            }
         }
     }
 }

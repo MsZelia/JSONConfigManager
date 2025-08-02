@@ -32,10 +32,19 @@ namespace JSONConfigManager
             this.components = new System.ComponentModel.Container();
             this.txtLog = new System.Windows.Forms.RichTextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.btnAddNewModConfig = new System.Windows.Forms.ToolStripSplitButton();
-            this.btnWeb = new System.Windows.Forms.ToolStripButton();
             this.ddlSelectedMod = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSplitButtonProfile = new System.Windows.Forms.ToolStripComboBox();
+            this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.userControlContainer = new System.Windows.Forms.Panel();
+            this.txtJson = new System.Windows.Forms.RichTextBox();
+            this.jsonTreeView = new Alex75.JsonViewer.WindowsForm.JsonTreeView();
+            this.btnAddNewModConfig = new System.Windows.Forms.ToolStripSplitButton();
+            this.btnWeb = new System.Windows.Forms.ToolStripButton();
             this.btnSelectGameLocation = new System.Windows.Forms.ToolStripButton();
             this.btnRemoveModConfig = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
@@ -45,15 +54,6 @@ namespace JSONConfigManager
             this.btnOpenBackupDirectory = new System.Windows.Forms.ToolStripMenuItem();
             this.ddlRestoreBackup = new System.Windows.Forms.ToolStripMenuItem();
             this.dummyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.jsonTreeView = new Alex75.JsonViewer.WindowsForm.JsonTreeView();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.userControlContainer = new System.Windows.Forms.Panel();
-            this.txtJson = new System.Windows.Forms.RichTextBox();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.statusStrip.SuspendLayout();
@@ -79,7 +79,7 @@ namespace JSONConfigManager
             this.txtLog.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
-            this.txtLog.Size = new System.Drawing.Size(355, 346);
+            this.txtLog.Size = new System.Drawing.Size(270, 396);
             this.txtLog.TabIndex = 0;
             this.txtLog.TabStop = false;
             this.txtLog.Text = "";
@@ -104,6 +104,155 @@ namespace JSONConfigManager
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // ddlSelectedMod
+            // 
+            this.ddlSelectedMod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlSelectedMod.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
+            this.ddlSelectedMod.MaxDropDownItems = 32;
+            this.ddlSelectedMod.Name = "ddlSelectedMod";
+            this.ddlSelectedMod.Size = new System.Drawing.Size(264, 27);
+            this.ddlSelectedMod.ToolTipText = "Select Mod Config file to load";
+            this.ddlSelectedMod.SelectedIndexChanged += new System.EventHandler(this.ddlSelectedMod_SelectedIndexChanged);
+            // 
+            // toolStripSplitButtonProfile
+            // 
+            this.toolStripSplitButtonProfile.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripSplitButtonProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStripSplitButtonProfile.Name = "toolStripSplitButtonProfile";
+            this.toolStripSplitButtonProfile.Size = new System.Drawing.Size(114, 27);
+            this.toolStripSplitButtonProfile.Visible = false;
+            this.toolStripSplitButtonProfile.SelectedIndexChanged += new System.EventHandler(this.toolStripSplitButtonProfile_SelectedIndexChanged);
+            // 
+            // fileSystemWatcher1
+            // 
+            this.fileSystemWatcher1.EnableRaisingEvents = true;
+            this.fileSystemWatcher1.SynchronizingObject = this;
+            // 
+            // statusStrip
+            // 
+            this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblStatus});
+            this.statusStrip.Location = new System.Drawing.Point(0, 611);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
+            this.statusStrip.Size = new System.Drawing.Size(984, 22);
+            this.statusStrip.TabIndex = 3;
+            this.statusStrip.Text = "statusStrip1";
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.lblStatus.Size = new System.Drawing.Size(39, 17);
+            this.lblStatus.Text = "Status";
+            this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 27);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.jsonTreeView);
+            this.splitContainer1.Panel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.splitContainer1.Panel1MinSize = 400;
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
+            this.splitContainer1.Size = new System.Drawing.Size(984, 584);
+            this.splitContainer1.SplitterDistance = 400;
+            this.splitContainer1.SplitterWidth = 3;
+            this.splitContainer1.TabIndex = 4;
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.splitContainer3);
+            this.splitContainer2.Panel1MinSize = 270;
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.txtJson);
+            this.splitContainer2.Panel2MinSize = 0;
+            this.splitContainer2.Size = new System.Drawing.Size(581, 584);
+            this.splitContainer2.SplitterDistance = 270;
+            this.splitContainer2.SplitterWidth = 3;
+            this.splitContainer2.TabIndex = 2;
+            this.splitContainer2.TabStop = false;
+            // 
+            // splitContainer3
+            // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.splitContainer3.Name = "splitContainer3";
+            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.userControlContainer);
+            this.splitContainer3.Panel1MinSize = 100;
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.txtLog);
+            this.splitContainer3.Size = new System.Drawing.Size(270, 584);
+            this.splitContainer3.SplitterDistance = 185;
+            this.splitContainer3.SplitterWidth = 3;
+            this.splitContainer3.TabIndex = 0;
+            this.splitContainer3.TabStop = false;
+            // 
+            // userControlContainer
+            // 
+            this.userControlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.userControlContainer.Location = new System.Drawing.Point(0, 0);
+            this.userControlContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.userControlContainer.MinimumSize = new System.Drawing.Size(0, 81);
+            this.userControlContainer.Name = "userControlContainer";
+            this.userControlContainer.Size = new System.Drawing.Size(270, 185);
+            this.userControlContainer.TabIndex = 1;
+            // 
+            // txtJson
+            // 
+            this.txtJson.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtJson.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.txtJson.Location = new System.Drawing.Point(0, 0);
+            this.txtJson.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtJson.Name = "txtJson";
+            this.txtJson.Size = new System.Drawing.Size(308, 584);
+            this.txtJson.TabIndex = 0;
+            this.txtJson.Text = "";
+            this.txtJson.Leave += new System.EventHandler(this.txtJson_Leave);
+            // 
+            // jsonTreeView
+            // 
+            this.jsonTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.jsonTreeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.jsonTreeView.FullRowSelect = true;
+            this.jsonTreeView.ImageIndex = 0;
+            this.jsonTreeView.LabelEdit = true;
+            this.jsonTreeView.Location = new System.Drawing.Point(0, 0);
+            this.jsonTreeView.Margin = new System.Windows.Forms.Padding(2);
+            this.jsonTreeView.MinimumSize = new System.Drawing.Size(264, 4);
+            this.jsonTreeView.Name = "jsonTreeView1";
+            this.jsonTreeView.SelectedImageIndex = 0;
+            this.jsonTreeView.Size = new System.Drawing.Size(400, 584);
+            this.jsonTreeView.TabIndex = 0;
+            this.jsonTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.jsonTreeView_NodeMouseClick);
+            // 
             // btnAddNewModConfig
             // 
             this.btnAddNewModConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -126,25 +275,6 @@ namespace JSONConfigManager
             this.btnWeb.Size = new System.Drawing.Size(24, 24);
             this.btnWeb.Text = "Open Nexus Mod Page";
             this.btnWeb.Click += new System.EventHandler(this.btnWeb_Click);
-            // 
-            // ddlSelectedMod
-            // 
-            this.ddlSelectedMod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddlSelectedMod.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
-            this.ddlSelectedMod.MaxDropDownItems = 32;
-            this.ddlSelectedMod.Name = "ddlSelectedMod";
-            this.ddlSelectedMod.Size = new System.Drawing.Size(264, 27);
-            this.ddlSelectedMod.ToolTipText = "Select Mod Config file to load";
-            this.ddlSelectedMod.SelectedIndexChanged += new System.EventHandler(this.ddlSelectedMod_SelectedIndexChanged);
-            // 
-            // toolStripSplitButtonProfile
-            // 
-            this.toolStripSplitButtonProfile.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripSplitButtonProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toolStripSplitButtonProfile.Name = "toolStripSplitButtonProfile";
-            this.toolStripSplitButtonProfile.Size = new System.Drawing.Size(114, 27);
-            this.toolStripSplitButtonProfile.Visible = false;
-            this.toolStripSplitButtonProfile.SelectedIndexChanged += new System.EventHandler(this.toolStripSplitButtonProfile_SelectedIndexChanged);
             // 
             // btnSelectGameLocation
             // 
@@ -229,134 +359,6 @@ namespace JSONConfigManager
             this.dummyToolStripMenuItem.Name = "dummyToolStripMenuItem";
             this.dummyToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.dummyToolStripMenuItem.Text = "dummy";
-            // 
-            // fileSystemWatcher1
-            // 
-            this.fileSystemWatcher1.EnableRaisingEvents = true;
-            this.fileSystemWatcher1.SynchronizingObject = this;
-            // 
-            // statusStrip
-            // 
-            this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblStatus});
-            this.statusStrip.Location = new System.Drawing.Point(0, 611);
-            this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
-            this.statusStrip.Size = new System.Drawing.Size(984, 22);
-            this.statusStrip.TabIndex = 3;
-            this.statusStrip.Text = "statusStrip1";
-            // 
-            // lblStatus
-            // 
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.lblStatus.Size = new System.Drawing.Size(39, 17);
-            this.lblStatus.Text = "Status";
-            this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 27);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.jsonTreeView);
-            this.splitContainer1.Panel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.splitContainer1.Panel1MinSize = 400;
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(984, 584);
-            this.splitContainer1.SplitterDistance = 400;
-            this.splitContainer1.SplitterWidth = 3;
-            this.splitContainer1.TabIndex = 4;
-            // 
-            // jsonTreeView
-            // 
-            this.jsonTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.jsonTreeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.jsonTreeView.FullRowSelect = true;
-            this.jsonTreeView.ImageIndex = 0;
-            this.jsonTreeView.LabelEdit = true;
-            this.jsonTreeView.Location = new System.Drawing.Point(0, 0);
-            this.jsonTreeView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.jsonTreeView.MinimumSize = new System.Drawing.Size(264, 4);
-            this.jsonTreeView.Name = "jsonTreeView1";
-            this.jsonTreeView.SelectedImageIndex = 0;
-            this.jsonTreeView.Size = new System.Drawing.Size(400, 584);
-            this.jsonTreeView.TabIndex = 0;
-            this.jsonTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.jsonTreeView_NodeMouseClick);
-            // 
-            // splitContainer2
-            // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.splitContainer2.Name = "splitContainer2";
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Panel1MinSize = 0;
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.txtJson);
-            this.splitContainer2.Panel2MinSize = 0;
-            this.splitContainer2.Size = new System.Drawing.Size(581, 584);
-            this.splitContainer2.SplitterDistance = 355;
-            this.splitContainer2.SplitterWidth = 3;
-            this.splitContainer2.TabIndex = 2;
-            this.splitContainer2.TabStop = false;
-            // 
-            // splitContainer3
-            // 
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.splitContainer3.Name = "splitContainer3";
-            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer3.Panel1
-            // 
-            this.splitContainer3.Panel1.Controls.Add(this.userControlContainer);
-            // 
-            // splitContainer3.Panel2
-            // 
-            this.splitContainer3.Panel2.Controls.Add(this.txtLog);
-            this.splitContainer3.Size = new System.Drawing.Size(355, 512);
-            this.splitContainer3.SplitterDistance = 163;
-            this.splitContainer3.SplitterWidth = 3;
-            this.splitContainer3.TabIndex = 0;
-            this.splitContainer3.TabStop = false;
-            // 
-            // userControlContainer
-            // 
-            this.userControlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.userControlContainer.Location = new System.Drawing.Point(0, 0);
-            this.userControlContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.userControlContainer.MinimumSize = new System.Drawing.Size(0, 81);
-            this.userControlContainer.Name = "userControlContainer";
-            this.userControlContainer.Size = new System.Drawing.Size(355, 163);
-            this.userControlContainer.TabIndex = 1;
-            // 
-            // txtJson
-            // 
-            this.txtJson.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtJson.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.txtJson.Location = new System.Drawing.Point(0, 0);
-            this.txtJson.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.txtJson.Name = "txtJson";
-            this.txtJson.Size = new System.Drawing.Size(339, 512);
-            this.txtJson.TabIndex = 0;
-            this.txtJson.Text = "";
-            this.txtJson.Leave += new System.EventHandler(this.txtJson_Leave);
             // 
             // Form1
             // 

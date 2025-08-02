@@ -110,9 +110,13 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                if (MessageBox.Show($"ERROR loading settings:{Environment.NewLine}{ex}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}Do you want to restore default settings?", "Restore Default Settings?", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+                if (MessageBox.Show($"Error loading settings:{Environment.NewLine}{ex.Message}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}Do you want to restore default settings?", "Restore Default Settings?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     SaveSettings();
+                }
+                else
+                {
+                    Close();
                 }
             }
         }
@@ -131,8 +135,8 @@ namespace JSONConfigManager
                 var keys = modList.Keys.ToArray();
                 Array.Sort(keys);
                 settings[SETTING_MOD_LIST] = JToken.FromObject(keys);
-                settings[SETTING_X] = this.Left;
-                settings[SETTING_Y] = this.Top;
+                settings[SETTING_X] = this.Left == 0 ? 50 : this.Left;
+                settings[SETTING_Y] = this.Top == 0 ? 50 : this.Top;
                 settings[SETTING_W] = this.Width;
                 settings[SETTING_H] = this.Height;
                 settings[SETTING_SPLIT_1] = splitContainer1.SplitterDistance;
@@ -333,6 +337,11 @@ namespace JSONConfigManager
                 {
                     Process.Start("explorer.exe", backupDir);
                 }
+                else
+                {
+                    Directory.CreateDirectory(backupDir);
+                    OpenBackupDirectory();
+                }
             }
             catch (Exception ex)
             {
@@ -500,7 +509,7 @@ namespace JSONConfigManager
                     newElement = JToken.FromObject(kvPair.Value);
                 }
                 obj.Add(kvPair.Key, newElement);
-                txtLog.Text += $"{token.Path}: added property {kvPair.Key} {newElement} ({newElement.Type}){Environment.NewLine}";
+                txtLog.Text += $"{(token.Path.Length == 0 ? "root" : token.Path)}: added property {kvPair.Key}: {newElement} ({newElement.Type}){Environment.NewLine}";
                 RefreshConfigTree();
             }
             else if (token.Parent is JProperty || token.Parent is JArray && token is JValue)
@@ -977,10 +986,12 @@ namespace JSONConfigManager
             selectedNode = e.Node;
             if (selectedNode.Tag == null)
             {
-                selectedNodeToken = null;
-                return;
+                selectedNodeToken = config;
             }
-            selectedNodeToken = selectedNode.Tag as JToken;
+            else
+            {
+                selectedNodeToken = selectedNode.Tag as JToken;
+            }
             //tbLog.Text += $"Node: {selectedNode.Text}, {selectedNode.FullPath}, {selectedNode.Tag}{Environment.NewLine}";
 
             switch (selectedNodeToken.Type)

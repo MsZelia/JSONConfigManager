@@ -14,6 +14,14 @@ namespace JSONConfigManager
     {
         public event EventHandler TextFieldDataSubmit;
 
+        private Dictionary<string, string> dict = new Dictionary<string, string> {
+            { "string", "" },
+            { "int", "0" },
+            {"decimal", "0.0" },
+            {"bool", "false"},
+            {"array", "[]"},
+            {"object", "{}"} };
+
         public UserControlProperty()
         {
             InitializeComponent();
@@ -21,7 +29,7 @@ namespace JSONConfigManager
 
         private void UserControlProperty_Load(object sender, EventArgs e)
         {
-            string[] items = { "string", "int", "decimal", "bool", "array", "object" };
+            string[] items = dict.Keys.ToArray();
             ddlType.Items.AddRange(items);
             ddlType.SelectedIndex = 0;
         }
@@ -36,13 +44,9 @@ namespace JSONConfigManager
 
         private void ddlType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(ddlType.SelectedItem.ToString() == "array")
+            if (ddlType.SelectedItem != null)
             {
-                textBoxValue.Text = "[]";
-            }
-            else if(ddlType.SelectedItem.ToString() == "object")
-            {
-                textBoxValue.Text = "{}";
+                textBoxValue.Text = dict[ddlType.SelectedItem.ToString()];
             }
         }
     }

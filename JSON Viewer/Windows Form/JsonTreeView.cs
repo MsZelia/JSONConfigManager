@@ -25,7 +25,7 @@ namespace Alex75.JsonViewer.WindowsForm
         private ToolStripMenuItem expandAllMenuItem;
         private StatusStrip statusStrip1;
         private string previouslySelectedNodeText = null;
-
+        private JObject json = null;
         public JsonTreeView()
         {
             InitializeComponent();
@@ -56,9 +56,11 @@ namespace Alex75.JsonViewer.WindowsForm
             this.ImageList = treeImages;            
         }
 
+        public JObject JSON { get => json; }
+
         public void ShowJson(string jsonString)
         {
-            JObject json = JObject.Parse(jsonString);
+            json = JObject.Parse(jsonString);
             LoadTree(json);
         }
 

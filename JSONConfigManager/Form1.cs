@@ -26,6 +26,8 @@ namespace JSONConfigManager
         private const string SETTING_MOD_LIST = "modList";
         private const string SETTING_GAME_DIR = "gameDir";
 
+        public string settingsDir = AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".json";
+
         public string initDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Fallout76\\Data\\";
 
         public string gameDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Fallout76\\Data\\";
@@ -86,11 +88,10 @@ namespace JSONConfigManager
 
         private void LoadSettings()
         {
-            string file = AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".json";
             try
             {
-                string fileContent = File.ReadAllText(file);
-                settings = JContainer.Parse(fileContent);
+                string fileContent = File.ReadAllText(settingsDir);
+                settings = JObject.Parse(fileContent);
                 if (settings[SETTING_MOD_LIST] != null)
                 {
                     foreach (var mod in settings[SETTING_MOD_LIST].ToArray())
@@ -110,7 +111,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                if (MessageBox.Show($"Error loading settings:{Environment.NewLine}{ex.Message}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}Do you want to restore default settings?", "Restore Default Settings?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                if (MessageBox.Show($"Error loading settings:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}Do you want to restore default settings?", "Restore Default Settings?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     SaveSettings();
                 }
@@ -123,7 +124,6 @@ namespace JSONConfigManager
 
         private void SaveSettings()
         {
-            string file = AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".json";
             try
             {
                 if (settings == null)
@@ -143,8 +143,7 @@ namespace JSONConfigManager
                 settings[SETTING_SPLIT_2] = splitContainer2.SplitterDistance;
                 settings[SETTING_SPLIT_3] = splitContainer3.SplitterDistance;
 
-
-                File.WriteAllText(file, settings.ToString());
+                File.WriteAllText(settingsDir, settings.ToString());
                 logStatus = $"Settings saved!";
             }
             catch (Exception ex)
@@ -219,7 +218,6 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                logStatus = $"ERROR backing up file {file}: {ex}";
                 MessageBox.Show($"Error backing up file {file}:{Environment.NewLine}{ex}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return false;
@@ -251,7 +249,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                logStatus = $"ERROR Loading backups: {ex}";
+                MessageBox.Show($"Error loading backups:{Environment.NewLine}{ex/*.Message*/}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -272,21 +270,19 @@ namespace JSONConfigManager
                     {
                         RestoreFile(file);
                     }
-                    logStatus = "Backup restoration finished!";
                     MessageBox.Show("Backup restoration finished!", "Restore All", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
                     if (RestoreFile(dir))
                     {
-                        logStatus = $"{dir} restored!";
                         MessageBox.Show($"{dir} restored!", "Restore File", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error restoring files:{Environment.NewLine}{ex}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error restoring files:{Environment.NewLine}{ex/*.Message*/}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -302,7 +298,6 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                logStatus = $"ERROR Restoring file {file}: {ex}";
                 MessageBox.Show($"Error restoring file {file}:{Environment.NewLine}{ex}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return false;
@@ -316,15 +311,16 @@ namespace JSONConfigManager
                 {
                     return;
                 }
-                string file = "TestEdit.json";
+                string file = ddlSelectedMod.SelectedItem.ToString();
                 string cnf = config.ToString();
                 File.WriteAllText(gameDir + file, cnf);
                 logStatus = $"Saved all changes to {file}";
                 configEdited = false;
+
+                MessageBox.Show($"Saved all changes to {file}.", "Save file", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                logStatus = $"Error Saving file {ex}";
                 MessageBox.Show($"Error Saving file:{Environment.NewLine}{ex}", "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -377,7 +373,6 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                logStatus = $"Error adding config: {ex}";
                 MessageBox.Show($"Error adding config file:{Environment.NewLine}{ex}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -409,11 +404,11 @@ namespace JSONConfigManager
                         btnAddNewModConfig.DropDownItems.Add(info.Name);
                     }
                 }
-                logStatus = "Ready";
+                logStatus = "Config files loaded";
             }
             catch (Exception ex)
             {
-                logStatus = $"Error loading files: {ex}";
+                MessageBox.Show($"Error loading config files:{Environment.NewLine}{ex/*.Message*/}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -431,7 +426,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Invalid Json from manual changes!{Environment.NewLine}{ex.Message}{Environment.NewLine}";
+                txtLog.Text += $"Invalid Json from manual changes!{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
             }
         }
 
@@ -463,10 +458,11 @@ namespace JSONConfigManager
                         gameDir = selectedDir;
                         logStatus = $"Game dir set: {selectedDir}";
                         SaveSettings();
+                        UpdateToolbarButtons();
+                        InitLoadedModConfigs();
                     }
                     else
                     {
-                        logStatus = $"ERROR Selected game dir invalid: {selectedDir}";
                         MessageBox.Show($"Invalid game directory, folder does not exist!{Environment.NewLine}{selectedDir}", "Game dir error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -630,7 +626,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Error changing numeric value:{Environment.NewLine}{ex.Message}{Environment.NewLine}";
+                txtLog.Text += $"Error changing numeric value:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
             }
         }
 
@@ -645,7 +641,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Error changing numeric value:{Environment.NewLine}{ex.Message}{Environment.NewLine}";
+                txtLog.Text += $"Error changing numeric value:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
             }
         }
 
@@ -660,7 +656,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Error changing bool value:{Environment.NewLine}{ex.Message}{Environment.NewLine}";
+                txtLog.Text += $"Error changing bool value:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
             }
 
         }
@@ -676,7 +672,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Error changing string value:{Environment.NewLine}{ex.Message}{Environment.NewLine}";
+                txtLog.Text += $"Error changing string value:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
             }
         }
 
@@ -718,7 +714,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Error changing array value:{Environment.NewLine}{ex.Message}{Environment.NewLine}";
+                txtLog.Text += $"Error changing array value:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
             }
         }
 
@@ -766,7 +762,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Error adding property value:{Environment.NewLine}{ex.Message}{Environment.NewLine}";
+                txtLog.Text += $"Error adding property value:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
             }
         }
 
@@ -853,6 +849,10 @@ namespace JSONConfigManager
 
         private void UpdateToolbarButtons()
         {
+            btnAddNewModConfig.Enabled = Directory.Exists(gameDir);
+            ddlSelectedMod.Enabled = btnAddNewModConfig.Enabled;
+            btnBackupAll.Enabled = btnAddNewModConfig.Enabled;
+            ddlRestoreBackup.Enabled = btnAddNewModConfig.Enabled;
             bool isModSelected = ddlSelectedMod.SelectedIndex != -1;
             btnRemoveModConfig.Enabled = isModSelected;
             btnSave.Enabled = isModSelected;
@@ -917,7 +917,6 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                logStatus = $"ERROR loading config {file}: {ex}";
                 MessageBox.Show($"Error loading config {file}:{Environment.NewLine}{ex}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -1018,7 +1017,7 @@ namespace JSONConfigManager
                     {
                         var uc = new UserControlInteger();
                         uc.Tag = selectedNodeToken;
-                        uc.label.Text = $"int {selectedNodeToken.Path}";
+                        uc.label.Text = selectedNodeToken.Path;
                         uc.numericUpDown.Value = int.Parse(selectedNodeToken.ToString());
                         uc.numericUpDown.ValueChanged += NumericUpDownInt_ValueChanged;
                         userControlContainer.Controls.Add(uc);
@@ -1029,7 +1028,7 @@ namespace JSONConfigManager
                     {
                         var uc = new UserControlDecimal();
                         uc.Tag = selectedNodeToken;
-                        uc.label.Text = $"float {selectedNodeToken.Path}";
+                        uc.label.Text = selectedNodeToken.Path;
                         uc.numericUpDown.Value = decimal.Parse(selectedNodeToken.ToString());
                         uc.numericUpDown.ValueChanged += NumericUpDown_ValueChanged;
                         userControlContainer.Controls.Add(uc);

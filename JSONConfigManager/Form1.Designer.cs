@@ -34,7 +34,6 @@ namespace JSONConfigManager
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ddlSelectedMod = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSplitButtonProfile = new System.Windows.Forms.ToolStripComboBox();
-            this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -55,7 +54,6 @@ namespace JSONConfigManager
             this.ddlRestoreBackup = new System.Windows.Forms.ToolStripMenuItem();
             this.dummyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -122,11 +120,6 @@ namespace JSONConfigManager
             this.toolStripSplitButtonProfile.Size = new System.Drawing.Size(114, 27);
             this.toolStripSplitButtonProfile.Visible = false;
             this.toolStripSplitButtonProfile.SelectedIndexChanged += new System.EventHandler(this.toolStripSplitButtonProfile_SelectedIndexChanged);
-            // 
-            // fileSystemWatcher1
-            // 
-            this.fileSystemWatcher1.EnableRaisingEvents = true;
-            this.fileSystemWatcher1.SynchronizingObject = this;
             // 
             // statusStrip
             // 
@@ -377,7 +370,6 @@ namespace JSONConfigManager
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -403,7 +395,6 @@ namespace JSONConfigManager
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripComboBox ddlSelectedMod;
         private System.Windows.Forms.ToolStripButton btnSelectGameLocation;
-        private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
         private System.Windows.Forms.ToolStripComboBox toolStripSplitButtonProfile;

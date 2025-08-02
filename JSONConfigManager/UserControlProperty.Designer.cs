@@ -1,7 +1,7 @@
 ﻿
 namespace JSONConfigManager
 {
-    partial class UserControlArray
+    partial class UserControlProperty
     {
         /// <summary> 
         /// Required designer variable.
@@ -30,8 +30,9 @@ namespace JSONConfigManager
         private void InitializeComponent()
         {
             this.label = new System.Windows.Forms.Label();
-            this.textBox = new System.Windows.Forms.TextBox();
+            this.textBoxKey = new System.Windows.Forms.TextBox();
             this.ddlType = new System.Windows.Forms.ComboBox();
+            this.textBoxValue = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label
@@ -44,18 +45,19 @@ namespace JSONConfigManager
             this.label.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.label.Size = new System.Drawing.Size(262, 20);
             this.label.TabIndex = 2;
-            this.label.Text = "Add to array";
+            this.label.Text = "Add property";
             this.label.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // textBox
+            // textBoxKey
             // 
-            this.textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F);
-            this.textBox.Location = new System.Drawing.Point(4, 24);
-            this.textBox.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox.Name = "textBox";
-            this.textBox.Size = new System.Drawing.Size(260, 23);
-            this.textBox.TabIndex = 4;
-            this.textBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox_KeyUp);
+            this.textBoxKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F);
+            this.textBoxKey.Location = new System.Drawing.Point(4, 24);
+            this.textBoxKey.Margin = new System.Windows.Forms.Padding(2);
+            this.textBoxKey.Name = "textBoxKey";
+            this.textBoxKey.Size = new System.Drawing.Size(260, 23);
+            this.textBoxKey.TabIndex = 4;
+            this.textBoxKey.Text = "key";
+            this.textBoxKey.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox_KeyUp);
             // 
             // ddlType
             // 
@@ -68,17 +70,29 @@ namespace JSONConfigManager
             this.ddlType.TabIndex = 3;
             this.ddlType.SelectedIndexChanged += new System.EventHandler(this.ddlType_SelectedIndexChanged);
             // 
-            // UserControlArray
+            // textBoxValue
+            // 
+            this.textBoxValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F);
+            this.textBoxValue.Location = new System.Drawing.Point(4, 48);
+            this.textBoxValue.Margin = new System.Windows.Forms.Padding(2);
+            this.textBoxValue.Name = "textBoxValue";
+            this.textBoxValue.Size = new System.Drawing.Size(260, 23);
+            this.textBoxValue.TabIndex = 5;
+            this.textBoxValue.Text = "value";
+            this.textBoxValue.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox_KeyUp);
+            // 
+            // UserControlProperty
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.textBoxValue);
             this.Controls.Add(this.ddlType);
-            this.Controls.Add(this.textBox);
+            this.Controls.Add(this.textBoxKey);
             this.Controls.Add(this.label);
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "UserControlArray";
-            this.Size = new System.Drawing.Size(266, 47);
-            this.Load += new System.EventHandler(this.UserControlArray_Load);
+            this.Name = "UserControlProperty";
+            this.Size = new System.Drawing.Size(266, 71);
+            this.Load += new System.EventHandler(this.UserControlProperty_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -87,7 +101,8 @@ namespace JSONConfigManager
         #endregion
 
         public System.Windows.Forms.Label label;
-        public System.Windows.Forms.TextBox textBox;
+        public System.Windows.Forms.TextBox textBoxKey;
         public System.Windows.Forms.ComboBox ddlType;
+        public System.Windows.Forms.TextBox textBoxValue;
     }
 }

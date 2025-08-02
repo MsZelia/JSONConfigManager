@@ -96,6 +96,12 @@
     <Compile Include="UserControlInteger.Designer.cs">
       <DependentUpon>UserControlInteger.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControlProperty.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlProperty.Designer.cs">
+      <DependentUpon>UserControlProperty.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControlString.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -127,6 +133,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControlInteger.resx">
       <DependentUpon>UserControlInteger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlProperty.resx">
+      <DependentUpon>UserControlProperty.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControlString.resx">
       <DependentUpon>UserControlString.cs</DependentUpon>

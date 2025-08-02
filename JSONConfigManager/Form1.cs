@@ -408,6 +408,24 @@ namespace JSONConfigManager
             }
         }
 
+        private void ApplyManualEditChanges()
+        {
+            try
+            {
+                if (lastJsonText != txtJson.Text)
+                {
+                    configEdited = true;
+                    JObject.Parse(txtJson.Text);
+                    RefreshConfigTree(txtJson.Text);
+                    txtLog.Text += $"Changes from manual edit applied!{Environment.NewLine}";
+                }
+            }
+            catch (Exception ex)
+            {
+                txtLog.Text += $"Invalid Json from manual changes!{Environment.NewLine}{ex.Message}{Environment.NewLine}";
+            }
+        }
+
         private void toolStripSplitButtonProfile_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -448,15 +466,41 @@ namespace JSONConfigManager
 
         private void SetConfigValue(object value, JToken token)
         {
-            if (token.Type == JTokenType.Array && value is Array)
+            if (token.Type == JTokenType.Array)
             {
                 var prop = token as JArray;
-                foreach (var item in value as Array)
+                if (value is Array)
                 {
-                    var newElement = JToken.FromObject(item);
-                    prop.Add(newElement);
-                    txtLog.Text += $"{token.Path}: added element {item.ToString().Replace(',', '.')} ({newElement.Type}){Environment.NewLine}";
+                    foreach (var item in value as Array)
+                    {
+                        var newElement = JToken.FromObject(item);
+                        prop.Add(newElement);
+                        txtLog.Text += $"{token.Path}: added element {item.ToString().Replace(',', '.')} ({newElement.Type}){Environment.NewLine}";
+                    }
                 }
+                else if(value is JToken)
+                {
+                    if (value is JToken newElement)
+                    {
+                        prop.Add(newElement);
+                    }
+                }
+                RefreshConfigTree();
+            }
+            else if (token.Type == JTokenType.Object && value is KeyValuePair<string, object> kvPair)
+            {
+                var obj = token as JObject;
+                JToken newElement;
+                if(kvPair.Value is JToken)
+                {
+                    newElement = kvPair.Value as JToken;
+                }
+                else
+                {
+                    newElement = JToken.FromObject(kvPair.Value);
+                }
+                obj.Add(kvPair.Key, newElement);
+                txtLog.Text += $"{token.Path}: added property {kvPair.Key} {newElement} ({newElement.Type}){Environment.NewLine}";
                 RefreshConfigTree();
             }
             else if (token.Parent is JProperty || token.Parent is JArray && token is JValue)
@@ -477,6 +521,32 @@ namespace JSONConfigManager
             {
                 txtLog.Text += $"Parent is {token.Parent.Type}: {token.Parent}{Environment.NewLine}";
             }
+        }
+
+        private JToken MapArray(string value)
+        {
+            JToken token = null;
+            try
+            {
+                token = JArray.Parse(value);
+                return token;
+            }
+            catch (Exception) { }
+            token = JArray.Parse("[]");
+            return token;
+        }
+
+        private JToken MapObject(string value)
+        {
+            JToken token = null;
+            try
+            {
+                token = JObject.Parse(value);
+                return token;
+            }
+            catch (Exception) { }
+            token = JObject.Parse("{}");
+            return token;
         }
 
         private void RefreshConfigTree(string json = null)
@@ -504,9 +574,12 @@ namespace JSONConfigManager
                     selectedNode.EnsureVisible();
                     selectedNodeToken = selectedNode.Tag as JToken;
                     jsonTreeView_NodeMouseClick(null, new TreeNodeMouseClickEventArgs(selectedNode, MouseButtons.Left, 1, 0, 0));
-                    if (selectedNodeToken != null && selectedNodeToken.Type == JTokenType.Array)
+                    if (selectedNodeToken != null)
                     {
-                        selectedNode.Expand();
+                        if (selectedNodeToken.Type == JTokenType.Array || selectedNodeToken.Type == JTokenType.Object)
+                        {
+                            selectedNode.Expand();
+                        }
                     }
                 }
             }
@@ -548,7 +621,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"ERROR changing numeric value!{Environment.NewLine}{ex}{Environment.NewLine}";
+                txtLog.Text += $"Error changing numeric value:{Environment.NewLine}{ex.Message}{Environment.NewLine}";
             }
         }
 
@@ -563,7 +636,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"ERROR changing numeric value!{Environment.NewLine}{ex}{Environment.NewLine}";
+                txtLog.Text += $"Error changing numeric value:{Environment.NewLine}{ex.Message}{Environment.NewLine}";
             }
         }
 
@@ -578,7 +651,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"ERROR changing bool value!{Environment.NewLine}{ex}{Environment.NewLine}";
+                txtLog.Text += $"Error changing bool value:{Environment.NewLine}{ex.Message}{Environment.NewLine}";
             }
 
         }
@@ -594,71 +667,131 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"ERROR changing string value!{Environment.NewLine}{ex}{Environment.NewLine}";
+                txtLog.Text += $"Error changing string value:{Environment.NewLine}{ex.Message}{Environment.NewLine}";
             }
         }
 
-        private void TextBoxArray_LostFocus(object sender, EventArgs e)
+        private void TextBoxArray_DataSubmit(object sender, EventArgs e)
         {
             try
             {
-                TextBox textBox = sender as TextBox;
-                JToken token = textBox.Parent.Tag as JToken;
-                string type = (textBox.Parent as UserControlArray).ddlType.SelectedItem as string;
-                object[] array = null;
+                var ucArray = sender as UserControlArray;
+                TextBox textBox = ucArray.textBox;
+                string type = ucArray.ddlType.SelectedItem as string;
+                JToken token = ucArray.Tag as JToken;
+
+                object value = null;
+                var txtValue = textBox.Text.Trim();
                 if (type == "array")
                 {
-                    object[] arr = { };
-                    array = new object[] { arr };
+                    //object[] arr = { };
+                    //array = new object[] { arr };
+                    value = MapArray(txtValue);
+                }
+                else if (type == "object")
+                {
+                    //object obj = new object();
+                    //array = new object[] { obj };
+                    value = MapObject(txtValue);
                 }
                 else if (textBox.Text.Length > 0)
                 {
-                    array = textBox.Text.Split(',')
-                        .Select<string, object>(x =>
-                        {
-                            if (type == "string")
-                            {
-                                return x.Trim();
-                            }
-                            else if (type == "int")
-                            {
-                                if (int.TryParse(x, out int result))
-                                {
-                                    return result;
-                                }
-                                return 0;
-                            }
-                            else if (type == "decimal")
-                            {
-                                if (decimal.TryParse(x.Replace('.', ','), out decimal result))
-                                {
-                                    return result;
-                                }
-                                return (decimal)0;
-                            }
-                            else if (type == "bool")
-                            {
-                                if (bool.TryParse(x, out bool result))
-                                {
-                                    return result;
-                                }
-                                return false;
-                            }
-                            return "";
-                        }).ToArray();
+                    value = textBox.Text.Split(',').Select(x => RemapObject(type, x)).ToArray();
                 }
                 else
                 {
                     return;
                 }
-                SetConfigValue(array, token);
+
+                SetConfigValue(value, token);
                 configEdited = true;
                 textBox.Text = "";
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"ERROR changing array value!{Environment.NewLine}{ex}{Environment.NewLine}";
+                txtLog.Text += $"Error changing array value:{Environment.NewLine}{ex.Message}{Environment.NewLine}";
             }
+        }
+
+        private void TextBoxProperty_DataSubmit(object sender, EventArgs e)
+        {
+            try
+            {
+                var ucProp = sender as UserControlProperty;
+                TextBox textBoxKey = ucProp.textBoxKey;
+                TextBox textBoxValue = ucProp.textBoxValue;
+                string type = ucProp.ddlType.SelectedItem as string;
+                JToken token = ucProp.Tag as JToken;
+
+                string key;
+                object value = null;
+                if (textBoxKey.Text.Trim().Length == 0)
+                {
+                    return;
+                }
+                key = textBoxKey.Text.Trim();
+                var txtValue = textBoxValue.Text.Trim();
+                if (type == "array")
+                {
+                    //value = new object[] { };
+                    value = MapArray(txtValue);
+                }
+                else if (type == "object")
+                {
+                    //value = new object();
+                    value = MapObject(txtValue);
+                }
+                else if (txtValue.Length > 0)
+                {
+                    value = RemapObject(type, txtValue);
+                }
+                else
+                {
+                    return;
+                }
+                var prop = new KeyValuePair<string, object>(key, value);
+                SetConfigValue(prop, token);
+                configEdited = true;
+                textBoxKey.Text = "";
+                textBoxValue.Text = "";
+            }
+            catch (Exception ex)
+            {
+                txtLog.Text += $"Error adding property value:{Environment.NewLine}{ex.Message}{Environment.NewLine}";
+            }
+        }
+
+        private object RemapObject(string type, string value)
+        {
+            if (type == "string")
+            {
+                return value.Trim();
+            }
+            else if (type == "int")
+            {
+                if (int.TryParse(value, out int result))
+                {
+                    return result;
+                }
+                return 0;
+            }
+            else if (type == "decimal")
+            {
+                if (decimal.TryParse(value.Replace('.', ','), out decimal result))
+                {
+                    return result;
+                }
+                return (decimal)0;
+            }
+            else if (type == "bool")
+            {
+                if (bool.TryParse(value, out bool result))
+                {
+                    return result;
+                }
+                return false;
+            }
+            return "";
         }
 
         private void InitLoadedModConfigs(bool clearSelection = false)
@@ -699,7 +832,11 @@ namespace JSONConfigManager
                 }
                 else if (uc is UserControlArray)
                 {
-                    (uc as UserControlArray).textBox.LostFocus -= TextBoxArray_LostFocus;
+                    (uc as UserControlArray).TextFieldDataSubmit -= TextBoxArray_DataSubmit;
+                }
+                else if (uc is UserControlProperty)
+                {
+                    (uc as UserControlProperty).TextFieldDataSubmit -= TextBoxProperty_DataSubmit;
                 }
             }
             userControlContainer.Controls.Clear();
@@ -849,12 +986,19 @@ namespace JSONConfigManager
             switch (selectedNodeToken.Type)
             {
                 case JTokenType.Object:
-                    break;
+                    {
+                        var uc = new UserControlProperty();
+                        uc.Tag = selectedNodeToken;
+                        uc.TextFieldDataSubmit += TextBoxProperty_DataSubmit;
+                        userControlContainer.Controls.Add(uc);
+                        nodeEditUserControl = uc;
+                        break;
+                    }
                 case JTokenType.Array:
                     {
                         var uc = new UserControlArray();
                         uc.Tag = selectedNodeToken;
-                        uc.textBox.LostFocus += TextBoxArray_LostFocus;
+                        uc.TextFieldDataSubmit += TextBoxArray_DataSubmit;
                         userControlContainer.Controls.Add(uc);
                         nodeEditUserControl = uc;
                         break;
@@ -917,20 +1061,7 @@ namespace JSONConfigManager
 
         private void txtJson_Leave(object sender, EventArgs e)
         {
-            try
-            {
-                if (lastJsonText != txtJson.Text)
-                {
-                    configEdited = true;
-                    JObject.Parse(txtJson.Text);
-                    RefreshConfigTree(txtJson.Text);
-                    txtLog.Text += $"Changes from manual edit applied!{Environment.NewLine}";
-                }
-            }
-            catch (Exception ex)
-            {
-                txtLog.Text += $"Invalid Json from manual changes!{Environment.NewLine}{ex.Message}{Environment.NewLine}";
-            }
+            ApplyManualEditChanges();
         }
     }
 }

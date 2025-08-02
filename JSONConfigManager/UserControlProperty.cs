@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace JSONConfigManager
 {
-    public partial class UserControlArray : UserControl
+    public partial class UserControlProperty : UserControl
     {
         public event EventHandler TextFieldDataSubmit;
 
-        public UserControlArray()
+        public UserControlProperty()
         {
             InitializeComponent();
         }
 
-        private void UserControlArray_Load(object sender, EventArgs e)
+        private void UserControlProperty_Load(object sender, EventArgs e)
         {
             string[] items = { "string", "int", "decimal", "bool", "array", "object" };
             ddlType.Items.AddRange(items);
@@ -34,13 +36,13 @@ namespace JSONConfigManager
 
         private void ddlType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ddlType.SelectedItem.ToString() == "array")
+            if(ddlType.SelectedItem.ToString() == "array")
             {
-                textBox.Text = "[]";
+                textBoxValue.Text = "[]";
             }
-            else if (ddlType.SelectedItem.ToString() == "object")
+            else if(ddlType.SelectedItem.ToString() == "object")
             {
-                textBox.Text = "{}";
+                textBoxValue.Text = "{}";
             }
         }
     }

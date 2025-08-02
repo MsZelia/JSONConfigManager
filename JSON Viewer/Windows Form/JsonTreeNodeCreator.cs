@@ -39,6 +39,7 @@ namespace Alex75.JsonViewer.WindowsForm
             var node = new JsonTreeNode(type, text, textWhenSelected);
             node.ImageKey = item.Type.ToString();
             node.SelectedImageKey = node.ImageKey;
+            node.Tag = item;
 
             return node;
         }

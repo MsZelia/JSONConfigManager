@@ -16,6 +16,13 @@ namespace JSONConfigManager
 {
     public partial class Form1 : Form
     {
+        private const string SETTING_X = "x";
+        private const string SETTING_Y = "y";
+        private const string SETTING_W = "w";
+        private const string SETTING_H = "h";
+        private const string SETTING_MOD_LIST = "modList";
+        private const string SETTING_GAME_DIR = "gameDir";
+
         public string initDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Fallout76\\Data\\";
 
         public string gameDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Fallout76\\Data\\";
@@ -51,9 +58,11 @@ namespace JSONConfigManager
 
         private bool configEdited = false;
 
-        private int yOffset = 0;
+        private TreeNode selectedNode;
 
+        private JToken selectedNodeToken;
 
+        private UserControl nodeEditUserControl;
         public Form1()
         {
             InitializeComponent();
@@ -76,16 +85,16 @@ namespace JSONConfigManager
             {
                 string fileContent = File.ReadAllText(file);
                 settings = JContainer.Parse(fileContent);
-                if (settings["modList"] != null)
+                if (settings[SETTING_MOD_LIST] != null)
                 {
-                    foreach (var mod in settings["modList"].ToArray())
+                    foreach (var mod in settings[SETTING_MOD_LIST].ToArray())
                     {
                         modList.Add((string)mod, (string)mod);
                     }
                 }
-                if (settings["gameDir"] != null)
+                if (settings[SETTING_GAME_DIR] != null)
                 {
-                    gameDir = (string)settings["gameDir"];
+                    gameDir = (string)settings[SETTING_GAME_DIR];
                 }
                 logStatus = $"Settings loaded!";
             }
@@ -112,13 +121,17 @@ namespace JSONConfigManager
                     settings = JToken.Parse("{}");
                 }
 
-                settings["gameDir"] = gameDir;
+                settings[SETTING_GAME_DIR] = gameDir;
                 var keys = modList.Keys.ToArray();
                 Array.Sort(keys);
-                settings["modList"] = JToken.FromObject(keys);
+                settings[SETTING_MOD_LIST] = JToken.FromObject(keys);
+                settings[SETTING_X] = this.Left;
+                settings[SETTING_Y] = this.Top;
+                settings[SETTING_W] = this.Width;
+                settings[SETTING_H] = this.Height;
 
                 File.WriteAllText(file, settings.ToString());
-                logStatus = $"Settings loaded!";
+                logStatus = $"Settings saved!";
             }
             catch (Exception ex)
             {
@@ -423,151 +436,77 @@ namespace JSONConfigManager
             }
         }
 
-        private void ListChildren(JToken token)
-        {
-            foreach (var child in token.Children())
-            {
-                if (child.Type == JTokenType.Property)
-                {
-                    ListChildren(child);
-                }
-                else if (child.Type == JTokenType.Object)
-                {
-                    yOffset += 20;
-                    ListChildren(child);
-                }
-                /*else if (child.Type == JTokenType.Array)
-                {
-                    var uc = new UserControlString();
-                    uc.Tag = token;
-                    uc.label.Text = token.Path + ":";
-                    uc.textBox.Text = child.ToString();
-                    uc.textBox.Enabled = false;
-                    uc.Top = yOffset;
-                    yOffset += uc.Height;
-                    userControlContainer.Controls.Add(uc);
-
-                    for (int subChildId = 0; subChildId < child.Children().Count(); subChildId++)
-                    {
-                        var subChild = child.Children().ElementAt(subChildId);
-                        string key = subChild.Parent.Path + "[" + subChild + "]";
-                        var ucChild = new UserControlString();
-                        ucChild.Tag = subChild;
-                        if (subChild.Type == JTokenType.String)
-                        {
-
-                        ucChild.label.Text = $"{key} {subChildId}:";
-                        }
-                        else
-                        {
-                        ucChild.label.Text = $"NOT_STRING ({subChild.Type})";
-                            ucChild.label.ForeColor = Color.Red;
-                        }
-                        ucChild.textBox.Text = subChild.ToString();
-                        ucChild.textBox.LostFocus += TextBox_LostFocus;
-                        ucChild.Top = yOffset;
-                        yOffset += ucChild.Height;
-                        userControlContainer.Controls.Add(ucChild);
-                    }
-
-                }*/
-                else
-                {
-                    switch (child.Type)
-                    {
-                        case JTokenType.Integer:
-                            {
-                                var uc = new UserControlInteger();
-                                uc.Tag = token;
-                                uc.label.Text = token.Path;//.Substring(token.Parent.Path.Length);
-                                uc.numericUpDown.Value = int.Parse(child.ToString());
-                                uc.numericUpDown.ValueChanged += NumericUpDown_ValueChanged;
-                                uc.Top = yOffset;
-                                yOffset += uc.Height;
-                                userControlContainer.Controls.Add(uc);
-                                break;
-                            }
-                        case JTokenType.Float:
-                            {
-                                var uc = new UserControlDecimal();
-                                uc.Tag = token;
-                                uc.label.Text = token.Path;//.Substring(token.Parent.Path.Length);
-                                uc.numericUpDown.Value = decimal.Parse(child.ToString());
-                                uc.numericUpDown.ValueChanged += NumericUpDown_ValueChanged;
-                                uc.Top = yOffset;
-                                yOffset += uc.Height;
-                                userControlContainer.Controls.Add(uc);
-                                break;
-                            }
-                        case JTokenType.Boolean:
-                            {
-                                var uc = new UserControlBoolean();
-                                uc.Tag = token;
-                                uc.checkBox.Text = token.Path;//.Substring(token.Parent.Path.Length);
-                                uc.checkBox.Checked = bool.Parse(child.ToString());
-                                uc.checkBox.CheckedChanged += CheckBox_CheckedChanged;
-                                uc.Top = yOffset;
-                                yOffset += uc.Height;
-                                userControlContainer.Controls.Add(uc);
-                                break;
-                            }
-                        case JTokenType.String:
-                            {
-                                var uc = new UserControlString();
-                                uc.Tag = token;
-                                uc.label.Text = token.Path + ":"; //.Substring(token.Parent.Path.Length);
-                                uc.textBox.Text = child.ToString();
-                                uc.textBox.LostFocus += TextBox_LostFocus;
-                                uc.Top = yOffset;
-                                yOffset += uc.Height;
-                                userControlContainer.Controls.Add(uc);
-                                break;
-                            }
-                        case JTokenType.Array:
-                            {
-                                var uc = new UserControlArray();
-                                uc.Tag = token;
-                                uc.label.Text = token.Path + ":";
-                                uc.textBox.Text = string.Join(",", child.Children());
-                                uc.textBox.LostFocus += ArrayTextBox_LostFocus;
-                                uc.Top = yOffset;
-                                yOffset += uc.Height;
-                                userControlContainer.Controls.Add(uc);
-                                break;
-                            }
-                        default:
-                            {
-                                tbLog.Text += $"Control not made for: {token.Path} ({child.Type}){Environment.NewLine}";
-                                break;
-                            }
-                    }
-
-                }
-            }
-        }
-
         private void SetConfigValue(object value, JToken token)
         {
-            string key = token.Path.Substring(token.Parent.Path.Length).TrimStart('.');
-            string parentKey = token.Parent.Path;
-
-            JToken parent;
-            if (parentKey == "")
+            if (token.Parent is JProperty || token.Parent is JArray && token is JValue)
             {
-                parent = config;
+                var prop = token as JValue;
+                var prevValue = prop.Value;
+                if (value is int i) prop.Value = i;
+                else if (value is decimal d) prop.Value = d;
+                else if (value is bool b) prop.Value = b;
+                else if (value is string s) prop.Value = s;
+
+                txtLog.Text += $"{token.Path}: {prevValue} -> {prop.Value}{Environment.NewLine}";
+                RefreshConfigTree();
             }
             else
             {
-                parent = config[parentKey];
+                txtLog.Text += $"Parent is {token.Parent.Type}: {token.Parent}{Environment.NewLine}";
             }
+        }
 
-            var previousValue = parent[key];
-            if (value is int i) parent[key] = i;
-            else if (value is decimal d) parent[key] = d;
-            else if (value is bool b) parent[key] = b;
-            else if (value is string s) parent[key] = s;
-            else if (value is Array arr) parent[key] = JToken.FromObject(arr);
-            tbLog.Text += $"{token.Path}: {previousValue} -> {parent[key]}{Environment.NewLine}";
+        private void RefreshConfigTree(string json = null)
+        {
+            string selectedPath = "";
+            if (selectedNodeToken != null)
+            {
+                selectedPath = selectedNodeToken.Path;
+            }
+            selectedNode = null;
+            selectedNodeToken = null;
+            if (json == null)
+            {
+                jsonTreeView.ShowJson(config.ToString());
+            }
+            else
+            {
+                jsonTreeView.ShowJson(json);
+            }
+            if (selectedPath != "")
+            {
+                selectedNode = GetNodeFromPath(jsonTreeView.TopNode, selectedPath);
+                if (selectedNode != null)
+                {
+                    selectedNode.EnsureVisible();
+                    selectedNodeToken = selectedNode.Tag as JToken;
+                    jsonTreeView_NodeMouseClick(null, new TreeNodeMouseClickEventArgs(selectedNode, MouseButtons.Left, 1, 0, 0));
+                }
+            }
+            config = jsonTreeView.JSON;
+            txtJson.Text = config.ToString();
+        }
+
+        private TreeNode GetNodeFromPath(TreeNode node, string path)
+        {
+            TreeNode foundNode = null;
+            foreach (TreeNode tn in node.Nodes)
+            {
+                var tnPath = (tn.Tag as JToken)?.Path ?? "";
+                if (tnPath == path)
+                {
+                    return tn;
+                }
+                else if (tn.Nodes.Count > 0)
+                {
+                    foundNode = GetNodeFromPath(tn, path);
+                }
+                if (foundNode != null)
+                {
+                    return foundNode;
+                }
+            }
+            return null;
         }
 
         private void NumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -576,13 +515,27 @@ namespace JSONConfigManager
             {
                 NumericUpDown numericUpDown = sender as NumericUpDown;
                 JToken token = numericUpDown.Parent.Tag as JToken;
-                bool isDecimal = numericUpDown.Parent is UserControlDecimal;
-                SetConfigValue(isDecimal ? numericUpDown.Value : (int)numericUpDown.Value, token);
+                SetConfigValue(numericUpDown.Value, token);
                 configEdited = true;
             }
             catch (Exception ex)
             {
-                tbLog.Text += $"ERROR changing numeric value! {ex}{Environment.NewLine}";
+                txtLog.Text += $"ERROR changing numeric value!{Environment.NewLine}{ex}{Environment.NewLine}";
+            }
+        }
+
+        private void NumericUpDownInt_ValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                NumericUpDown numericUpDown = sender as NumericUpDown;
+                JToken token = numericUpDown.Parent.Tag as JToken;
+                SetConfigValue(int.Parse(numericUpDown.Value.ToString()), token);
+                configEdited = true;
+            }
+            catch (Exception ex)
+            {
+                txtLog.Text += $"ERROR changing numeric value!{Environment.NewLine}{ex}{Environment.NewLine}";
             }
         }
 
@@ -597,7 +550,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                tbLog.Text += $"ERROR changing bool value! {ex}{Environment.NewLine}";
+                txtLog.Text += $"ERROR changing bool value!{Environment.NewLine}{ex}{Environment.NewLine}";
             }
 
         }
@@ -613,7 +566,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                tbLog.Text += $"ERROR changing string value! {ex}{Environment.NewLine}";
+                txtLog.Text += $"ERROR changing string value!{Environment.NewLine}{ex}{Environment.NewLine}";
             }
         }
 
@@ -628,7 +581,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                tbLog.Text += $"ERROR changing string value! {ex}{Environment.NewLine}";
+                txtLog.Text += $"ERROR changing array value!{Environment.NewLine}{ex}{Environment.NewLine}";
             }
         }
 
@@ -650,13 +603,11 @@ namespace JSONConfigManager
 
         private void ResetSelectedConfigControls()
         {
-            yOffset = 0;
-            tbLog.Text = "";
             foreach (Control uc in userControlContainer.Controls)
             {
                 if (uc is UserControlInteger)
                 {
-                    (uc as UserControlInteger).numericUpDown.ValueChanged -= NumericUpDown_ValueChanged;
+                    (uc as UserControlInteger).numericUpDown.ValueChanged -= NumericUpDownInt_ValueChanged;
                 }
                 else if (uc is UserControlDecimal)
                 {
@@ -690,6 +641,10 @@ namespace JSONConfigManager
         private void Form1_Load(object sender, EventArgs e)
         {
             InitLoadedModConfigs();
+            if (settings[SETTING_X] != null) this.Left = (int)settings[SETTING_X];
+            if (settings[SETTING_Y] != null) this.Top = (int)settings[SETTING_Y];
+            if (settings[SETTING_W] != null) this.Width = (int)settings[SETTING_W];
+            if (settings[SETTING_H] != null) this.Height = (int)settings[SETTING_H];
         }
 
         private void Form1_Shown(object sender, EventArgs e)
@@ -699,6 +654,7 @@ namespace JSONConfigManager
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            SaveSettings();
             if (configEdited)
             {
                 if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and exit?", "Discard Changes and Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
@@ -718,7 +674,7 @@ namespace JSONConfigManager
                 }
             }
             UpdateToolbarButtons();
-            ResetSelectedConfigControls();
+            //ResetSelectedConfigControls();
             if (sender == null)
             {
                 return;
@@ -730,9 +686,7 @@ namespace JSONConfigManager
                 configEdited = false;
                 file = ddlSelectedMod.SelectedItem.ToString();
                 string fileContent = File.ReadAllText(gameDir + file);
-
-                this.config = JContainer.Parse(fileContent);
-                ListChildren(config);
+                RefreshConfigTree(fileContent);
                 logStatus = $"Config file {file} loaded!";
             }
             catch (Exception ex)
@@ -792,8 +746,86 @@ namespace JSONConfigManager
 
         private void tbLog_TextChanged(object sender, EventArgs e)
         {
-            tbLog.SelectionStart = tbLog.Text.Length;
-            tbLog.ScrollToCaret();
+            txtLog.SelectionStart = txtLog.Text.Length;
+            txtLog.ScrollToCaret();
+        }
+
+        private void jsonTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (nodeEditUserControl != null)
+            {
+                ResetSelectedConfigControls();
+            }
+
+            selectedNode = e.Node;
+            if (selectedNode.Tag == null)
+            {
+                selectedNodeToken = null;
+                return;
+            }
+            selectedNodeToken = selectedNode.Tag as JToken;
+            //tbLog.Text += $"Node: {selectedNode.Text}, {selectedNode.FullPath}, {selectedNode.Tag}{Environment.NewLine}";
+
+            switch (selectedNodeToken.Type)
+            {
+                case JTokenType.Object:
+                    break;
+                case JTokenType.Array:
+                    break;
+                case JTokenType.Integer:
+                    {
+                        var uc = new UserControlInteger();
+                        uc.Tag = selectedNodeToken;
+                        uc.label.Text = $"int {selectedNodeToken.Path}";
+                        uc.numericUpDown.Value = int.Parse(selectedNodeToken.ToString());
+                        uc.numericUpDown.ValueChanged += NumericUpDownInt_ValueChanged;
+                        userControlContainer.Controls.Add(uc);
+                        nodeEditUserControl = uc;
+                        break;
+                    }
+                case JTokenType.Float:
+                    {
+                        var uc = new UserControlDecimal();
+                        uc.Tag = selectedNodeToken;
+                        uc.label.Text = $"float {selectedNodeToken.Path}";
+                        uc.numericUpDown.Value = decimal.Parse(selectedNodeToken.ToString());
+                        uc.numericUpDown.ValueChanged += NumericUpDown_ValueChanged;
+                        userControlContainer.Controls.Add(uc);
+                        nodeEditUserControl = uc;
+                        break;
+                    }
+                case JTokenType.Boolean:
+                    {
+                        var uc = new UserControlBoolean();
+                        uc.Tag = selectedNodeToken;
+                        uc.checkBox.Text = selectedNodeToken.Path;
+                        uc.checkBox.Checked = bool.Parse(selectedNodeToken.ToString());
+                        uc.checkBox.CheckedChanged += CheckBox_CheckedChanged;
+                        userControlContainer.Controls.Add(uc);
+                        nodeEditUserControl = uc;
+                        break;
+                    }
+                case JTokenType.String:
+                    {
+                        var uc = new UserControlString();
+                        uc.Tag = selectedNodeToken;
+                        uc.label.Text = selectedNodeToken.Path;
+                        uc.textBox.Text = selectedNodeToken.ToString();
+                        uc.textBox.LostFocus += TextBox_LostFocus;
+                        userControlContainer.Controls.Add(uc);
+                        nodeEditUserControl = uc;
+                        break;
+                    }
+                default:
+                    break;
+            }
+
+        }
+
+        private void btnAddNewModConfig_ButtonClick(object sender, EventArgs e)
+        {
+            LoadModConfigFiles();
+            btnAddNewModConfig.DropDown.Show(btnAddNewModConfig.DropDown.Left, btnAddNewModConfig.DropDown.Top);
         }
     }
 }

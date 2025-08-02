@@ -368,6 +368,7 @@ namespace JSONConfigManager
                 FileInfo info = new FileInfo(gameDir + file);
                 modList.Add(file, file);
                 InitLoadedModConfigs();
+                ddlSelectedMod.SelectedIndex = ddlSelectedMod.Items.Count - 1;
                 logStatus = $"Config file {file} added!";
                 SaveSettings();
             }
@@ -385,9 +386,10 @@ namespace JSONConfigManager
             }
             modList.Remove(ddlSelectedMod.Text);
             logStatus = $"Config file {ddlSelectedMod.Text} removed!";
-            ddlSelectedMod_SelectedIndexChanged(null, null);
             InitLoadedModConfigs(true);
             SaveSettings();
+            UpdateToolbarButtons();
+            jsonTreeView.Nodes.Clear();
         }
 
         private void LoadModConfigFiles()
@@ -483,7 +485,7 @@ namespace JSONConfigManager
                         txtLog.Text += $"{token.Path}: added element {item.ToString().Replace(',', '.')} ({newElement.Type}){Environment.NewLine}";
                     }
                 }
-                else if(value is JToken)
+                else if (value is JToken)
                 {
                     if (value is JToken newElement)
                     {
@@ -496,7 +498,7 @@ namespace JSONConfigManager
             {
                 var obj = token as JObject;
                 JToken newElement;
-                if(kvPair.Value is JToken)
+                if (kvPair.Value is JToken)
                 {
                     newElement = kvPair.Value as JToken;
                 }
@@ -860,6 +862,37 @@ namespace JSONConfigManager
             btnWeb.Enabled = isModSelected && nexusLinks.ContainsKey(ddlSelectedMod.SelectedItem.ToString().ToLower());
         }
 
+        private void SelectModConfigFile()
+        {
+            if (configEdited)
+            {
+                if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and switch to selected config?", "Discard Changes and Switch?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
+            configEdited = false;
+            UpdateToolbarButtons();
+            //ResetSelectedConfigControls();
+            if (ddlSelectedMod.SelectedIndex == -1)
+            {
+                return;
+            }
+
+            string file = "";
+            try
+            {
+                file = ddlSelectedMod.SelectedItem.ToString();
+                string fileContent = File.ReadAllText(gameDir + file);
+                RefreshConfigTree(fileContent);
+                logStatus = $"Config file {file} loaded!";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading config {file}:{Environment.NewLine}{ex}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             InitLoadedModConfigs();
@@ -892,33 +925,7 @@ namespace JSONConfigManager
 
         private void ddlSelectedMod_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (configEdited)
-            {
-                if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and switch to selected config?", "Discard Changes and Switch?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
-                {
-                    return;
-                }
-            }
-            UpdateToolbarButtons();
-            //ResetSelectedConfigControls();
-            if (sender == null)
-            {
-                return;
-            }
-
-            string file = "";
-            try
-            {
-                configEdited = false;
-                file = ddlSelectedMod.SelectedItem.ToString();
-                string fileContent = File.ReadAllText(gameDir + file);
-                RefreshConfigTree(fileContent);
-                logStatus = $"Config file {file} loaded!";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error loading config {file}:{Environment.NewLine}{ex}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            SelectModConfigFile();
         }
 
         private void btnAddNewModConfig_DropDownOpening(object sender, EventArgs e)
@@ -1060,7 +1067,6 @@ namespace JSONConfigManager
                 default:
                     break;
             }
-
         }
 
         private void btnAddNewModConfig_ButtonClick(object sender, EventArgs e)

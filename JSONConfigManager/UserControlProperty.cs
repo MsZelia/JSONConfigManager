@@ -47,6 +47,7 @@ namespace JSONConfigManager
             if (ddlType.SelectedItem != null)
             {
                 textBoxValue.Text = dict[ddlType.SelectedItem.ToString()];
+                textBoxValue.Multiline = ddlType.SelectedIndex > 3;
             }
         }
     }

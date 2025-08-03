@@ -52,6 +52,7 @@ namespace JSONConfigManager
             this.textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F);
             this.textBox.Location = new System.Drawing.Point(4, 24);
             this.textBox.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox.Multiline = true;
             this.textBox.Name = "textBox";
             this.textBox.Size = new System.Drawing.Size(260, 23);
             this.textBox.TabIndex = 4;

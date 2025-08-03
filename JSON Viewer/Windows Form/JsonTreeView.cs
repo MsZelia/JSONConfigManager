@@ -53,7 +53,8 @@ namespace Alex75.JsonViewer.WindowsForm
                 }
             }
 
-            this.ImageList = treeImages;            
+            this.ImageList = treeImages;
+            this.ImageList.TransparentColor = Color.White;
         }
 
         public JObject JSON { get => json; }

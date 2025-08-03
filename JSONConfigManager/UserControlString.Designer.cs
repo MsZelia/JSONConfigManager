@@ -37,7 +37,7 @@ namespace JSONConfigManager
             // 
             this.label.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label.Location = new System.Drawing.Point(2, 0);
+            this.label.Location = new System.Drawing.Point(2, 5);
             this.label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label.Name = "label";
             this.label.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -49,7 +49,7 @@ namespace JSONConfigManager
             // textBox
             // 
             this.textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F);
-            this.textBox.Location = new System.Drawing.Point(4, 22);
+            this.textBox.Location = new System.Drawing.Point(4, 25);
             this.textBox.Margin = new System.Windows.Forms.Padding(2);
             this.textBox.Name = "textBox";
             this.textBox.Size = new System.Drawing.Size(260, 23);
@@ -64,7 +64,7 @@ namespace JSONConfigManager
             this.Controls.Add(this.label);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "UserControlString";
-            this.Size = new System.Drawing.Size(266, 45);
+            this.Size = new System.Drawing.Size(266, 48);
             this.ResumeLayout(false);
             this.PerformLayout();
 

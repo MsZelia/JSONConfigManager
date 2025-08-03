@@ -39,7 +39,7 @@ namespace JSONConfigManager
             // 
             this.label.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label.Location = new System.Drawing.Point(2, 1);
+            this.label.Location = new System.Drawing.Point(2, 7);
             this.label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label.Name = "label";
             this.label.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -51,7 +51,7 @@ namespace JSONConfigManager
             // textBoxKey
             // 
             this.textBoxKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F);
-            this.textBoxKey.Location = new System.Drawing.Point(4, 24);
+            this.textBoxKey.Location = new System.Drawing.Point(4, 29);
             this.textBoxKey.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxKey.Name = "textBoxKey";
             this.textBoxKey.Size = new System.Drawing.Size(260, 23);
@@ -64,7 +64,7 @@ namespace JSONConfigManager
             this.ddlType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.ddlType.FormattingEnabled = true;
-            this.ddlType.Location = new System.Drawing.Point(142, 0);
+            this.ddlType.Location = new System.Drawing.Point(143, 5);
             this.ddlType.Name = "ddlType";
             this.ddlType.Size = new System.Drawing.Size(121, 24);
             this.ddlType.TabIndex = 3;
@@ -73,7 +73,7 @@ namespace JSONConfigManager
             // textBoxValue
             // 
             this.textBoxValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F);
-            this.textBoxValue.Location = new System.Drawing.Point(4, 48);
+            this.textBoxValue.Location = new System.Drawing.Point(4, 53);
             this.textBoxValue.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxValue.Multiline = true;
             this.textBoxValue.Name = "textBoxValue";
@@ -92,7 +92,7 @@ namespace JSONConfigManager
             this.Controls.Add(this.label);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "UserControlProperty";
-            this.Size = new System.Drawing.Size(266, 71);
+            this.Size = new System.Drawing.Size(266, 76);
             this.Load += new System.EventHandler(this.UserControlProperty_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

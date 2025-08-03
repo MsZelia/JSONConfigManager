@@ -66,13 +66,15 @@ namespace JSONConfigManager
 
         private JToken config = null;
 
-        private bool configEdited = false;
+        private JToken selectedNodeToken;
 
         private TreeNode selectedNode;
 
-        private JToken selectedNodeToken;
-
         private UserControl nodeEditUserControl;
+
+        private UserControlCopy nodeCopyUserControl;
+
+        private bool configEdited = false;
 
         private string lastJsonText = string.Empty;
 
@@ -81,10 +83,13 @@ namespace JSONConfigManager
         private Color[] DarkColors = { Color.FromArgb(30, 30, 30), Color.FromArgb(50, 50, 50), Color.White };
         private Color[] LightColors = { Color.FromArgb(230, 230, 230), Color.FromArgb(190, 190, 190), Color.Black };
 
+        private object lastSelectedModItem;
+
         public Form1()
         {
             InitializeComponent();
             LoadSettings();
+            InitCopyUserControl();
         }
 
         public string logStatus
@@ -95,6 +100,17 @@ namespace JSONConfigManager
                 lblStatus.Text = value;
             }
         }
+
+        public string log
+        {
+            get => lblStatus.Text;
+            set
+            {
+                txtLog.Text += $"{value}{Environment.NewLine}";
+            }
+        }
+
+
 
         public bool IsDarkMode
         {
@@ -132,7 +148,6 @@ namespace JSONConfigManager
                     foreach (JProperty customLink in settings[SETTING_CUSTOM_LINKS])
                     {
                         customLinks.Add(customLink.Name, customLink.Value.ToString());
-                        txtLog.Text += "customLink: " + customLink.Name + ":" + customLink.Value + "\n";
                     }
                 }
                 logStatus = $"Settings loaded!";
@@ -472,13 +487,13 @@ namespace JSONConfigManager
             }
             if (Uri.TryCreate(unicode, UriKind.Absolute, out Uri uri))
             {
-                customLinks.Add(ddlSelectedMod.SelectedItem.ToString().ToLower(), uri.ToString());
-                txtLog.Text += $"Added custom URL for {ddlSelectedMod.SelectedItem}: {uri}{Environment.NewLine}";
+                customLinks[ddlSelectedMod.SelectedItem.ToString().ToLower()] = uri.ToString();
+                log = $"Added custom URL for {ddlSelectedMod.SelectedItem}: {uri}";
                 UpdateToolbarButtons();
             }
             else
             {
-                txtLog.Text += $"URL invalid, not adding custom URL {unicode}!{Environment.NewLine}";
+                log = $"URL invalid, not adding custom URL {unicode}!";
             }
         }
         #endregion
@@ -583,20 +598,20 @@ namespace JSONConfigManager
                 string fileName = filePath.Substring(filePath.LastIndexOf("\\") + 1);
                 if (filePath.IndexOf(gameDir) == -1)
                 {
-                    txtLog.Text += $"Not adding config file {fileName}, not located in game directory!{Environment.NewLine}";
+                    log = $"Not adding config file {fileName}, not located in game directory!";
                     continue;
                 }
                 if (fileName.ToLower().IndexOf(".json") == -1)
                 {
-                    txtLog.Text += $"Not adding config file {fileName}, not Json extension!{Environment.NewLine}";
+                    log = $"Not adding config file {fileName}, not Json extension!";
                     continue;
                 }
                 if (modList.ContainsKey(fileName))
                 {
-                    txtLog.Text += $"Not adding config file {fileName}, config file already exists with that name!{Environment.NewLine}";
+                    log = $"Not adding config file {fileName}, config file already exists with that name!";
                     continue;
                 }
-                txtLog.Text += $"Adding config file {fileName}{Environment.NewLine}";
+                log = $"Adding config file {fileName}";
                 AddModConfigFile(fileName);
             }
         }
@@ -616,12 +631,12 @@ namespace JSONConfigManager
                     configEdited = true;
                     JObject.Parse(txtJson.Text);
                     RefreshConfigTree(txtJson.Text);
-                    txtLog.Text += $"Changes from manual edit applied!{Environment.NewLine}";
+                    log = $"Changes from manual edit applied!";
                 }
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Invalid Json from manual changes!{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
+                log = $"Invalid Json from manual changes!{Environment.NewLine}{ex/*.Message*/}";
             }
         }
 
@@ -636,7 +651,7 @@ namespace JSONConfigManager
                     {
                         var newElement = JToken.FromObject(item);
                         prop.Add(newElement);
-                        txtLog.Text += $"{token.Path}: added element {item.ToString().Replace(',', '.')} ({newElement.Type}){Environment.NewLine}";
+                        log = $"{token.Path}: added element {item.ToString().Replace(',', '.')} ({newElement.Type})";
                     }
                 }
                 else if (value is JToken)
@@ -644,7 +659,7 @@ namespace JSONConfigManager
                     if (value is JToken newElement)
                     {
                         prop.Add(newElement);
-                        txtLog.Text += $"{token.Path}: added element {newElement} ({newElement.Type}){Environment.NewLine}";
+                        log = $"{token.Path}: added element {newElement} ({newElement.Type})";
                     }
                 }
                 RefreshConfigTree();
@@ -662,7 +677,7 @@ namespace JSONConfigManager
                     newElement = JToken.FromObject(kvPair.Value);
                 }
                 obj.Add(kvPair.Key, newElement);
-                txtLog.Text += $"{(token.Path.Length == 0 ? "root" : token.Path)}: added property {kvPair.Key}: {newElement} ({newElement.Type}){Environment.NewLine}";
+                log = $"{(token.Path.Length == 0 ? "root" : token.Path)}: added property {kvPair.Key}: {newElement} ({newElement.Type})";
                 RefreshConfigTree();
             }
             else if (token.Parent is JProperty || token.Parent is JArray && token is JValue)
@@ -675,13 +690,13 @@ namespace JSONConfigManager
                 else if (value is string s && (string)prevValue != s) prop.Value = s;
                 if (prevValue != prop.Value)
                 {
-                    txtLog.Text += $"{token.Path}: {prevValue} -> {prop.Value}{Environment.NewLine}";
+                    log = $"{token.Path}: {prevValue} -> {prop.Value}";
                     RefreshConfigTree();
                 }
             }
             else
             {
-                txtLog.Text += $"Parent is {token.Parent.Type}: {token.Parent}{Environment.NewLine}";
+                log = $"Parent is {token.Parent.Type}: {token.Parent}";
             }
         }
 
@@ -735,7 +750,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Error changing numeric value:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
+                log = $"Error changing numeric value:{Environment.NewLine}{ex/*.Message*/}";
             }
         }
 
@@ -750,7 +765,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Error changing numeric value:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
+                log = $"Error changing numeric value:{Environment.NewLine}{ex/*.Message*/}";
             }
         }
 
@@ -765,7 +780,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Error changing bool value:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
+                log = $"Error changing bool value:{Environment.NewLine}{ex/*.Message*/}";
             }
 
         }
@@ -781,7 +796,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Error changing string value:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
+                log = $"Error changing string value:{Environment.NewLine}{ex/*.Message*/}";
             }
         }
 
@@ -803,7 +818,7 @@ namespace JSONConfigManager
                     value = MapArray(txtValue);
                     if (value == null)
                     {
-                        txtLog.Text += $"Error adding array: Invalid Json string!{Environment.NewLine}";
+                        log = $"Error adding array: Invalid Json string!";
                         return;
                     }
                 }
@@ -814,7 +829,7 @@ namespace JSONConfigManager
                     value = MapObject(txtValue);
                     if (value == null)
                     {
-                        txtLog.Text += $"Error adding object: Invalid Json string!{Environment.NewLine}";
+                        log = $"Error adding object: Invalid Json string!";
                         return;
                     }
                 }
@@ -833,7 +848,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Error changing array value:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
+                log = $"Error changing array value:{Environment.NewLine}{ex/*.Message*/}";
             }
         }
 
@@ -861,7 +876,7 @@ namespace JSONConfigManager
                     value = MapArray(txtValue);
                     if (value == null)
                     {
-                        txtLog.Text += $"Error adding array: Invalid Json string!{Environment.NewLine}";
+                        log = $"Error adding array: Invalid Json string!";
                         return;
                     }
                 }
@@ -871,7 +886,7 @@ namespace JSONConfigManager
                     value = MapObject(txtValue);
                     if (value == null)
                     {
-                        txtLog.Text += $"Error adding object: Invalid Json string!{Environment.NewLine}";
+                        log = $"Error adding object: Invalid Json string!";
                         return;
                     }
                 }
@@ -891,22 +906,45 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                txtLog.Text += $"Error adding property value:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
+                log = $"Error adding property value:{Environment.NewLine}{ex/*.Message*/}";
+            }
+        }
+
+        private void BtnCopy_Click(object sender, EventArgs e)
+        {
+            if (selectedNodeToken != null)
+            {
+                try
+                {
+                    Clipboard.SetText(selectedNodeToken.ToString());
+                    log = $"{(selectedNodeToken.Path.Length == 0 ? "root" : selectedNodeToken.Path)} copied to clipboard!";
+                }
+                catch (Exception ex)
+                {
+                    log = $"Error copying to clipboard: {ex}";
+                }
+
             }
         }
 
         private void SelectModConfigFile()
         {
+            if(lastSelectedModItem == ddlSelectedMod.SelectedItem)
+            {
+                return;
+            }
             if (configEdited)
             {
                 if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and switch to selected config?", "Discard Changes and Switch?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
                 {
+                    ddlSelectedMod.SelectedItem = lastSelectedModItem;
                     return;
                 }
             }
+            lastSelectedModItem = ddlSelectedMod.SelectedItem;
             configEdited = false;
             UpdateToolbarButtons();
-            //ResetSelectedConfigControls();
+
             if (ddlSelectedMod.SelectedIndex == -1)
             {
                 return;
@@ -942,15 +980,17 @@ namespace JSONConfigManager
             {
                 selectedNodeToken = selectedNode.Tag as JToken;
             }
-            //tbLog.Text += $"Node: {selectedNode.Text}, {selectedNode.FullPath}, {selectedNode.Tag}{Environment.NewLine}";
+            //log = $"Node: {selectedNode.Text}, {selectedNode.FullPath}, {selectedNode.Tag}";
 
             switch (selectedNodeToken.Type)
             {
                 case JTokenType.Object:
                     {
                         var uc = new UserControlProperty();
+                        uc.Top = nodeCopyUserControl.Height;
                         uc.Tag = selectedNodeToken;
                         uc.TextFieldDataSubmit += TextBoxProperty_DataSubmit;
+                        userControlContainer.Controls.Add(nodeCopyUserControl);
                         userControlContainer.Controls.Add(uc);
                         nodeEditUserControl = uc;
                         break;
@@ -958,9 +998,12 @@ namespace JSONConfigManager
                 case JTokenType.Array:
                     {
                         var uc = new UserControlArray();
+                        uc.Top = nodeCopyUserControl.Height;
                         uc.Tag = selectedNodeToken;
                         uc.TextFieldDataSubmit += TextBoxArray_DataSubmit;
+                        userControlContainer.Controls.Add(nodeCopyUserControl);
                         userControlContainer.Controls.Add(uc);
+                        uc.Top = nodeCopyUserControl.Height;
                         nodeEditUserControl = uc;
                         break;
                     }
@@ -1160,6 +1203,12 @@ namespace JSONConfigManager
             }
             userControlContainer.Controls.Clear();
         }
+
+        private void InitCopyUserControl()
+        {
+            nodeCopyUserControl = new UserControlCopy();
+            nodeCopyUserControl.btnCopy.Click += BtnCopy_Click;
+        }
         #endregion
 
         #region FORM EVENTS
@@ -1170,7 +1219,6 @@ namespace JSONConfigManager
             if (settings[SETTING_Y] != null) this.Top = (int)settings[SETTING_Y];
             if (settings[SETTING_W] != null) this.Width = Math.Max((int)settings[SETTING_W], this.MinimumSize.Width);
             if (settings[SETTING_H] != null) this.Height = Math.Max((int)settings[SETTING_H], this.MinimumSize.Height);
-
             if (settings[SETTING_SPLIT_1] != null) splitContainer1.SplitterDistance = (int)settings[SETTING_SPLIT_1];
             if (settings[SETTING_SPLIT_2] != null) splitContainer2.SplitterDistance = (int)settings[SETTING_SPLIT_2];
             if (settings[SETTING_SPLIT_3] != null) splitContainer3.SplitterDistance = (int)settings[SETTING_SPLIT_3];

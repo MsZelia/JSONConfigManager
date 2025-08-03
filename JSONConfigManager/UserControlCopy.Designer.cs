@@ -1,7 +1,7 @@
 ﻿
 namespace JSONConfigManager
 {
-    partial class UserControlBoolean
+    partial class UserControlCopy
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,36 +29,34 @@ namespace JSONConfigManager
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBox = new System.Windows.Forms.CheckBox();
+            this.btnCopy = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // checkBox
+            // btnCopy
             // 
-            this.checkBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.checkBox.Location = new System.Drawing.Point(2, 5);
-            this.checkBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.checkBox.Name = "checkBox";
-            this.checkBox.Size = new System.Drawing.Size(262, 22);
-            this.checkBox.TabIndex = 3;
-            this.checkBox.Text = "checkBox1";
-            this.checkBox.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkBox.UseVisualStyleBackColor = true;
+            this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.btnCopy.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.btnCopy.Location = new System.Drawing.Point(3, 3);
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.Size = new System.Drawing.Size(260, 24);
+            this.btnCopy.TabIndex = 0;
+            this.btnCopy.Text = "Copy JSON Object to clipboard";
+            this.btnCopy.UseVisualStyleBackColor = true;
             // 
-            // UserControlBoolean
+            // UserControlCopy
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.checkBox);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.Name = "UserControlBoolean";
-            this.Size = new System.Drawing.Size(266, 27);
+            this.Controls.Add(this.btnCopy);
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Name = "UserControlCopy";
+            this.Size = new System.Drawing.Size(266, 50);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        public System.Windows.Forms.CheckBox checkBox;
+        public System.Windows.Forms.Button btnCopy;
     }
 }

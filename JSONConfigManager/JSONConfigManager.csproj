@@ -81,6 +81,12 @@
     <Compile Include="UserControlArray.Designer.cs">
       <DependentUpon>UserControlArray.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControlCopy.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlCopy.Designer.cs">
+      <DependentUpon>UserControlCopy.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControlBoolean.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -127,6 +133,9 @@
     </Compile>
     <EmbeddedResource Include="UserControlArray.resx">
       <DependentUpon>UserControlArray.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlCopy.resx">
+      <DependentUpon>UserControlCopy.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControlBoolean.resx">
       <DependentUpon>UserControlBoolean.cs</DependentUpon>

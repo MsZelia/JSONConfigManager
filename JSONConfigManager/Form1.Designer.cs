@@ -36,8 +36,9 @@ namespace JSONConfigManager
             this.ddlSelectedMod = new System.Windows.Forms.ToolStripComboBox();
             this.btnDarkMode = new System.Windows.Forms.ToolStripButton();
             this.btnAbout = new System.Windows.Forms.ToolStripSplitButton();
-            this.btnNexusMods = new System.Windows.Forms.ToolStripMenuItem();
             this.btnGithub = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnNexusMods = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnNexusUserPage = new System.Windows.Forms.ToolStripMenuItem();
             this.btnKofi = new System.Windows.Forms.ToolStripMenuItem();
             this.btnRemoveModConfig = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
@@ -58,7 +59,8 @@ namespace JSONConfigManager
             this.userControlContainer = new System.Windows.Forms.Panel();
             this.txtLog = new JSONConfigManager.QuickScrollRichTextBox();
             this.txtJson = new JSONConfigManager.QuickScrollRichTextBox();
-            this.btnNexusUserPage = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -150,7 +152,9 @@ namespace JSONConfigManager
             this.btnAbout.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnGithub,
             this.btnNexusMods,
+            this.toolStripSeparator1,
             this.btnNexusUserPage,
+            this.toolStripSeparator2,
             this.btnKofi});
             this.btnAbout.Image = global::JSONConfigManager.Properties.Resources.Info;
             this.btnAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -159,27 +163,35 @@ namespace JSONConfigManager
             this.btnAbout.Text = "About";
             this.btnAbout.ButtonClick += new System.EventHandler(this.btnAbout_ButtonClick);
             // 
-            // btnNexusMods
-            // 
-            this.btnNexusMods.Image = global::JSONConfigManager.Properties.Resources.Nexus;
-            this.btnNexusMods.Name = "btnNexusMods";
-            this.btnNexusMods.Size = new System.Drawing.Size(230, 26);
-            this.btnNexusMods.Text = "Open on NexusMods";
-            this.btnNexusMods.Click += new System.EventHandler(this.btnNexusMods_Click);
-            // 
             // btnGithub
             // 
             this.btnGithub.Image = global::JSONConfigManager.Properties.Resources.Github;
             this.btnGithub.Name = "btnGithub";
-            this.btnGithub.Size = new System.Drawing.Size(230, 26);
+            this.btnGithub.Size = new System.Drawing.Size(235, 26);
             this.btnGithub.Text = "Open on Github";
             this.btnGithub.Click += new System.EventHandler(this.btnGithub_Click);
+            // 
+            // btnNexusMods
+            // 
+            this.btnNexusMods.Image = global::JSONConfigManager.Properties.Resources.Nexus;
+            this.btnNexusMods.Name = "btnNexusMods";
+            this.btnNexusMods.Size = new System.Drawing.Size(235, 26);
+            this.btnNexusMods.Text = "Open on NexusMods";
+            this.btnNexusMods.Click += new System.EventHandler(this.btnNexusMods_Click);
+            // 
+            // btnNexusUserPage
+            // 
+            this.btnNexusUserPage.Image = global::JSONConfigManager.Properties.Resources.Nexus;
+            this.btnNexusUserPage.Name = "btnNexusUserPage";
+            this.btnNexusUserPage.Size = new System.Drawing.Size(235, 26);
+            this.btnNexusUserPage.Text = "Check my other mods";
+            this.btnNexusUserPage.Click += new System.EventHandler(this.btnNexusUserPage_Click);
             // 
             // btnKofi
             // 
             this.btnKofi.Image = global::JSONConfigManager.Properties.Resources.Kofi;
             this.btnKofi.Name = "btnKofi";
-            this.btnKofi.Size = new System.Drawing.Size(230, 26);
+            this.btnKofi.Size = new System.Drawing.Size(235, 26);
             this.btnKofi.Text = "Support me on Ko-Fi";
             this.btnKofi.Click += new System.EventHandler(this.btnKofi_Click);
             // 
@@ -427,13 +439,15 @@ namespace JSONConfigManager
             this.txtJson.Text = "";
             this.txtJson.Leave += new System.EventHandler(this.txtJson_Leave);
             // 
-            // btnNexusUserPage
+            // toolStripSeparator1
             // 
-            this.btnNexusUserPage.Image = global::JSONConfigManager.Properties.Resources.Nexus;
-            this.btnNexusUserPage.Name = "btnNexusUserPage";
-            this.btnNexusUserPage.Size = new System.Drawing.Size(230, 26);
-            this.btnNexusUserPage.Text = "See my other mods";
-            this.btnNexusUserPage.Click += new System.EventHandler(this.btnNexusUserPage_Click);
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(232, 6);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(232, 6);
             // 
             // Form1
             // 
@@ -444,6 +458,8 @@ namespace JSONConfigManager
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.toolStrip1);
+            this.HelpButton = true;
+            this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(1327, 728);
             this.Name = "Form1";
@@ -453,6 +469,7 @@ namespace JSONConfigManager
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.statusStrip.ResumeLayout(false);
@@ -505,6 +522,8 @@ namespace JSONConfigManager
         private System.Windows.Forms.ToolStripMenuItem btnGithub;
         private System.Windows.Forms.ToolStripMenuItem btnKofi;
         private System.Windows.Forms.ToolStripMenuItem btnNexusUserPage;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
 

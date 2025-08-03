@@ -1280,6 +1280,14 @@ namespace JSONConfigManager
             }
         }
 
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.S)
+            {
+                SaveFile();
+            }
+        }
+
         private void Form1_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(DataFormats.UnicodeText))
@@ -1371,5 +1379,6 @@ namespace JSONConfigManager
         private void btnKofi_Click(object sender, EventArgs e) => OpenURL(kofiURL);
 
         private void btnNexusUserPage_Click(object sender, EventArgs e) => OpenURL(nexusUserPageURL);
+
     }
 }

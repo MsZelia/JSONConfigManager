@@ -1366,6 +1366,14 @@ namespace JSONConfigManager
                         }
                         break;
                     }
+                case Keys.D:
+                    {
+                        if (e.Control && e.Shift)
+                        {
+                            OpenBackupDirectory();
+                        }
+                        break;
+                    }
                 case Keys.F1:
                     {
                         btnAbout.DropDown.Show();

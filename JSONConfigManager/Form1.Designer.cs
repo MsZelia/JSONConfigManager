@@ -38,7 +38,9 @@ namespace JSONConfigManager
             this.btnAbout = new System.Windows.Forms.ToolStripSplitButton();
             this.btnGithub = new System.Windows.Forms.ToolStripMenuItem();
             this.btnNexusMods = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnNexusUserPage = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnKofi = new System.Windows.Forms.ToolStripMenuItem();
             this.btnRemoveModConfig = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
@@ -53,12 +55,10 @@ namespace JSONConfigManager
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.jsonTreeView = new Alex75.JsonViewer.WindowsForm.JsonTreeView();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.userControlContainer = new System.Windows.Forms.Panel();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.jsonTreeView = new Alex75.JsonViewer.WindowsForm.JsonTreeView();
             this.txtLog = new JSONConfigManager.QuickScrollRichTextBox();
             this.txtJson = new JSONConfigManager.QuickScrollRichTextBox();
             this.toolStrip1.SuspendLayout();
@@ -182,6 +182,11 @@ namespace JSONConfigManager
             this.btnNexusMods.Text = "Open on NexusMods";
             this.btnNexusMods.Click += new System.EventHandler(this.btnNexusMods_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(258, 6);
+            // 
             // btnNexusUserPage
             // 
             this.btnNexusUserPage.Image = global::JSONConfigManager.Properties.Resources.Nexus;
@@ -189,6 +194,11 @@ namespace JSONConfigManager
             this.btnNexusUserPage.Size = new System.Drawing.Size(261, 28);
             this.btnNexusUserPage.Text = "Check my other mods";
             this.btnNexusUserPage.Click += new System.EventHandler(this.btnNexusUserPage_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(258, 6);
             // 
             // btnKofi
             // 
@@ -238,7 +248,7 @@ namespace JSONConfigManager
             // 
             this.btnBackupSingle.Image = global::JSONConfigManager.Properties.Resources.Backup;
             this.btnBackupSingle.Name = "btnBackupSingle";
-            this.btnBackupSingle.Size = new System.Drawing.Size(321, 28);
+            this.btnBackupSingle.Size = new System.Drawing.Size(322, 28);
             this.btnBackupSingle.Text = "Backup (Ctrl+B)";
             this.btnBackupSingle.Click += new System.EventHandler(this.btnBackupSingle_Click);
             // 
@@ -246,7 +256,7 @@ namespace JSONConfigManager
             // 
             this.btnBackupAll.Image = global::JSONConfigManager.Properties.Resources.Backup;
             this.btnBackupAll.Name = "btnBackupAll";
-            this.btnBackupAll.Size = new System.Drawing.Size(321, 28);
+            this.btnBackupAll.Size = new System.Drawing.Size(322, 28);
             this.btnBackupAll.Text = "Backup All (Ctrl+Shift+B)";
             this.btnBackupAll.Click += new System.EventHandler(this.btnBackupAll_Click);
             // 
@@ -254,8 +264,8 @@ namespace JSONConfigManager
             // 
             this.btnOpenBackupDirectory.Image = global::JSONConfigManager.Properties.Resources.Browse;
             this.btnOpenBackupDirectory.Name = "btnOpenBackupDirectory";
-            this.btnOpenBackupDirectory.Size = new System.Drawing.Size(321, 28);
-            this.btnOpenBackupDirectory.Text = "Open Directory";
+            this.btnOpenBackupDirectory.Size = new System.Drawing.Size(322, 28);
+            this.btnOpenBackupDirectory.Text = "Open Directory (Ctrl+Shift+D)";
             this.btnOpenBackupDirectory.Click += new System.EventHandler(this.btnOpenBackupDirectory_Click);
             // 
             // ddlRestoreBackup
@@ -264,14 +274,14 @@ namespace JSONConfigManager
             this.dummyToolStripMenuItem});
             this.ddlRestoreBackup.Image = global::JSONConfigManager.Properties.Resources.Restore;
             this.ddlRestoreBackup.Name = "ddlRestoreBackup";
-            this.ddlRestoreBackup.Size = new System.Drawing.Size(321, 28);
+            this.ddlRestoreBackup.Size = new System.Drawing.Size(322, 28);
             this.ddlRestoreBackup.Text = "Restore Backup (Ctrl+Shift+R)";
             this.ddlRestoreBackup.DropDownOpened += new System.EventHandler(this.ddlRestoreBackup_DropDownOpened);
             // 
             // dummyToolStripMenuItem
             // 
             this.dummyToolStripMenuItem.Name = "dummyToolStripMenuItem";
-            this.dummyToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
+            this.dummyToolStripMenuItem.Size = new System.Drawing.Size(152, 28);
             this.dummyToolStripMenuItem.Text = "dummy";
             // 
             // btnSelectGameLocation
@@ -281,8 +291,8 @@ namespace JSONConfigManager
             this.btnSelectGameLocation.Image = global::JSONConfigManager.Properties.Resources.Browse;
             this.btnSelectGameLocation.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSelectGameLocation.Name = "btnSelectGameLocation";
-            this.btnSelectGameLocation.Size = new System.Drawing.Size(199, 28);
-            this.btnSelectGameLocation.Text = "Select Game Location";
+            this.btnSelectGameLocation.Size = new System.Drawing.Size(156, 28);
+            this.btnSelectGameLocation.Text = "Select Game Dir";
             this.btnSelectGameLocation.ToolTipText = "Select your Fallout 76 game folder or data directory";
             this.btnSelectGameLocation.Click += new System.EventHandler(this.btnSelectGameLocation_Click);
             // 
@@ -336,6 +346,27 @@ namespace JSONConfigManager
             this.splitContainer1.Size = new System.Drawing.Size(1312, 721);
             this.splitContainer1.SplitterDistance = 400;
             this.splitContainer1.TabIndex = 4;
+            // 
+            // jsonTreeView
+            // 
+            this.jsonTreeView.AllowDrop = true;
+            this.jsonTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.jsonTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.jsonTreeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.jsonTreeView.FullRowSelect = true;
+            this.jsonTreeView.HideSelection = false;
+            this.jsonTreeView.ImageIndex = 0;
+            this.jsonTreeView.Location = new System.Drawing.Point(0, 0);
+            this.jsonTreeView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.jsonTreeView.MinimumSize = new System.Drawing.Size(352, 5);
+            this.jsonTreeView.Name = "jsonTreeView1";
+            this.jsonTreeView.SelectedImageIndex = 0;
+            this.jsonTreeView.Size = new System.Drawing.Size(400, 721);
+            this.jsonTreeView.TabIndex = 0;
+            this.jsonTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.jsonTreeView_AfterSelect);
+            this.jsonTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.jsonTreeView_NodeMouseClick);
+            this.jsonTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
+            this.jsonTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
             // 
             // splitContainer2
             // 
@@ -391,37 +422,6 @@ namespace JSONConfigManager
             this.userControlContainer.Name = "userControlContainer";
             this.userControlContainer.Size = new System.Drawing.Size(270, 227);
             this.userControlContainer.TabIndex = 1;
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(258, 6);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(258, 6);
-            // 
-            // jsonTreeView
-            // 
-            this.jsonTreeView.AllowDrop = true;
-            this.jsonTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.jsonTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.jsonTreeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.jsonTreeView.FullRowSelect = true;
-            this.jsonTreeView.HideSelection = false;
-            this.jsonTreeView.ImageIndex = 0;
-            this.jsonTreeView.Location = new System.Drawing.Point(0, 0);
-            this.jsonTreeView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.jsonTreeView.MinimumSize = new System.Drawing.Size(352, 5);
-            this.jsonTreeView.Name = "jsonTreeView1";
-            this.jsonTreeView.SelectedImageIndex = 0;
-            this.jsonTreeView.Size = new System.Drawing.Size(400, 721);
-            this.jsonTreeView.TabIndex = 0;
-            this.jsonTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.jsonTreeView_AfterSelect);
-            this.jsonTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.jsonTreeView_NodeMouseClick);
-            this.jsonTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
-            this.jsonTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
             // 
             // txtLog
             // 

@@ -44,7 +44,7 @@ namespace JSONConfigManager
         public string nexusPageURL = "https://next.nexusmods.com/profile/MsZelia"; //TODO
 
         public string nexusUserPageURL = "https://next.nexusmods.com/profile/MsZelia/mods";
-        
+
         public string kofiURL = "https://ko-fi.com/zelia";
 
         public Dictionary<string, string> modList = new Dictionary<string, string>();
@@ -92,6 +92,10 @@ namespace JSONConfigManager
         private Color[] LightColors = { Color.FromArgb(230, 230, 230), Color.FromArgb(190, 190, 190), Color.Black };
 
         private object lastSelectedModItem;
+
+        private bool isIni = false;
+
+        private string configIni = string.Empty;
 
         public Form1()
         {
@@ -381,11 +385,12 @@ namespace JSONConfigManager
                 btnBackup.DropDown.Close();
                 if (isDir)
                 {
+                    int restored = 0;
                     foreach (var file in Directory.GetFiles(dir))
                     {
-                        RestoreFile(file);
+                        if (RestoreFile(file)) restored++;
                     }
-                    MessageBox.Show("Backup restoration finished!", "Restore All", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Backup restoration finished, restored {restored} files!", "Restore All", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -532,8 +537,21 @@ namespace JSONConfigManager
                     return;
                 }
                 string file = ddlSelectedMod.SelectedItem.ToString();
-                string cnf = config.ToString();
-                File.WriteAllText(gameDir + file, cnf);
+                if (isIni)
+                {
+                    if (configIni == txtJson.Text)
+                    {
+                        return;
+                    }
+                    string cnf = txtJson.Text.Replace("\r\n", "\n").Replace("\n", "\r\n");
+                    File.WriteAllText(gameDir + file, cnf);
+                    configIni = txtJson.Text;
+                }
+                else
+                {
+                    string cnf = config.ToString();
+                    File.WriteAllText(gameDir + file, cnf);
+                }
                 logStatus = $"Saved all changes to {file}";
                 configEdited = false;
 
@@ -583,7 +601,8 @@ namespace JSONConfigManager
             {
                 btnAddNewModConfig.DropDownItems.Clear();
                 logStatus = "Loading...";
-                foreach (var file in Directory.GetFiles(gameDir, "*.json"))
+                foreach (var file in Directory.EnumerateFiles(gameDir)
+                    .Where(fileName => fileName.ToLower().EndsWith(".json") || fileName.ToLower().EndsWith(".ini")))
                 {
                     FileInfo info = new FileInfo(file);
                     if (!modList.ContainsKey(info.Name))
@@ -625,9 +644,9 @@ namespace JSONConfigManager
                     log = $"Not adding config file {fileName}, not located in game directory!";
                     continue;
                 }
-                if (fileName.ToLower().IndexOf(".json") == -1)
+                if (!fileName.ToLower().EndsWith(".json") && !fileName.ToLower().EndsWith(".ini"))
                 {
-                    log = $"Not adding config file {fileName}, not Json extension!";
+                    log = $"Not adding config file {fileName}, not json or ini extension!";
                     continue;
                 }
                 if (modList.ContainsKey(fileName))
@@ -646,7 +665,7 @@ namespace JSONConfigManager
         {
             try
             {
-                if (txtJson.Text.Trim() == string.Empty)
+                if (isIni || txtJson.Text.Trim() == string.Empty)
                 {
                     return;
                 }
@@ -957,7 +976,7 @@ namespace JSONConfigManager
             {
                 return;
             }
-            if (configEdited)
+            if (configEdited || isIni && configIni != txtJson.Text)
             {
                 if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and switch to selected config?", "Discard Changes and Switch?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
                 {
@@ -973,13 +992,24 @@ namespace JSONConfigManager
             {
                 return;
             }
+            isIni = ddlSelectedMod.SelectedItem.ToString().ToLower().EndsWith(".ini");
 
             string file = string.Empty;
             try
             {
                 file = ddlSelectedMod.SelectedItem.ToString();
                 string fileContent = File.ReadAllText(gameDir + file);
-                RefreshConfigTree(fileContent);
+                if (isIni)
+                {
+                    txtJson.Text = fileContent;
+                    configIni = txtJson.Text;
+                    jsonTreeView.Nodes.Clear();
+                    ResetSelectedConfigControls();
+                }
+                else
+                {
+                    RefreshConfigTree(fileContent);
+                }
                 logStatus = $"Config file {file} loaded!";
             }
             catch (Exception ex)
@@ -1282,9 +1312,31 @@ namespace JSONConfigManager
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.S)
+            switch (e.KeyCode)
             {
-                SaveFile();
+                case Keys.S:
+                    {
+                        if (e.Control)
+                        {
+                            SaveFile();
+                        }
+                        break;
+                    }
+                case Keys.B:
+                    {
+                        if (e.Control)
+                        {
+                            Backup(e.Shift);
+                        }
+                        break;
+                    }
+                case Keys.F1:
+                    {
+                        btnAbout.DropDown.Show();
+                        break;
+                    }
+                default:
+                    break;
             }
         }
 
@@ -1325,7 +1377,9 @@ namespace JSONConfigManager
 
         private void btnWeb_Click(object sender, EventArgs e) => OpenNexusUrl();
 
-        private void btnBackup_ButtonClick(object sender, EventArgs e) => Backup();
+        private void btnBackup_ButtonClick(object sender, EventArgs e) => btnBackup.DropDown.Show();
+
+        private void btnBackupSingle_Click(object sender, EventArgs e) => Backup();
 
         private void btnBackupAll_Click(object sender, EventArgs e) => Backup(true);
 
@@ -1362,7 +1416,6 @@ namespace JSONConfigManager
         }
 
         private void txtJson_Leave(object sender, EventArgs e) => ApplyManualEditChanges();
-        #endregion
 
         private void btnDarkMode_Click(object sender, EventArgs e) => IsDarkMode = !IsDarkMode;
 
@@ -1379,6 +1432,6 @@ namespace JSONConfigManager
         private void btnKofi_Click(object sender, EventArgs e) => OpenURL(kofiURL);
 
         private void btnNexusUserPage_Click(object sender, EventArgs e) => OpenURL(nexusUserPageURL);
-
+        #endregion
     }
 }

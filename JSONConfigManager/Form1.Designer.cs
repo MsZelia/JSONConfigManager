@@ -57,10 +57,10 @@ namespace JSONConfigManager
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.userControlContainer = new System.Windows.Forms.Panel();
-            this.txtLog = new JSONConfigManager.QuickScrollRichTextBox();
-            this.txtJson = new JSONConfigManager.QuickScrollRichTextBox();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.txtLog = new JSONConfigManager.QuickScrollRichTextBox();
+            this.txtJson = new JSONConfigManager.QuickScrollRichTextBox();
             this.toolStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -95,7 +95,7 @@ namespace JSONConfigManager
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.toolStrip1.Size = new System.Drawing.Size(1312, 28);
+            this.toolStrip1.Size = new System.Drawing.Size(1312, 31);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -105,7 +105,7 @@ namespace JSONConfigManager
             this.btnAddNewModConfig.Image = global::JSONConfigManager.Properties.Resources.AddFile;
             this.btnAddNewModConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAddNewModConfig.Name = "btnAddNewModConfig";
-            this.btnAddNewModConfig.Size = new System.Drawing.Size(39, 25);
+            this.btnAddNewModConfig.Size = new System.Drawing.Size(39, 28);
             this.btnAddNewModConfig.Text = "Add New Mod Config";
             this.btnAddNewModConfig.ToolTipText = "Add New Mod Config";
             this.btnAddNewModConfig.ButtonClick += new System.EventHandler(this.btnAddNewModConfig_ButtonClick);
@@ -118,7 +118,7 @@ namespace JSONConfigManager
             this.btnWeb.Image = global::JSONConfigManager.Properties.Resources.Web;
             this.btnWeb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnWeb.Name = "btnWeb";
-            this.btnWeb.Size = new System.Drawing.Size(29, 25);
+            this.btnWeb.Size = new System.Drawing.Size(29, 28);
             this.btnWeb.Tag = "To add custom URL for selected mod, drag and drop link in program bounds.";
             this.btnWeb.Text = "Open Nexus Mod Page";
             this.btnWeb.ToolTipText = "Open Nexus Mod Page or Custom URL\r\n\r\nTo add custom URL for selected mod, drag and" +
@@ -131,7 +131,7 @@ namespace JSONConfigManager
             this.ddlSelectedMod.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             this.ddlSelectedMod.MaxDropDownItems = 32;
             this.ddlSelectedMod.Name = "ddlSelectedMod";
-            this.ddlSelectedMod.Size = new System.Drawing.Size(351, 28);
+            this.ddlSelectedMod.Size = new System.Drawing.Size(351, 31);
             this.ddlSelectedMod.SelectedIndexChanged += new System.EventHandler(this.ddlSelectedMod_SelectedIndexChanged);
             // 
             // btnDarkMode
@@ -141,7 +141,7 @@ namespace JSONConfigManager
             this.btnDarkMode.Image = global::JSONConfigManager.Properties.Resources.DarkMode;
             this.btnDarkMode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnDarkMode.Name = "btnDarkMode";
-            this.btnDarkMode.Size = new System.Drawing.Size(29, 25);
+            this.btnDarkMode.Size = new System.Drawing.Size(29, 28);
             this.btnDarkMode.Text = "DarkMode";
             this.btnDarkMode.ToolTipText = "Toggle between Light and Dark mode";
             this.btnDarkMode.Click += new System.EventHandler(this.btnDarkMode_Click);
@@ -159,7 +159,7 @@ namespace JSONConfigManager
             this.btnAbout.Image = global::JSONConfigManager.Properties.Resources.Info;
             this.btnAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAbout.Name = "btnAbout";
-            this.btnAbout.Size = new System.Drawing.Size(89, 25);
+            this.btnAbout.Size = new System.Drawing.Size(89, 28);
             this.btnAbout.Text = "About";
             this.btnAbout.ButtonClick += new System.EventHandler(this.btnAbout_ButtonClick);
             // 
@@ -201,7 +201,7 @@ namespace JSONConfigManager
             this.btnRemoveModConfig.Image = global::JSONConfigManager.Properties.Resources.RemoveFile;
             this.btnRemoveModConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRemoveModConfig.Name = "btnRemoveModConfig";
-            this.btnRemoveModConfig.Size = new System.Drawing.Size(29, 25);
+            this.btnRemoveModConfig.Size = new System.Drawing.Size(29, 28);
             this.btnRemoveModConfig.Text = "Remove Selected Mod Config";
             this.btnRemoveModConfig.Click += new System.EventHandler(this.btnRemoveModConfig_Click);
             // 
@@ -210,9 +210,9 @@ namespace JSONConfigManager
             this.btnSave.Image = global::JSONConfigManager.Properties.Resources.SaveFile;
             this.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(64, 25);
+            this.btnSave.Size = new System.Drawing.Size(64, 28);
             this.btnSave.Text = "Save";
-            this.btnSave.ToolTipText = "Save Config Changes";
+            this.btnSave.ToolTipText = "Save Config Changes (Ctrl+S)";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnBackup
@@ -226,7 +226,7 @@ namespace JSONConfigManager
             this.btnBackup.Image = global::JSONConfigManager.Properties.Resources.Backup;
             this.btnBackup.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnBackup.Name = "btnBackup";
-            this.btnBackup.Size = new System.Drawing.Size(96, 25);
+            this.btnBackup.Size = new System.Drawing.Size(96, 28);
             this.btnBackup.Text = "Backup";
             this.btnBackup.ToolTipText = "Backup config files or Restore from backup points";
             this.btnBackup.ButtonClick += new System.EventHandler(this.btnBackup_ButtonClick);
@@ -235,23 +235,23 @@ namespace JSONConfigManager
             // 
             this.btnBackupSingle.Image = global::JSONConfigManager.Properties.Resources.Backup;
             this.btnBackupSingle.Name = "btnBackupSingle";
-            this.btnBackupSingle.Size = new System.Drawing.Size(194, 26);
-            this.btnBackupSingle.Text = "Backup";
-            this.btnBackupSingle.Click += new System.EventHandler(this.btnBackup_ButtonClick);
+            this.btnBackupSingle.Size = new System.Drawing.Size(258, 26);
+            this.btnBackupSingle.Text = "Backup (Ctrl+B)";
+            this.btnBackupSingle.Click += new System.EventHandler(this.btnBackupSingle_Click);
             // 
             // btnBackupAll
             // 
             this.btnBackupAll.Image = global::JSONConfigManager.Properties.Resources.Backup;
             this.btnBackupAll.Name = "btnBackupAll";
-            this.btnBackupAll.Size = new System.Drawing.Size(194, 26);
-            this.btnBackupAll.Text = "Backup All";
+            this.btnBackupAll.Size = new System.Drawing.Size(258, 26);
+            this.btnBackupAll.Text = "Backup All (Ctrl+Shift+B)";
             this.btnBackupAll.Click += new System.EventHandler(this.btnBackupAll_Click);
             // 
             // btnOpenBackupDirectory
             // 
             this.btnOpenBackupDirectory.Image = global::JSONConfigManager.Properties.Resources.Browse;
             this.btnOpenBackupDirectory.Name = "btnOpenBackupDirectory";
-            this.btnOpenBackupDirectory.Size = new System.Drawing.Size(194, 26);
+            this.btnOpenBackupDirectory.Size = new System.Drawing.Size(258, 26);
             this.btnOpenBackupDirectory.Text = "Open Directory";
             this.btnOpenBackupDirectory.Click += new System.EventHandler(this.btnOpenBackupDirectory_Click);
             // 
@@ -261,7 +261,7 @@ namespace JSONConfigManager
             this.dummyToolStripMenuItem});
             this.ddlRestoreBackup.Image = global::JSONConfigManager.Properties.Resources.Restore;
             this.ddlRestoreBackup.Name = "ddlRestoreBackup";
-            this.ddlRestoreBackup.Size = new System.Drawing.Size(194, 26);
+            this.ddlRestoreBackup.Size = new System.Drawing.Size(258, 26);
             this.ddlRestoreBackup.Text = "Restore Backup";
             this.ddlRestoreBackup.DropDownOpened += new System.EventHandler(this.ddlRestoreBackup_DropDownOpened);
             // 
@@ -278,7 +278,7 @@ namespace JSONConfigManager
             this.btnSelectGameLocation.Image = global::JSONConfigManager.Properties.Resources.Browse;
             this.btnSelectGameLocation.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSelectGameLocation.Name = "btnSelectGameLocation";
-            this.btnSelectGameLocation.Size = new System.Drawing.Size(177, 25);
+            this.btnSelectGameLocation.Size = new System.Drawing.Size(177, 28);
             this.btnSelectGameLocation.Text = "Select Game Location";
             this.btnSelectGameLocation.ToolTipText = "Select your Fallout 76 game folder or data directory";
             this.btnSelectGameLocation.Click += new System.EventHandler(this.btnSelectGameLocation_Click);
@@ -316,7 +316,7 @@ namespace JSONConfigManager
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 28);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 31);
             this.splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -330,7 +330,7 @@ namespace JSONConfigManager
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1312, 725);
+            this.splitContainer1.Size = new System.Drawing.Size(1312, 722);
             this.splitContainer1.SplitterDistance = 400;
             this.splitContainer1.TabIndex = 4;
             // 
@@ -348,7 +348,7 @@ namespace JSONConfigManager
             this.jsonTreeView.MinimumSize = new System.Drawing.Size(352, 5);
             this.jsonTreeView.Name = "jsonTreeView1";
             this.jsonTreeView.SelectedImageIndex = 0;
-            this.jsonTreeView.Size = new System.Drawing.Size(400, 725);
+            this.jsonTreeView.Size = new System.Drawing.Size(400, 722);
             this.jsonTreeView.TabIndex = 0;
             this.jsonTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.jsonTreeView_AfterSelect);
             this.jsonTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.jsonTreeView_NodeMouseClick);
@@ -374,7 +374,7 @@ namespace JSONConfigManager
             this.splitContainer2.Panel2.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
             this.splitContainer2.Panel2.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
             this.splitContainer2.Panel2MinSize = 0;
-            this.splitContainer2.Size = new System.Drawing.Size(908, 725);
+            this.splitContainer2.Size = new System.Drawing.Size(908, 722);
             this.splitContainer2.SplitterDistance = 270;
             this.splitContainer2.TabIndex = 2;
             this.splitContainer2.TabStop = false;
@@ -395,8 +395,8 @@ namespace JSONConfigManager
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.txtLog);
-            this.splitContainer3.Size = new System.Drawing.Size(270, 725);
-            this.splitContainer3.SplitterDistance = 229;
+            this.splitContainer3.Size = new System.Drawing.Size(270, 722);
+            this.splitContainer3.SplitterDistance = 228;
             this.splitContainer3.TabIndex = 0;
             this.splitContainer3.TabStop = false;
             // 
@@ -407,8 +407,18 @@ namespace JSONConfigManager
             this.userControlContainer.Margin = new System.Windows.Forms.Padding(0);
             this.userControlContainer.MinimumSize = new System.Drawing.Size(0, 100);
             this.userControlContainer.Name = "userControlContainer";
-            this.userControlContainer.Size = new System.Drawing.Size(270, 229);
+            this.userControlContainer.Size = new System.Drawing.Size(270, 228);
             this.userControlContainer.TabIndex = 1;
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(232, 6);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(232, 6);
             // 
             // txtLog
             // 
@@ -419,7 +429,7 @@ namespace JSONConfigManager
             this.txtLog.Margin = new System.Windows.Forms.Padding(0);
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
-            this.txtLog.Size = new System.Drawing.Size(270, 492);
+            this.txtLog.Size = new System.Drawing.Size(270, 490);
             this.txtLog.TabIndex = 0;
             this.txtLog.TabStop = false;
             this.txtLog.Text = "";
@@ -434,20 +444,10 @@ namespace JSONConfigManager
             this.txtJson.Location = new System.Drawing.Point(0, 0);
             this.txtJson.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtJson.Name = "txtJson";
-            this.txtJson.Size = new System.Drawing.Size(634, 725);
+            this.txtJson.Size = new System.Drawing.Size(634, 722);
             this.txtJson.TabIndex = 0;
             this.txtJson.Text = "";
             this.txtJson.Leave += new System.EventHandler(this.txtJson_Leave);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(232, 6);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(232, 6);
             // 
             // Form1
             // 

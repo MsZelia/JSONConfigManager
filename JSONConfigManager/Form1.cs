@@ -490,6 +490,7 @@ namespace JSONConfigManager
                     if (value is JToken newElement)
                     {
                         prop.Add(newElement);
+                        txtLog.Text += $"{token.Path}: added element {newElement} ({newElement.Type}){Environment.NewLine}";
                     }
                 }
                 RefreshConfigTree();
@@ -539,7 +540,7 @@ namespace JSONConfigManager
                 return token;
             }
             catch (Exception) { }
-            token = JArray.Parse("[]");
+            //token = JArray.Parse("[]");
             return token;
         }
 
@@ -552,7 +553,7 @@ namespace JSONConfigManager
                 return token;
             }
             catch (Exception) { }
-            token = JObject.Parse("{}");
+            //token = JObject.Parse("{}");
             return token;
         }
 
@@ -694,12 +695,22 @@ namespace JSONConfigManager
                     //object[] arr = { };
                     //array = new object[] { arr };
                     value = MapArray(txtValue);
+                    if (value == null)
+                    {
+                        txtLog.Text += $"Error adding array: Invalid Json string!{Environment.NewLine}";
+                        return;
+                    }
                 }
                 else if (type == "object")
                 {
                     //object obj = new object();
                     //array = new object[] { obj };
                     value = MapObject(txtValue);
+                    if (value == null)
+                    {
+                        txtLog.Text += $"Error adding object: Invalid Json string!{Environment.NewLine}";
+                        return;
+                    }
                 }
                 else if (textBox.Text.Length > 0)
                 {
@@ -742,11 +753,21 @@ namespace JSONConfigManager
                 {
                     //value = new object[] { };
                     value = MapArray(txtValue);
+                    if (value == null)
+                    {
+                        txtLog.Text += $"Error adding array: Invalid Json string!{Environment.NewLine}";
+                        return;
+                    }
                 }
                 else if (type == "object")
                 {
                     //value = new object();
                     value = MapObject(txtValue);
+                    if (value == null)
+                    {
+                        txtLog.Text += $"Error adding object: Invalid Json string!{Environment.NewLine}";
+                        return;
+                    }
                 }
                 else if (txtValue.Length > 0)
                 {

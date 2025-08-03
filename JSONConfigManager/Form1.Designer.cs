@@ -41,7 +41,6 @@ namespace JSONConfigManager
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.userControlContainer = new System.Windows.Forms.Panel();
             this.txtJson = new System.Windows.Forms.RichTextBox();
-            this.jsonTreeView = new Alex75.JsonViewer.WindowsForm.JsonTreeView();
             this.btnAddNewModConfig = new System.Windows.Forms.ToolStripSplitButton();
             this.btnWeb = new System.Windows.Forms.ToolStripButton();
             this.btnSelectGameLocation = new System.Windows.Forms.ToolStripButton();
@@ -53,6 +52,7 @@ namespace JSONConfigManager
             this.btnOpenBackupDirectory = new System.Windows.Forms.ToolStripMenuItem();
             this.ddlRestoreBackup = new System.Windows.Forms.ToolStripMenuItem();
             this.dummyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.jsonTreeView = new Alex75.JsonViewer.WindowsForm.JsonTreeView();
             this.toolStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -231,22 +231,6 @@ namespace JSONConfigManager
             this.txtJson.Text = "";
             this.txtJson.Leave += new System.EventHandler(this.txtJson_Leave);
             // 
-            // jsonTreeView
-            // 
-            this.jsonTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.jsonTreeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.jsonTreeView.FullRowSelect = true;
-            this.jsonTreeView.ImageIndex = 0;
-            this.jsonTreeView.LabelEdit = true;
-            this.jsonTreeView.Location = new System.Drawing.Point(0, 0);
-            this.jsonTreeView.Margin = new System.Windows.Forms.Padding(2);
-            this.jsonTreeView.MinimumSize = new System.Drawing.Size(264, 4);
-            this.jsonTreeView.Name = "jsonTreeView1";
-            this.jsonTreeView.SelectedImageIndex = 0;
-            this.jsonTreeView.Size = new System.Drawing.Size(400, 584);
-            this.jsonTreeView.TabIndex = 0;
-            this.jsonTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.jsonTreeView_NodeMouseClick);
-            // 
             // btnAddNewModConfig
             // 
             this.btnAddNewModConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -353,6 +337,22 @@ namespace JSONConfigManager
             this.dummyToolStripMenuItem.Name = "dummyToolStripMenuItem";
             this.dummyToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.dummyToolStripMenuItem.Text = "dummy";
+            // 
+            // jsonTreeView
+            // 
+            this.jsonTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.jsonTreeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.jsonTreeView.FullRowSelect = true;
+            this.jsonTreeView.HideSelection = false;
+            this.jsonTreeView.ImageIndex = 0;
+            this.jsonTreeView.Location = new System.Drawing.Point(0, 0);
+            this.jsonTreeView.Margin = new System.Windows.Forms.Padding(2);
+            this.jsonTreeView.MinimumSize = new System.Drawing.Size(264, 4);
+            this.jsonTreeView.Name = "jsonTreeView1";
+            this.jsonTreeView.SelectedImageIndex = 0;
+            this.jsonTreeView.Size = new System.Drawing.Size(400, 584);
+            this.jsonTreeView.TabIndex = 0;
+            this.jsonTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.jsonTreeView_NodeMouseClick);
             // 
             // Form1
             // 

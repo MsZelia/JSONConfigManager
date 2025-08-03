@@ -69,7 +69,7 @@ namespace JSONConfigManager
 
         private UserControl nodeEditUserControl;
 
-        private string lastJsonText = "";
+        private string lastJsonText = string.Empty;
 
         public Form1()
         {
@@ -86,6 +86,7 @@ namespace JSONConfigManager
             }
         }
 
+        #region SETTINGS
         private void LoadSettings()
         {
             try
@@ -151,7 +152,45 @@ namespace JSONConfigManager
                 MessageBox.Show($"Error saving settings:{Environment.NewLine}{ex}", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        #endregion
 
+        #region GAME DIRECTORY
+        private void SelectGameLocation()
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                fbd.ShowNewFolderButton = false;
+                if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    string selectedDir = fbd.SelectedPath;
+                    if (selectedDir.ToLower().IndexOf("data") == -1)
+                    {
+                        selectedDir = selectedDir + "\\Data\\";
+                    }
+
+                    if (!selectedDir.EndsWith("\\") && !selectedDir.EndsWith("/"))
+                    {
+                        selectedDir = selectedDir + "\\";
+                    }
+
+                    if (Directory.Exists(selectedDir))
+                    {
+                        gameDir = selectedDir;
+                        logStatus = $"Game dir set: {selectedDir}";
+                        SaveSettings();
+                        UpdateToolbarButtons();
+                        InitLoadedModConfigs();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Invalid game directory, folder does not exist!{Environment.NewLine}{selectedDir}", "Game dir error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region BACKUPS
         private void Backup(bool backupAll = false)
         {
             string file = ddlSelectedMod.Text;
@@ -223,42 +262,6 @@ namespace JSONConfigManager
             return false;
         }
 
-        private void ListBackups()
-        {
-            try
-            {
-                foreach (ToolStripMenuItem tsmi in ddlRestoreBackup.DropDownItems)
-                {
-                    tsmi.DropDownItemClicked -= restoreBackup_DropDownItemClicked;
-                }
-                ddlRestoreBackup.DropDownItems.Clear();
-                if (Directory.Exists(backupDir))
-                {
-                    foreach (string directory in Directory.GetDirectories(backupDir))
-                    {
-                        ToolStripMenuItem tsmi = new ToolStripMenuItem(directory.Substring(directory.LastIndexOf("\\") + 1));
-                        tsmi.DropDownItems.Add(new ToolStripMenuItem("RESTORE ALL") { Tag = (directory, true) });
-                        foreach (var file in Directory.GetFiles(directory))
-                        {
-                            tsmi.DropDownItems.Add(new ToolStripMenuItem(file.Substring(file.LastIndexOf("\\") + 1)) { Tag = (file, false) });
-                        }
-                        tsmi.DropDownItemClicked += restoreBackup_DropDownItemClicked;
-                        ddlRestoreBackup.DropDownItems.Add(tsmi);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error loading backups:{Environment.NewLine}{ex/*.Message*/}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void restoreBackup_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            ValueTuple<string, bool> fileToRestore = (ValueTuple<string, bool>)(e.ClickedItem as ToolStripMenuItem).Tag;
-            Restore(fileToRestore.Item1, fileToRestore.Item2);
-        }
-
         private void Restore(string dir, bool isDir)
         {
             try
@@ -303,25 +306,33 @@ namespace JSONConfigManager
             return false;
         }
 
-        private void SaveFile()
+        private void ListBackups()
         {
             try
             {
-                if (ddlSelectedMod.SelectedIndex == -1)
+                foreach (ToolStripMenuItem tsmi in ddlRestoreBackup.DropDownItems)
                 {
-                    return;
+                    tsmi.DropDownItemClicked -= restoreBackup_DropDownItemClicked;
                 }
-                string file = ddlSelectedMod.SelectedItem.ToString();
-                string cnf = config.ToString();
-                File.WriteAllText(gameDir + file, cnf);
-                logStatus = $"Saved all changes to {file}";
-                configEdited = false;
-
-                MessageBox.Show($"Saved all changes to {file}.", "Save file", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ddlRestoreBackup.DropDownItems.Clear();
+                if (Directory.Exists(backupDir))
+                {
+                    foreach (string directory in Directory.GetDirectories(backupDir))
+                    {
+                        ToolStripMenuItem tsmi = new ToolStripMenuItem(directory.Substring(directory.LastIndexOf("\\") + 1));
+                        tsmi.DropDownItems.Add(new ToolStripMenuItem("RESTORE ALL") { Tag = (directory, true) });
+                        foreach (var file in Directory.GetFiles(directory))
+                        {
+                            tsmi.DropDownItems.Add(new ToolStripMenuItem(file.Substring(file.LastIndexOf("\\") + 1)) { Tag = (file, false) });
+                        }
+                        tsmi.DropDownItemClicked += restoreBackup_DropDownItemClicked;
+                        ddlRestoreBackup.DropDownItems.Add(tsmi);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error Saving file:{Environment.NewLine}{ex}", "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading backups:{Environment.NewLine}{ex/*.Message*/}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -344,7 +355,9 @@ namespace JSONConfigManager
                 MessageBox.Show($"Error opening backup directory:{Environment.NewLine}{ex}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        #endregion
 
+        #region NEXUS URL
         private void OpenNexusUrl()
         {
             try
@@ -358,6 +371,30 @@ namespace JSONConfigManager
             catch (Exception ex)
             {
                 MessageBox.Show($"Error opening nexus url:{Environment.NewLine}{ex}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        #endregion
+
+        #region CONFIG  FILE MANIPULATION
+        private void SaveFile()
+        {
+            try
+            {
+                if (ddlSelectedMod.SelectedIndex == -1)
+                {
+                    return;
+                }
+                string file = ddlSelectedMod.SelectedItem.ToString();
+                string cnf = config.ToString();
+                File.WriteAllText(gameDir + file, cnf);
+                logStatus = $"Saved all changes to {file}";
+                configEdited = false;
+
+                MessageBox.Show($"Saved all changes to {file}.", "Save file", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error Saving file:{Environment.NewLine}{ex}", "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -390,6 +427,7 @@ namespace JSONConfigManager
             SaveSettings();
             UpdateToolbarButtons();
             jsonTreeView.Nodes.Clear();
+            txtJson.Text = string.Empty;
         }
 
         private void LoadModConfigFiles()
@@ -414,10 +452,32 @@ namespace JSONConfigManager
             }
         }
 
+        private void InitLoadedModConfigs(bool clearSelection = false)
+        {
+            ddlSelectedMod.Items.Clear();
+            foreach (var key in modList.Keys)
+            {
+                if (File.Exists(gameDir + key))
+                {
+                    ddlSelectedMod.Items.Add(key);
+                }
+            }
+            if (clearSelection)
+            {
+                ddlSelectedMod.Text = ddlSelectedMod.ToolTipText;
+            }
+        }
+        #endregion
+
+        #region CONFIG EDITING
         private void ApplyManualEditChanges()
         {
             try
             {
+                if (txtJson.Text.Trim() == string.Empty)
+                {
+                    return;
+                }
                 if (lastJsonText != txtJson.Text)
                 {
                     configEdited = true;
@@ -429,45 +489,6 @@ namespace JSONConfigManager
             catch (Exception ex)
             {
                 txtLog.Text += $"Invalid Json from manual changes!{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
-            }
-        }
-
-        private void toolStripSplitButtonProfile_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnSelectGameLocation_Click(object sender, EventArgs e)
-        {
-            using (var fbd = new FolderBrowserDialog())
-            {
-                fbd.ShowNewFolderButton = false;
-                if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    string selectedDir = fbd.SelectedPath;
-                    if (selectedDir.ToLower().IndexOf("data") == -1)
-                    {
-                        selectedDir = selectedDir + "\\Data\\";
-                    }
-
-                    if (!selectedDir.EndsWith("\\") && !selectedDir.EndsWith("/"))
-                    {
-                        selectedDir = selectedDir + "\\";
-                    }
-
-                    if (Directory.Exists(selectedDir))
-                    {
-                        gameDir = selectedDir;
-                        logStatus = $"Game dir set: {selectedDir}";
-                        SaveSettings();
-                        UpdateToolbarButtons();
-                        InitLoadedModConfigs();
-                    }
-                    else
-                    {
-                        MessageBox.Show($"Invalid game directory, folder does not exist!{Environment.NewLine}{selectedDir}", "Game dir error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
             }
         }
 
@@ -531,35 +552,9 @@ namespace JSONConfigManager
             }
         }
 
-        private JToken MapArray(string value)
-        {
-            JToken token = null;
-            try
-            {
-                token = JArray.Parse(value);
-                return token;
-            }
-            catch (Exception) { }
-            //token = JArray.Parse("[]");
-            return token;
-        }
-
-        private JToken MapObject(string value)
-        {
-            JToken token = null;
-            try
-            {
-                token = JObject.Parse(value);
-                return token;
-            }
-            catch (Exception) { }
-            //token = JObject.Parse("{}");
-            return token;
-        }
-
         private void RefreshConfigTree(string json = null)
         {
-            string selectedPath = "";
+            string selectedPath = string.Empty;
             if (selectedNodeToken != null)
             {
                 selectedPath = selectedNodeToken.Path;
@@ -574,7 +569,7 @@ namespace JSONConfigManager
             {
                 jsonTreeView.ShowJson(json);
             }
-            if (selectedPath != "")
+            if (selectedPath != string.Empty)
             {
                 selectedNode = GetNodeFromPath(jsonTreeView.TopNode, selectedPath);
                 if (selectedNode != null)
@@ -594,28 +589,6 @@ namespace JSONConfigManager
             config = jsonTreeView.JSON;
             txtJson.Text = config.ToString();
             lastJsonText = txtJson.Text;
-        }
-
-        private TreeNode GetNodeFromPath(TreeNode node, string path)
-        {
-            TreeNode foundNode = null;
-            foreach (TreeNode tn in node.Nodes)
-            {
-                var tnPath = (tn.Tag as JToken)?.Path ?? "";
-                if (tnPath == path)
-                {
-                    return tn;
-                }
-                else if (tn.Nodes.Count > 0)
-                {
-                    foundNode = GetNodeFromPath(tn, path);
-                }
-                if (foundNode != null)
-                {
-                    return foundNode;
-                }
-            }
-            return null;
         }
 
         private void NumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -723,7 +696,7 @@ namespace JSONConfigManager
 
                 SetConfigValue(value, token);
                 configEdited = true;
-                textBox.Text = "";
+                textBox.Text = string.Empty;
             }
             catch (Exception ex)
             {
@@ -780,107 +753,13 @@ namespace JSONConfigManager
                 var prop = new KeyValuePair<string, object>(key, value);
                 SetConfigValue(prop, token);
                 configEdited = true;
-                textBoxKey.Text = "";
-                textBoxValue.Text = "";
+                textBoxKey.Text = string.Empty;
+                textBoxValue.Text = string.Empty;
             }
             catch (Exception ex)
             {
                 txtLog.Text += $"Error adding property value:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}";
             }
-        }
-
-        private object RemapObject(string type, string value)
-        {
-            if (type == "string")
-            {
-                return value.Trim();
-            }
-            else if (type == "int")
-            {
-                if (int.TryParse(value, out int result))
-                {
-                    return result;
-                }
-                return 0;
-            }
-            else if (type == "decimal")
-            {
-                if (decimal.TryParse(value.Replace('.', ','), out decimal result))
-                {
-                    return result;
-                }
-                return (decimal)0;
-            }
-            else if (type == "bool")
-            {
-                if (bool.TryParse(value, out bool result))
-                {
-                    return result;
-                }
-                return false;
-            }
-            return "";
-        }
-
-        private void InitLoadedModConfigs(bool clearSelection = false)
-        {
-            ddlSelectedMod.Items.Clear();
-            foreach (var key in modList.Keys)
-            {
-                if (File.Exists(gameDir + key))
-                {
-                    ddlSelectedMod.Items.Add(key);
-                }
-            }
-            if (clearSelection)
-            {
-                ddlSelectedMod.Text = ddlSelectedMod.ToolTipText;
-            }
-        }
-
-        private void ResetSelectedConfigControls()
-        {
-            foreach (Control uc in userControlContainer.Controls)
-            {
-                if (uc is UserControlInteger)
-                {
-                    (uc as UserControlInteger).numericUpDown.ValueChanged -= NumericUpDownInt_ValueChanged;
-                }
-                else if (uc is UserControlDecimal)
-                {
-                    (uc as UserControlDecimal).numericUpDown.ValueChanged -= NumericUpDown_ValueChanged;
-                }
-                else if (uc is UserControlBoolean)
-                {
-                    (uc as UserControlBoolean).checkBox.CheckedChanged -= CheckBox_CheckedChanged;
-                }
-                else if (uc is UserControlString)
-                {
-                    (uc as UserControlString).textBox.LostFocus -= TextBox_LostFocus;
-                }
-                else if (uc is UserControlArray)
-                {
-                    (uc as UserControlArray).TextFieldDataSubmit -= TextBoxArray_DataSubmit;
-                }
-                else if (uc is UserControlProperty)
-                {
-                    (uc as UserControlProperty).TextFieldDataSubmit -= TextBoxProperty_DataSubmit;
-                }
-            }
-            userControlContainer.Controls.Clear();
-        }
-
-        private void UpdateToolbarButtons()
-        {
-            btnAddNewModConfig.Enabled = Directory.Exists(gameDir);
-            ddlSelectedMod.Enabled = btnAddNewModConfig.Enabled;
-            btnBackupAll.Enabled = btnAddNewModConfig.Enabled;
-            ddlRestoreBackup.Enabled = btnAddNewModConfig.Enabled;
-            bool isModSelected = ddlSelectedMod.SelectedIndex != -1;
-            btnRemoveModConfig.Enabled = isModSelected;
-            btnSave.Enabled = isModSelected;
-            btnBackupSingle.Enabled = isModSelected;
-            btnWeb.Enabled = isModSelected && nexusLinks.ContainsKey(ddlSelectedMod.SelectedItem.ToString().ToLower());
         }
 
         private void SelectModConfigFile()
@@ -900,7 +779,7 @@ namespace JSONConfigManager
                 return;
             }
 
-            string file = "";
+            string file = string.Empty;
             try
             {
                 file = ddlSelectedMod.SelectedItem.ToString();
@@ -914,96 +793,7 @@ namespace JSONConfigManager
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            InitLoadedModConfigs();
-            if (settings[SETTING_X] != null) this.Left = (int)settings[SETTING_X];
-            if (settings[SETTING_Y] != null) this.Top = (int)settings[SETTING_Y];
-            if (settings[SETTING_W] != null) this.Width = Math.Max((int)settings[SETTING_W], this.MinimumSize.Width);
-            if (settings[SETTING_H] != null) this.Height = Math.Max((int)settings[SETTING_H], this.MinimumSize.Height);
-
-            if (settings[SETTING_SPLIT_1] != null) splitContainer1.SplitterDistance = (int)settings[SETTING_SPLIT_1];
-            if (settings[SETTING_SPLIT_2] != null) splitContainer2.SplitterDistance = (int)settings[SETTING_SPLIT_2];
-            if (settings[SETTING_SPLIT_3] != null) splitContainer3.SplitterDistance = (int)settings[SETTING_SPLIT_3];
-        }
-
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            UpdateToolbarButtons();
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SaveSettings();
-            if (configEdited)
-            {
-                if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and exit?", "Discard Changes and Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
-                {
-                    e.Cancel = true;
-                }
-            }
-        }
-
-        private void ddlSelectedMod_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SelectModConfigFile();
-        }
-
-        private void btnAddNewModConfig_DropDownOpening(object sender, EventArgs e)
-        {
-            LoadModConfigFiles();
-        }
-
-        private void btnAddNewModConfig_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            AddModConfigFile(e.ClickedItem.Text);
-        }
-
-        private void btnRemoveModConfig_Click(object sender, EventArgs e)
-        {
-            RemoveModConfigFile();
-        }
-
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            SaveFile();
-        }
-
-        private void btnBackup_ButtonClick(object sender, EventArgs e)
-        {
-            if (ddlSelectedMod.SelectedIndex != -1)
-            {
-                Backup();
-            }
-        }
-
-        private void btnBackupAll_Click(object sender, EventArgs e)
-        {
-            Backup(true);
-        }
-
-        private void btnOpenBackupDirectory_Click(object sender, EventArgs e)
-        {
-            OpenBackupDirectory();
-        }
-
-        private void btnWeb_Click(object sender, EventArgs e)
-        {
-            OpenNexusUrl();
-        }
-
-        private void ddlRestoreBackup_DropDownOpened(object sender, EventArgs e)
-        {
-            ListBackups();
-        }
-
-        private void tbLog_TextChanged(object sender, EventArgs e)
-        {
-            txtLog.SelectionStart = txtLog.Text.Length;
-            txtLog.ScrollToCaret();
-        }
-
-        private void jsonTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void InitializeSelectedConfigEditControls(TreeNodeMouseClickEventArgs e)
         {
             if (nodeEditUserControl != null)
             {
@@ -1089,6 +879,237 @@ namespace JSONConfigManager
                     break;
             }
         }
+        #endregion
+
+        #region UTILITIES
+        private JToken MapArray(string value)
+        {
+            JToken token = null;
+            try
+            {
+                token = JArray.Parse(value);
+                return token;
+            }
+            catch (Exception) { }
+            //token = JArray.Parse("[]");
+            return token;
+        }
+
+        private JToken MapObject(string value)
+        {
+            JToken token = null;
+            try
+            {
+                token = JObject.Parse(value);
+                return token;
+            }
+            catch (Exception) { }
+            //token = JObject.Parse("{}");
+            return token;
+        }
+
+        private object RemapObject(string type, string value)
+        {
+            if (type == "string")
+            {
+                return value.Trim();
+            }
+            else if (type == "int")
+            {
+                if (int.TryParse(value, out int result))
+                {
+                    return result;
+                }
+                return 0;
+            }
+            else if (type == "decimal")
+            {
+                if (decimal.TryParse(value.Replace('.', ','), out decimal result))
+                {
+                    return result;
+                }
+                return decimal.Zero;
+            }
+            else if (type == "bool")
+            {
+                if (bool.TryParse(value, out bool result))
+                {
+                    return result;
+                }
+                return false;
+            }
+            return string.Empty;
+        }
+
+        private TreeNode GetNodeFromPath(TreeNode node, string path)
+        {
+            TreeNode foundNode = null;
+            foreach (TreeNode tn in node.Nodes)
+            {
+                var tnPath = (tn.Tag as JToken)?.Path ?? string.Empty;
+                if (tnPath == path)
+                {
+                    return tn;
+                }
+                else if (tn.Nodes.Count > 0)
+                {
+                    foundNode = GetNodeFromPath(tn, path);
+                }
+                if (foundNode != null)
+                {
+                    return foundNode;
+                }
+            }
+            return null;
+        }
+
+        private void UpdateToolbarButtons()
+        {
+            btnAddNewModConfig.Enabled = Directory.Exists(gameDir);
+            ddlSelectedMod.Enabled = btnAddNewModConfig.Enabled;
+            btnBackupAll.Enabled = btnAddNewModConfig.Enabled;
+            ddlRestoreBackup.Enabled = btnAddNewModConfig.Enabled;
+            bool isModSelected = ddlSelectedMod.SelectedIndex != -1;
+            btnRemoveModConfig.Enabled = isModSelected;
+            btnSave.Enabled = isModSelected;
+            btnBackupSingle.Enabled = isModSelected;
+            btnWeb.Enabled = isModSelected && nexusLinks.ContainsKey(ddlSelectedMod.SelectedItem.ToString().ToLower());
+        }
+
+        private void ResetSelectedConfigControls()
+        {
+            foreach (Control uc in userControlContainer.Controls)
+            {
+                if (uc is UserControlInteger)
+                {
+                    (uc as UserControlInteger).numericUpDown.ValueChanged -= NumericUpDownInt_ValueChanged;
+                }
+                else if (uc is UserControlDecimal)
+                {
+                    (uc as UserControlDecimal).numericUpDown.ValueChanged -= NumericUpDown_ValueChanged;
+                }
+                else if (uc is UserControlBoolean)
+                {
+                    (uc as UserControlBoolean).checkBox.CheckedChanged -= CheckBox_CheckedChanged;
+                }
+                else if (uc is UserControlString)
+                {
+                    (uc as UserControlString).textBox.LostFocus -= TextBox_LostFocus;
+                }
+                else if (uc is UserControlArray)
+                {
+                    (uc as UserControlArray).TextFieldDataSubmit -= TextBoxArray_DataSubmit;
+                }
+                else if (uc is UserControlProperty)
+                {
+                    (uc as UserControlProperty).TextFieldDataSubmit -= TextBoxProperty_DataSubmit;
+                }
+            }
+            userControlContainer.Controls.Clear();
+        }
+        #endregion
+
+        #region FORM EVENTS
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            InitLoadedModConfigs();
+            if (settings[SETTING_X] != null) this.Left = (int)settings[SETTING_X];
+            if (settings[SETTING_Y] != null) this.Top = (int)settings[SETTING_Y];
+            if (settings[SETTING_W] != null) this.Width = Math.Max((int)settings[SETTING_W], this.MinimumSize.Width);
+            if (settings[SETTING_H] != null) this.Height = Math.Max((int)settings[SETTING_H], this.MinimumSize.Height);
+
+            if (settings[SETTING_SPLIT_1] != null) splitContainer1.SplitterDistance = (int)settings[SETTING_SPLIT_1];
+            if (settings[SETTING_SPLIT_2] != null) splitContainer2.SplitterDistance = (int)settings[SETTING_SPLIT_2];
+            if (settings[SETTING_SPLIT_3] != null) splitContainer3.SplitterDistance = (int)settings[SETTING_SPLIT_3];
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            UpdateToolbarButtons();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveSettings();
+            if (configEdited)
+            {
+                if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and exit?", "Discard Changes and Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+        #endregion
+
+        #region UI EVENTS
+        private void toolStripSplitButtonProfile_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSelectGameLocation_Click(object sender, EventArgs e)
+        {
+            SelectGameLocation();
+        }
+
+        private void btnWeb_Click(object sender, EventArgs e)
+        {
+            OpenNexusUrl();
+        }
+
+        private void btnBackup_ButtonClick(object sender, EventArgs e)
+        {
+            if (ddlSelectedMod.SelectedIndex != -1)
+            {
+                Backup();
+            }
+        }
+
+        private void btnBackupAll_Click(object sender, EventArgs e)
+        {
+            Backup(true);
+        }
+
+        private void btnOpenBackupDirectory_Click(object sender, EventArgs e)
+        {
+            OpenBackupDirectory();
+        }
+
+        private void ddlRestoreBackup_DropDownOpened(object sender, EventArgs e)
+        {
+            ListBackups();
+        }
+
+        private void restoreBackup_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            ValueTuple<string, bool> fileToRestore = (ValueTuple<string, bool>)(e.ClickedItem as ToolStripMenuItem).Tag;
+            Restore(fileToRestore.Item1, fileToRestore.Item2);
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveFile();
+        }
+
+        private void ddlSelectedMod_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SelectModConfigFile();
+        }
+
+        private void btnAddNewModConfig_DropDownOpening(object sender, EventArgs e)
+        {
+            LoadModConfigFiles();
+        }
+
+        private void btnAddNewModConfig_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            AddModConfigFile(e.ClickedItem.Text);
+        }
+
+        private void btnRemoveModConfig_Click(object sender, EventArgs e)
+        {
+            RemoveModConfigFile();
+        }
 
         private void btnAddNewModConfig_ButtonClick(object sender, EventArgs e)
         {
@@ -1096,9 +1117,21 @@ namespace JSONConfigManager
             btnAddNewModConfig.DropDown.Show(btnAddNewModConfig.DropDown.Left, btnAddNewModConfig.DropDown.Top);
         }
 
+        private void tbLog_TextChanged(object sender, EventArgs e)
+        {
+            txtLog.SelectionStart = txtLog.Text.Length;
+            txtLog.ScrollToCaret();
+        }
+
+        private void jsonTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            InitializeSelectedConfigEditControls(e);
+        }
+
         private void txtJson_Leave(object sender, EventArgs e)
         {
             ApplyManualEditChanges();
         }
+        #endregion
     }
 }

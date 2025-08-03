@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,8 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace JSONConfigManager
 {
@@ -29,7 +29,11 @@ namespace JSONConfigManager
         private const string SETTING_MOD_LIST = "modList";
         private const string SETTING_CUSTOM_LINKS = "customLinks";
 
-        public string settingsDir = AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".json";
+        private const string SUFFIX_JSON = ".json";
+        private const string SUFFIX_INI = ".ini";
+        private const string SUFFIX_XML = ".xml";
+
+        public string settingsDir = $"{AppDomain.CurrentDomain.BaseDirectory}{Process.GetCurrentProcess().ProcessName}{SUFFIX_JSON}";
 
         public string initDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Fallout76\\Data\\";
 
@@ -51,12 +55,17 @@ namespace JSONConfigManager
 
         public Dictionary<string, string> nexusLinks = new Dictionary<string, string>()
         {
+            { "betterseasons.ini", "2824" },
             { "buffsmeter.json", "2821" },
             { "campswaplock.json", "3267" },
+            { "customcrosshair.xml", "953" },
             { "customradios.json", "2901" },
+            { "fanfarefree.ini", "1293" },
             { "hudbarpercentwidgets.json", "3124" },
             { "hudchallenges.json", "2860" },
             { "hudcondition.json", "3114" },
+            { "hudeditor.xml", "953" },
+            { "hudmodloader.ini", "3144" },
             { "hudplayerlist.json", "2811" },
             { "improvedpipboystatsconfig.json", "3080" },
             { "improvedsocialmenuconfig.json", "2915" },
@@ -65,7 +74,10 @@ namespace JSONConfigManager
             { "inventomaticstashconfig.json", "2335" },
             { "radialmenuloadoutconfig.json", "3166" },
             { "skipmessagesconfig.json", "3007" },
-            { "vatspriorityconfig.json", "3297" }
+            { "statsmeter.ini", "2082" },
+            { "skipmessagesconfig.json", "3007" },
+            { "vatspriorityconfig.json", "3297" },
+            { "vendorlog.ini", "2042" }
         };
 
         public Dictionary<string, string> customLinks = new Dictionary<string, string>();
@@ -97,6 +109,8 @@ namespace JSONConfigManager
 
         private string configIni = string.Empty;
 
+        private bool hasCommentsInFile = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -118,7 +132,7 @@ namespace JSONConfigManager
             get => lblStatus.Text;
             set
             {
-                txtLog.Text += $"{value}{Environment.NewLine}";
+                txtLog.Text += $"> {value}{Environment.NewLine}";
             }
         }
 
@@ -170,7 +184,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                if (MessageBox.Show($"Error loading settings:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}Do you want to restore default settings?", "Restore Default Settings?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                if (MessageBox.Show($"Error loading settings:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}{Environment.NewLine}Choosing No will exit the program!{Environment.NewLine}You can try to manually repair your config file.{Environment.NewLine}{Environment.NewLine}Do you want to restore default settings?", "Restore Default Settings?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     SaveSettings();
                 }
@@ -536,6 +550,13 @@ namespace JSONConfigManager
                 {
                     return;
                 }
+                if(hasCommentsInFile)
+                {
+                    if (MessageBox.Show($"Comments detected in config file:{Environment.NewLine}Saving will remove all comments and reset formatting!{Environment.NewLine}{Environment.NewLine}Are you sure you want to proceed?", "Reset formatting and Save file?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
+                    {
+                        return;
+                    }
+                }
                 string file = ddlSelectedMod.SelectedItem.ToString();
                 if (isIni)
                 {
@@ -551,6 +572,7 @@ namespace JSONConfigManager
                 {
                     string cnf = config.ToString();
                     File.WriteAllText(gameDir + file, cnf);
+                    hasCommentsInFile = false;
                 }
                 logStatus = $"Saved all changes to {file}";
                 configEdited = false;
@@ -592,7 +614,9 @@ namespace JSONConfigManager
             SaveSettings();
             UpdateToolbarButtons();
             jsonTreeView.Nodes.Clear();
+            isIni = false;
             txtJson.Text = string.Empty;
+            lastJsonText = string.Empty;
         }
 
         private void LoadModConfigFiles()
@@ -602,7 +626,7 @@ namespace JSONConfigManager
                 btnAddNewModConfig.DropDownItems.Clear();
                 logStatus = "Loading...";
                 foreach (var file in Directory.EnumerateFiles(gameDir)
-                    .Where(fileName => fileName.ToLower().EndsWith(".json") || fileName.ToLower().EndsWith(".ini")))
+                    .Where(fileName => fileName.ToLower().EndsWith(SUFFIX_JSON) || fileName.ToLower().EndsWith(SUFFIX_INI) || fileName.ToLower().EndsWith(SUFFIX_XML)))
                 {
                     FileInfo info = new FileInfo(file);
                     if (!modList.ContainsKey(info.Name))
@@ -644,9 +668,9 @@ namespace JSONConfigManager
                     log = $"Not adding config file {fileName}, not located in game directory!";
                     continue;
                 }
-                if (!fileName.ToLower().EndsWith(".json") && !fileName.ToLower().EndsWith(".ini"))
+                if (!fileName.ToLower().EndsWith(SUFFIX_JSON) && !fileName.ToLower().EndsWith(SUFFIX_INI) && !fileName.ToLower().EndsWith(SUFFIX_XML))
                 {
-                    log = $"Not adding config file {fileName}, not json or ini extension!";
+                    log = $"Not adding config file {fileName}, not json/ini/xml extension!";
                     continue;
                 }
                 if (modList.ContainsKey(fileName))
@@ -674,7 +698,7 @@ namespace JSONConfigManager
                     configEdited = true;
                     JObject.Parse(txtJson.Text);
                     RefreshConfigTree(txtJson.Text);
-                    log = $"Changes from manual edit applied!";
+                    log = $"Changes from manual edit synchronized!";
                 }
             }
             catch (Exception ex)
@@ -767,13 +791,17 @@ namespace JSONConfigManager
                 {
                     selectedNode.EnsureVisible();
                     selectedNodeToken = selectedNode.Tag as JToken;
-                    jsonTreeView_NodeMouseClick(null, new TreeNodeMouseClickEventArgs(selectedNode, MouseButtons.Left, 1, 0, 0));
+                    InitializeSelectedConfigEditControls(selectedNode);
                     if (selectedNodeToken != null)
                     {
                         if (selectedNodeToken.Type == JTokenType.Array || selectedNodeToken.Type == JTokenType.Object)
                         {
                             selectedNode.Expand();
                         }
+                    }
+                    else
+                    {
+                        jsonTreeView.TopNode.Tag = config;
                     }
                 }
             }
@@ -984,15 +1012,15 @@ namespace JSONConfigManager
                     return;
                 }
             }
-            lastSelectedModItem = ddlSelectedMod.SelectedItem;
             configEdited = false;
             UpdateToolbarButtons();
 
             if (ddlSelectedMod.SelectedIndex == -1)
             {
+                lastSelectedModItem = ddlSelectedMod.SelectedItem;
                 return;
             }
-            isIni = ddlSelectedMod.SelectedItem.ToString().ToLower().EndsWith(".ini");
+            isIni = ddlSelectedMod.SelectedItem.ToString().ToLower().EndsWith(SUFFIX_INI) || ddlSelectedMod.SelectedItem.ToString().ToLower().EndsWith(SUFFIX_XML);
 
             string file = string.Empty;
             try
@@ -1001,6 +1029,7 @@ namespace JSONConfigManager
                 string fileContent = File.ReadAllText(gameDir + file);
                 if (isIni)
                 {
+                    hasCommentsInFile = false;
                     txtJson.Text = fileContent;
                     configIni = txtJson.Text;
                     jsonTreeView.Nodes.Clear();
@@ -1008,22 +1037,21 @@ namespace JSONConfigManager
                 }
                 else
                 {
+                    hasCommentsInFile = fileContent.IndexOf("//") != -1 || fileContent.IndexOf("/*") != -1;
                     RefreshConfigTree(fileContent);
                 }
                 logStatus = $"Config file {file} loaded!";
+                lastSelectedModItem = ddlSelectedMod.SelectedItem;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading config {file}:{Environment.NewLine}{ex}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ddlSelectedMod.SelectedItem = lastSelectedModItem;
             }
         }
 
         private void InitializeSelectedConfigEditControls(TreeNode node)
         {
-            if (selectedNode == node)
-            {
-                return;
-            }
             if (nodeEditUserControl != null)
             {
                 ResetSelectedConfigControls();
@@ -1327,6 +1355,15 @@ namespace JSONConfigManager
                         if (e.Control)
                         {
                             Backup(e.Shift);
+                        }
+                        break;
+                    }
+                case Keys.R:
+                    {
+                        if (e.Control && e.Shift)
+                        {
+                            btnBackup.DropDown.Show();
+                            ddlRestoreBackup.DropDown.Show();
                         }
                         break;
                     }

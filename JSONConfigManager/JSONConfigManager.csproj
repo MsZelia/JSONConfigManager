@@ -181,20 +181,16 @@
   <ItemGroup>
     <Resource Include="Icons\AddFile.png" />
     <Resource Include="Icons\RemoveFile.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icons\Browse.png" />
     <Resource Include="Icons\SaveFile.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icons\Web.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icons\Backup.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icons\DarkMode.png" />
-    <Content Include="Icons\Restore.png" />
+    <Resource Include="Icons\Info.png" />
+    <Resource Include="Icons\Github.png" />
+    <Resource Include="Icons\Kofi.png" />
+    <Resource Include="Icons\Nexus.png" />
+    <Resource Include="Icons\Restore.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JSON Viewer\JSON Viewer.csproj">

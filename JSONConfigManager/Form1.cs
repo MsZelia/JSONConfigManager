@@ -37,7 +37,15 @@ namespace JSONConfigManager
 
         public string backupDir = ".\\Backups\\";
 
-        public string nexusURL = "https://www.nexusmods.com/fallout76/mods/";
+        public string nexus76HomeURL = "https://www.nexusmods.com/fallout76/mods/";
+
+        public string githubPageURL = "https://github.com/MsZelia/JSONConfigManager";
+
+        public string nexusPageURL = "https://next.nexusmods.com/profile/MsZelia"; //TODO
+
+        public string nexusUserPageURL = "https://next.nexusmods.com/profile/MsZelia/mods";
+        
+        public string kofiURL = "https://ko-fi.com/zelia";
 
         public Dictionary<string, string> modList = new Dictionary<string, string>();
 
@@ -462,6 +470,18 @@ namespace JSONConfigManager
         #endregion
 
         #region URLS
+        private void OpenURL(string url)
+        {
+            try
+            {
+                Process.Start(url);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening URL:{Environment.NewLine}{ex/*.Message*/}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void OpenNexusUrl()
         {
             try
@@ -469,17 +489,17 @@ namespace JSONConfigManager
                 string file = ddlSelectedMod.Text.ToLower();
                 if (customLinks.ContainsKey(file))
                 {
-                    Process.Start(customLinks[file]);
+                    OpenURL(customLinks[file]);
                     return;
                 }
                 if (nexusLinks.ContainsKey(file))
                 {
-                    Process.Start(nexusURL + nexusLinks[file]);
+                    OpenURL(nexus76HomeURL + nexusLinks[file]);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error opening URL:{Environment.NewLine}{ex/*.Message*/}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error opening mod URL:{Environment.NewLine}{ex/*.Message*/}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1172,7 +1192,7 @@ namespace JSONConfigManager
             if (isModSelected)
             {
                 var modName = ddlSelectedMod.SelectedItem.ToString().ToLower();
-                var url = customLinks.ContainsKey(modName) ? customLinks[modName] : (nexusLinks.ContainsKey(modName) ? $"{nexusURL}{nexusLinks[modName]}" : string.Empty);
+                var url = customLinks.ContainsKey(modName) ? customLinks[modName] : (nexusLinks.ContainsKey(modName) ? $"{nexus76HomeURL}{nexusLinks[modName]}" : string.Empty);
                 if (url != string.Empty)
                 {
                     btnWeb.Enabled = true;
@@ -1341,5 +1361,15 @@ namespace JSONConfigManager
         private void jsonTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e) => InitializeSelectedConfigEditControls(e.Node);
 
         private void jsonTreeView_AfterSelect(object sender, TreeViewEventArgs e) => InitializeSelectedConfigEditControls(e.Node);
+
+        private void btnAbout_ButtonClick(object sender, EventArgs e) => btnAbout.DropDown.Show();
+
+        private void btnNexusMods_Click(object sender, EventArgs e) => OpenURL(nexusPageURL);
+
+        private void btnGithub_Click(object sender, EventArgs e) => OpenURL(githubPageURL);
+
+        private void btnKofi_Click(object sender, EventArgs e) => OpenURL(kofiURL);
+
+        private void btnNexusUserPage_Click(object sender, EventArgs e) => OpenURL(nexusUserPageURL);
     }
 }

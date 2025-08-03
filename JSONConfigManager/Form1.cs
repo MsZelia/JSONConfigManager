@@ -375,7 +375,7 @@ namespace JSONConfigManager
         }
         #endregion
 
-        #region CONFIG  FILE MANIPULATION
+        #region CONFIG FILE MANIPULATION
         private void SaveFile()
         {
             try
@@ -465,6 +465,31 @@ namespace JSONConfigManager
             if (clearSelection)
             {
                 ddlSelectedMod.Text = ddlSelectedMod.ToolTipText;
+            }
+        }
+
+        private void AddDragDroppedFiles(string[] files)
+        {
+            foreach (string filePath in files)
+            {
+                string fileName = filePath.Substring(filePath.LastIndexOf("\\") + 1);
+                if (filePath.IndexOf(gameDir) == -1)
+                {
+                    txtLog.Text += $"Not adding config file {fileName}, not located in game directory!{Environment.NewLine}";
+                    continue;
+                }
+                if (fileName.ToLower().IndexOf(".json") == -1)
+                {
+                    txtLog.Text += $"Not adding config file {fileName}, not Json extension!{Environment.NewLine}";
+                    continue;
+                }
+                if (modList.ContainsKey(fileName))
+                {
+                    txtLog.Text += $"Not adding config file {fileName}, config file already exists with that name!{Environment.NewLine}";
+                    continue;
+                }
+                txtLog.Text += $"Adding config file {fileName}{Environment.NewLine}";
+                AddModConfigFile(fileName);
             }
         }
         #endregion
@@ -1039,6 +1064,24 @@ namespace JSONConfigManager
                 }
             }
         }
+
+        private void Form1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Link;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void Form1_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            AddDragDroppedFiles(files);
+        }
         #endregion
 
         #region UI EVENTS
@@ -1133,5 +1176,6 @@ namespace JSONConfigManager
             ApplyManualEditChanges();
         }
         #endregion
+
     }
 }

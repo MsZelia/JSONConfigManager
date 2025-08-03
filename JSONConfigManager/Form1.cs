@@ -1012,7 +1012,14 @@ namespace JSONConfigManager
                         var uc = new UserControlInteger();
                         uc.Tag = selectedNodeToken;
                         uc.label.Text = selectedNodeToken.Path;
-                        uc.numericUpDown.Value = int.Parse(selectedNodeToken.ToString());
+                        if (int.TryParse(selectedNodeToken.ToString(), out int result))
+                        {
+                            uc.numericUpDown.Value = result;
+                        }
+                        else if (uint.TryParse(selectedNodeToken.ToString(), out uint uresult))
+                        {
+                            uc.numericUpDown.Value = (int)uresult;
+                        }
                         uc.numericUpDown.ValueChanged += NumericUpDownInt_ValueChanged;
                         userControlContainer.Controls.Add(uc);
                         nodeEditUserControl = uc;

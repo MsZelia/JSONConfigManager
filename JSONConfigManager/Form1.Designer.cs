@@ -135,7 +135,7 @@ namespace JSONConfigManager
             this.btnDarkMode.Name = "btnDarkMode";
             this.btnDarkMode.Size = new System.Drawing.Size(24, 24);
             this.btnDarkMode.Text = "DarkMode";
-            this.btnDarkMode.ToolTipText = "Toggle between Dark and Light mode";
+            this.btnDarkMode.ToolTipText = "Toggle between Light and Dark mode";
             this.btnDarkMode.Click += new System.EventHandler(this.btnDarkMode_Click);
             // 
             // btnSelectGameLocation

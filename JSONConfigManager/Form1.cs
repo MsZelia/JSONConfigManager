@@ -293,6 +293,10 @@ namespace JSONConfigManager
         #region BACKUPS
         private void Backup(bool backupAll = false)
         {
+            if (!backupAll && ddlSelectedMod.SelectedIndex == -1)
+            {
+                return;
+            }
             string file = ddlSelectedMod.Text;
             string backupTimeStampDir = backupDir + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + "\\";
 
@@ -929,7 +933,7 @@ namespace JSONConfigManager
 
         private void SelectModConfigFile()
         {
-            if(lastSelectedModItem == ddlSelectedMod.SelectedItem)
+            if (lastSelectedModItem == ddlSelectedMod.SelectedItem)
             {
                 return;
             }
@@ -964,14 +968,17 @@ namespace JSONConfigManager
             }
         }
 
-        private void InitializeSelectedConfigEditControls(TreeNodeMouseClickEventArgs e)
+        private void InitializeSelectedConfigEditControls(TreeNode node)
         {
+            if (selectedNode == node)
+            {
+                return;
+            }
             if (nodeEditUserControl != null)
             {
                 ResetSelectedConfigControls();
             }
-
-            selectedNode = e.Node;
+            selectedNode = node;
             if (selectedNode.Tag == null)
             {
                 selectedNodeToken = config;
@@ -979,6 +986,11 @@ namespace JSONConfigManager
             else
             {
                 selectedNodeToken = selectedNode.Tag as JToken;
+            }
+
+            if (selectedNodeToken == null)
+            {
+                return;
             }
             //log = $"Node: {selectedNode.Text}, {selectedNode.FullPath}, {selectedNode.Tag}";
 
@@ -1234,10 +1246,7 @@ namespace JSONConfigManager
             ToggleDarkMode();
         }
 
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            UpdateToolbarButtons();
-        }
+        private void Form1_Shown(object sender, EventArgs e) => UpdateToolbarButtons();
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -1284,38 +1293,17 @@ namespace JSONConfigManager
 
         }
 
-        private void btnSelectGameLocation_Click(object sender, EventArgs e)
-        {
-            SelectGameLocation();
-        }
+        private void btnSelectGameLocation_Click(object sender, EventArgs e) => SelectGameLocation();
 
-        private void btnWeb_Click(object sender, EventArgs e)
-        {
-            OpenNexusUrl();
-        }
+        private void btnWeb_Click(object sender, EventArgs e) => OpenNexusUrl();
 
-        private void btnBackup_ButtonClick(object sender, EventArgs e)
-        {
-            if (ddlSelectedMod.SelectedIndex != -1)
-            {
-                Backup();
-            }
-        }
+        private void btnBackup_ButtonClick(object sender, EventArgs e) => Backup();
 
-        private void btnBackupAll_Click(object sender, EventArgs e)
-        {
-            Backup(true);
-        }
+        private void btnBackupAll_Click(object sender, EventArgs e) => Backup(true);
 
-        private void btnOpenBackupDirectory_Click(object sender, EventArgs e)
-        {
-            OpenBackupDirectory();
-        }
+        private void btnOpenBackupDirectory_Click(object sender, EventArgs e) => OpenBackupDirectory();
 
-        private void ddlRestoreBackup_DropDownOpened(object sender, EventArgs e)
-        {
-            ListBackups();
-        }
+        private void ddlRestoreBackup_DropDownOpened(object sender, EventArgs e) => ListBackups();
 
         private void restoreBackup_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
@@ -1323,30 +1311,15 @@ namespace JSONConfigManager
             Restore(fileToRestore.Item1, fileToRestore.Item2);
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            SaveFile();
-        }
+        private void btnSave_Click(object sender, EventArgs e) => SaveFile();
 
-        private void ddlSelectedMod_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SelectModConfigFile();
-        }
+        private void ddlSelectedMod_SelectedIndexChanged(object sender, EventArgs e) => SelectModConfigFile();
 
-        private void btnAddNewModConfig_DropDownOpening(object sender, EventArgs e)
-        {
-            LoadModConfigFiles();
-        }
+        private void btnAddNewModConfig_DropDownOpening(object sender, EventArgs e) => LoadModConfigFiles();
 
-        private void btnAddNewModConfig_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            AddModConfigFile(e.ClickedItem.Text);
-        }
+        private void btnAddNewModConfig_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) => AddModConfigFile(e.ClickedItem.Text);
 
-        private void btnRemoveModConfig_Click(object sender, EventArgs e)
-        {
-            RemoveModConfigFile();
-        }
+        private void btnRemoveModConfig_Click(object sender, EventArgs e) => RemoveModConfigFile();
 
         private void btnAddNewModConfig_ButtonClick(object sender, EventArgs e)
         {
@@ -1360,20 +1333,13 @@ namespace JSONConfigManager
             txtLog.ScrollToCaret();
         }
 
-        private void jsonTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            InitializeSelectedConfigEditControls(e);
-        }
-
-        private void txtJson_Leave(object sender, EventArgs e)
-        {
-            ApplyManualEditChanges();
-        }
+        private void txtJson_Leave(object sender, EventArgs e) => ApplyManualEditChanges();
         #endregion
 
-        private void btnDarkMode_Click(object sender, EventArgs e)
-        {
-            IsDarkMode = !IsDarkMode;
-        }
+        private void btnDarkMode_Click(object sender, EventArgs e) => IsDarkMode = !IsDarkMode;
+
+        private void jsonTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e) => InitializeSelectedConfigEditControls(e.Node);
+
+        private void jsonTreeView_AfterSelect(object sender, TreeViewEventArgs e) => InitializeSelectedConfigEditControls(e.Node);
     }
 }

@@ -294,6 +294,7 @@ namespace JSONConfigManager
             this.jsonTreeView.SelectedImageIndex = 0;
             this.jsonTreeView.Size = new System.Drawing.Size(400, 584);
             this.jsonTreeView.TabIndex = 0;
+            this.jsonTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.jsonTreeView_AfterSelect);
             this.jsonTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.jsonTreeView_NodeMouseClick);
             this.jsonTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
             this.jsonTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);

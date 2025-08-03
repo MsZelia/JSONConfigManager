@@ -75,7 +75,6 @@ namespace JSONConfigManager
             { "radialmenuloadoutconfig.json", "3166" },
             { "skipmessagesconfig.json", "3007" },
             { "statsmeter.ini", "2082" },
-            { "skipmessagesconfig.json", "3007" },
             { "vatspriorityconfig.json", "3297" },
             { "vendorlog.ini", "2042" }
         };

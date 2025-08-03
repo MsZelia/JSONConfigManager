@@ -34,7 +34,7 @@ namespace JSONConfigManager
             this.btnAddNewModConfig = new System.Windows.Forms.ToolStripSplitButton();
             this.btnWeb = new System.Windows.Forms.ToolStripButton();
             this.ddlSelectedMod = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripSplitButtonProfile = new System.Windows.Forms.ToolStripComboBox();
+            this.btnDarkMode = new System.Windows.Forms.ToolStripButton();
             this.btnSelectGameLocation = new System.Windows.Forms.ToolStripButton();
             this.btnRemoveModConfig = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
@@ -44,7 +44,7 @@ namespace JSONConfigManager
             this.btnOpenBackupDirectory = new System.Windows.Forms.ToolStripMenuItem();
             this.ddlRestoreBackup = new System.Windows.Forms.ToolStripMenuItem();
             this.dummyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnDarkMode = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSplitButtonProfile = new System.Windows.Forms.ToolStripComboBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -111,7 +111,10 @@ namespace JSONConfigManager
             this.btnWeb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnWeb.Name = "btnWeb";
             this.btnWeb.Size = new System.Drawing.Size(24, 24);
+            this.btnWeb.Tag = "To add custom URL for selected mod, drag and drop link in program bounds.";
             this.btnWeb.Text = "Open Nexus Mod Page";
+            this.btnWeb.ToolTipText = "Open Nexus Mod Page or Custom URL\r\n\r\nTo add custom URL for selected mod, drag and" +
+    " drop it in program bounds.";
             this.btnWeb.Click += new System.EventHandler(this.btnWeb_Click);
             // 
             // ddlSelectedMod
@@ -121,17 +124,19 @@ namespace JSONConfigManager
             this.ddlSelectedMod.MaxDropDownItems = 32;
             this.ddlSelectedMod.Name = "ddlSelectedMod";
             this.ddlSelectedMod.Size = new System.Drawing.Size(264, 27);
-            this.ddlSelectedMod.ToolTipText = "Select Mod Config file to load";
             this.ddlSelectedMod.SelectedIndexChanged += new System.EventHandler(this.ddlSelectedMod_SelectedIndexChanged);
             // 
-            // toolStripSplitButtonProfile
+            // btnDarkMode
             // 
-            this.toolStripSplitButtonProfile.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripSplitButtonProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toolStripSplitButtonProfile.Name = "toolStripSplitButtonProfile";
-            this.toolStripSplitButtonProfile.Size = new System.Drawing.Size(114, 27);
-            this.toolStripSplitButtonProfile.Visible = false;
-            this.toolStripSplitButtonProfile.SelectedIndexChanged += new System.EventHandler(this.toolStripSplitButtonProfile_SelectedIndexChanged);
+            this.btnDarkMode.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnDarkMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnDarkMode.Image = global::JSONConfigManager.Properties.Resources.DarkMode;
+            this.btnDarkMode.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDarkMode.Name = "btnDarkMode";
+            this.btnDarkMode.Size = new System.Drawing.Size(24, 24);
+            this.btnDarkMode.Text = "DarkMode";
+            this.btnDarkMode.ToolTipText = "Toggle between Dark and Light mode";
+            this.btnDarkMode.Click += new System.EventHandler(this.btnDarkMode_Click);
             // 
             // btnSelectGameLocation
             // 
@@ -142,7 +147,7 @@ namespace JSONConfigManager
             this.btnSelectGameLocation.Name = "btnSelectGameLocation";
             this.btnSelectGameLocation.Size = new System.Drawing.Size(145, 24);
             this.btnSelectGameLocation.Text = "Select Game Location";
-            this.btnSelectGameLocation.ToolTipText = "Directory to your Fallout 76 game folder";
+            this.btnSelectGameLocation.ToolTipText = "Select your Fallout 76 game folder or data directory";
             this.btnSelectGameLocation.Click += new System.EventHandler(this.btnSelectGameLocation_Click);
             // 
             // btnRemoveModConfig
@@ -178,6 +183,7 @@ namespace JSONConfigManager
             this.btnBackup.Name = "btnBackup";
             this.btnBackup.Size = new System.Drawing.Size(82, 24);
             this.btnBackup.Text = "Backup";
+            this.btnBackup.ToolTipText = "Backup config files or Restore from backup points";
             this.btnBackup.ButtonClick += new System.EventHandler(this.btnBackup_ButtonClick);
             // 
             // btnBackupSingle
@@ -220,17 +226,14 @@ namespace JSONConfigManager
             this.dummyToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.dummyToolStripMenuItem.Text = "dummy";
             // 
-            // btnDarkMode
+            // toolStripSplitButtonProfile
             // 
-            this.btnDarkMode.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.btnDarkMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnDarkMode.Image = global::JSONConfigManager.Properties.Resources.DarkMode;
-            this.btnDarkMode.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnDarkMode.Name = "btnDarkMode";
-            this.btnDarkMode.Size = new System.Drawing.Size(24, 24);
-            this.btnDarkMode.Text = "DarkMode";
-            this.btnDarkMode.ToolTipText = "Toggle between Dark and Light mode";
-            this.btnDarkMode.Click += new System.EventHandler(this.btnDarkMode_Click);
+            this.toolStripSplitButtonProfile.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripSplitButtonProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStripSplitButtonProfile.Name = "toolStripSplitButtonProfile";
+            this.toolStripSplitButtonProfile.Size = new System.Drawing.Size(114, 27);
+            this.toolStripSplitButtonProfile.Visible = false;
+            this.toolStripSplitButtonProfile.SelectedIndexChanged += new System.EventHandler(this.toolStripSplitButtonProfile_SelectedIndexChanged);
             // 
             // statusStrip
             // 

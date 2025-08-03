@@ -24,9 +24,10 @@ namespace JSONConfigManager
         private const string SETTING_SPLIT_1 = "split1";
         private const string SETTING_SPLIT_2 = "split2";
         private const string SETTING_SPLIT_3 = "split3";
-        private const string SETTING_MOD_LIST = "modList";
-        private const string SETTING_GAME_DIR = "gameDir";
         private const string SETTING_DARK_THEME = "useDarkTheme";
+        private const string SETTING_GAME_DIR = "gameDir";
+        private const string SETTING_MOD_LIST = "modList";
+        private const string SETTING_CUSTOM_LINKS = "customLinks";
 
         public string settingsDir = AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".json";
 
@@ -58,6 +59,8 @@ namespace JSONConfigManager
             { "skipmessagesconfig.json", "3007" },
             { "vatspriorityconfig.json", "3297" }
         };
+
+        public Dictionary<string, string> customLinks = new Dictionary<string, string>();
 
         private JToken settings = null;
 
@@ -113,6 +116,10 @@ namespace JSONConfigManager
             {
                 string fileContent = File.ReadAllText(settingsDir);
                 settings = JObject.Parse(fileContent);
+                if (settings[SETTING_GAME_DIR] != null)
+                {
+                    gameDir = (string)settings[SETTING_GAME_DIR];
+                }
                 if (settings[SETTING_MOD_LIST] != null)
                 {
                     foreach (var mod in settings[SETTING_MOD_LIST].ToArray())
@@ -120,9 +127,13 @@ namespace JSONConfigManager
                         modList.Add((string)mod, (string)mod);
                     }
                 }
-                if (settings[SETTING_GAME_DIR] != null)
+                if (settings[SETTING_CUSTOM_LINKS] != null)
                 {
-                    gameDir = (string)settings[SETTING_GAME_DIR];
+                    foreach (JProperty customLink in settings[SETTING_CUSTOM_LINKS])
+                    {
+                        customLinks.Add(customLink.Name, customLink.Value.ToString());
+                        txtLog.Text += "customLink: " + customLink.Name + ":" + customLink.Value + "\n";
+                    }
                 }
                 logStatus = $"Settings loaded!";
             }
@@ -164,13 +175,14 @@ namespace JSONConfigManager
                 var keys = modList.Keys.ToArray();
                 Array.Sort(keys);
                 settings[SETTING_MOD_LIST] = JToken.FromObject(keys);
+                settings[SETTING_CUSTOM_LINKS] = JToken.FromObject(customLinks);
 
                 File.WriteAllText(settingsDir, settings.ToString());
                 logStatus = $"Settings saved!";
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving settings:{Environment.NewLine}{ex}", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error saving settings:{Environment.NewLine}{ex/*.Message*/}", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         #endregion
@@ -430,12 +442,17 @@ namespace JSONConfigManager
         }
         #endregion
 
-        #region NEXUS URL
+        #region URLS
         private void OpenNexusUrl()
         {
             try
             {
                 string file = ddlSelectedMod.Text.ToLower();
+                if (customLinks.ContainsKey(file))
+                {
+                    Process.Start(customLinks[file]);
+                    return;
+                }
                 if (nexusLinks.ContainsKey(file))
                 {
                     Process.Start(nexusURL + nexusLinks[file]);
@@ -443,7 +460,25 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error opening nexus url:{Environment.NewLine}{ex}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error opening URL:{Environment.NewLine}{ex/*.Message*/}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void AddDragDroppedURL(string unicode)
+        {
+            if (unicode == null)
+            {
+                return;
+            }
+            if (Uri.TryCreate(unicode, UriKind.Absolute, out Uri uri))
+            {
+                customLinks.Add(ddlSelectedMod.SelectedItem.ToString().ToLower(), uri.ToString());
+                txtLog.Text += $"Added custom URL for {ddlSelectedMod.SelectedItem}: {uri}{Environment.NewLine}";
+                UpdateToolbarButtons();
+            }
+            else
+            {
+                txtLog.Text += $"URL invalid, not adding custom URL {unicode}!{Environment.NewLine}";
             }
         }
         #endregion
@@ -467,7 +502,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error Saving file:{Environment.NewLine}{ex}", "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error Saving file:{Environment.NewLine}{ex/*.Message*/}", "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -484,7 +519,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error adding config file:{Environment.NewLine}{ex}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error adding config file:{Environment.NewLine}{ex/*.Message*/}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1071,7 +1106,27 @@ namespace JSONConfigManager
             btnRemoveModConfig.Enabled = isModSelected;
             btnSave.Enabled = isModSelected;
             btnBackupSingle.Enabled = isModSelected;
-            btnWeb.Enabled = isModSelected && nexusLinks.ContainsKey(ddlSelectedMod.SelectedItem.ToString().ToLower());
+
+            if (isModSelected)
+            {
+                var modName = ddlSelectedMod.SelectedItem.ToString().ToLower();
+                var url = customLinks.ContainsKey(modName) ? customLinks[modName] : (nexusLinks.ContainsKey(modName) ? $"{nexusURL}{nexusLinks[modName]}" : string.Empty);
+                if (url != string.Empty)
+                {
+                    btnWeb.Enabled = true;
+                    btnWeb.ToolTipText = $"Open mod page:{Environment.NewLine}{url}{Environment.NewLine}{Environment.NewLine}{btnWeb.Tag}";
+                }
+                else
+                {
+                    btnWeb.Enabled = false;
+                    btnWeb.ToolTipText = (string)btnWeb.Tag;
+                }
+            }
+            else
+            {
+                btnWeb.Enabled = false;
+                btnWeb.ToolTipText = (string)btnWeb.Tag;
+            }
         }
 
         private void ResetSelectedConfigControls()
@@ -1143,7 +1198,7 @@ namespace JSONConfigManager
 
         private void Form1_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(DataFormats.UnicodeText))
             {
                 e.Effect = DragDropEffects.Link;
             }
@@ -1155,8 +1210,16 @@ namespace JSONConfigManager
 
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            AddDragDroppedFiles(files);
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                AddDragDroppedFiles(files);
+            }
+            else if (ddlSelectedMod.SelectedIndex != -1)
+            {
+                string unicode = (string)e.Data.GetData(DataFormats.UnicodeText);
+                AddDragDroppedURL(unicode);
+            }
         }
         #endregion
 

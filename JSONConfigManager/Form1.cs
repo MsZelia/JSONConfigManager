@@ -73,7 +73,7 @@ namespace JSONConfigManager
 
         private string lastJsonText = string.Empty;
 
-        private bool? isDarkMode = null;
+        private bool isDarkMode = false;
 
         private Color[] DarkColors = { Color.FromArgb(30, 30, 30), Color.FromArgb(50, 50, 50), Color.White };
         private Color[] LightColors = { Color.FromArgb(230, 230, 230), Color.FromArgb(190, 190, 190), Color.Black };
@@ -93,7 +93,7 @@ namespace JSONConfigManager
             }
         }
 
-        public bool? IsDarkMode
+        public bool IsDarkMode
         {
             get => isDarkMode;
             set
@@ -152,10 +152,6 @@ namespace JSONConfigManager
                     settings = JToken.Parse("{}");
                 }
 
-                settings[SETTING_GAME_DIR] = gameDir;
-                var keys = modList.Keys.ToArray();
-                Array.Sort(keys);
-                settings[SETTING_MOD_LIST] = JToken.FromObject(keys);
                 settings[SETTING_X] = this.Left == 0 ? 50 : this.Left;
                 settings[SETTING_Y] = this.Top == 0 ? 50 : this.Top;
                 settings[SETTING_W] = this.Width;
@@ -163,7 +159,11 @@ namespace JSONConfigManager
                 settings[SETTING_SPLIT_1] = splitContainer1.SplitterDistance;
                 settings[SETTING_SPLIT_2] = splitContainer2.SplitterDistance;
                 settings[SETTING_SPLIT_3] = splitContainer3.SplitterDistance;
-                settings[SETTING_DARK_THEME] = isDarkMode;
+                settings[SETTING_DARK_THEME] = IsDarkMode;
+                settings[SETTING_GAME_DIR] = gameDir;
+                var keys = modList.Keys.ToArray();
+                Array.Sort(keys);
+                settings[SETTING_MOD_LIST] = JToken.FromObject(keys);
 
                 File.WriteAllText(settingsDir, settings.ToString());
                 logStatus = $"Settings saved!";
@@ -216,7 +216,7 @@ namespace JSONConfigManager
 
         private void ToggleDarkMode()
         {
-            if (IsDarkMode.Value)
+            if (IsDarkMode)
             {
                 InitializeDarkTheme(this);
             }
@@ -1121,6 +1121,7 @@ namespace JSONConfigManager
             if (settings[SETTING_SPLIT_3] != null) splitContainer3.SplitterDistance = (int)settings[SETTING_SPLIT_3];
             if (settings[SETTING_DARK_THEME] != null) IsDarkMode = (bool)settings[SETTING_DARK_THEME];
             else IsDarkMode = false;
+            ToggleDarkMode();
         }
 
         private void Form1_Shown(object sender, EventArgs e)

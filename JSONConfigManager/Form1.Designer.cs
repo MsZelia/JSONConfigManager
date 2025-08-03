@@ -30,7 +30,6 @@ namespace JSONConfigManager
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.txtLog = new System.Windows.Forms.RichTextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAddNewModConfig = new System.Windows.Forms.ToolStripSplitButton();
             this.btnWeb = new System.Windows.Forms.ToolStripButton();
@@ -45,6 +44,7 @@ namespace JSONConfigManager
             this.btnOpenBackupDirectory = new System.Windows.Forms.ToolStripMenuItem();
             this.ddlRestoreBackup = new System.Windows.Forms.ToolStripMenuItem();
             this.dummyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnDarkMode = new System.Windows.Forms.ToolStripButton();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -52,7 +52,8 @@ namespace JSONConfigManager
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.userControlContainer = new System.Windows.Forms.Panel();
-            this.txtJson = new System.Windows.Forms.RichTextBox();
+            this.txtLog = new JSONConfigManager.QuickScrollRichTextBox();
+            this.txtJson = new JSONConfigManager.QuickScrollRichTextBox();
             this.toolStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -69,20 +70,6 @@ namespace JSONConfigManager
             this.splitContainer3.SuspendLayout();
             this.SuspendLayout();
             // 
-            // txtLog
-            // 
-            this.txtLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.txtLog.Location = new System.Drawing.Point(0, 0);
-            this.txtLog.Margin = new System.Windows.Forms.Padding(2);
-            this.txtLog.Name = "txtLog";
-            this.txtLog.ReadOnly = true;
-            this.txtLog.Size = new System.Drawing.Size(270, 396);
-            this.txtLog.TabIndex = 0;
-            this.txtLog.TabStop = false;
-            this.txtLog.Text = "";
-            this.txtLog.TextChanged += new System.EventHandler(this.tbLog_TextChanged);
-            // 
             // toolStrip1
             // 
             this.toolStrip1.BackColor = System.Drawing.SystemColors.Control;
@@ -91,14 +78,15 @@ namespace JSONConfigManager
             this.btnAddNewModConfig,
             this.btnWeb,
             this.ddlSelectedMod,
-            this.toolStripSplitButtonProfile,
+            this.btnDarkMode,
             this.btnSelectGameLocation,
             this.btnRemoveModConfig,
             this.btnSave,
-            this.btnBackup});
+            this.btnBackup,
+            this.toolStripSplitButtonProfile});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.toolStrip1.Size = new System.Drawing.Size(984, 27);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
@@ -164,7 +152,7 @@ namespace JSONConfigManager
             this.btnRemoveModConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRemoveModConfig.Name = "btnRemoveModConfig";
             this.btnRemoveModConfig.Size = new System.Drawing.Size(24, 24);
-            this.btnRemoveModConfig.Text = "Remove Mod Config";
+            this.btnRemoveModConfig.Text = "Remove Selected Mod Config";
             this.btnRemoveModConfig.Click += new System.EventHandler(this.btnRemoveModConfig_Click);
             // 
             // btnSave
@@ -174,6 +162,7 @@ namespace JSONConfigManager
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(55, 24);
             this.btnSave.Text = "Save";
+            this.btnSave.ToolTipText = "Save Config Changes";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnBackup
@@ -193,6 +182,7 @@ namespace JSONConfigManager
             // 
             // btnBackupSingle
             // 
+            this.btnBackupSingle.Image = global::JSONConfigManager.Properties.Resources.Backup;
             this.btnBackupSingle.Name = "btnBackupSingle";
             this.btnBackupSingle.Size = new System.Drawing.Size(155, 22);
             this.btnBackupSingle.Text = "Backup";
@@ -200,6 +190,7 @@ namespace JSONConfigManager
             // 
             // btnBackupAll
             // 
+            this.btnBackupAll.Image = global::JSONConfigManager.Properties.Resources.Backup;
             this.btnBackupAll.Name = "btnBackupAll";
             this.btnBackupAll.Size = new System.Drawing.Size(155, 22);
             this.btnBackupAll.Text = "Backup All";
@@ -228,6 +219,18 @@ namespace JSONConfigManager
             this.dummyToolStripMenuItem.Name = "dummyToolStripMenuItem";
             this.dummyToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.dummyToolStripMenuItem.Text = "dummy";
+            // 
+            // btnDarkMode
+            // 
+            this.btnDarkMode.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnDarkMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnDarkMode.Image = global::JSONConfigManager.Properties.Resources.DarkMode;
+            this.btnDarkMode.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDarkMode.Name = "btnDarkMode";
+            this.btnDarkMode.Size = new System.Drawing.Size(24, 24);
+            this.btnDarkMode.Text = "DarkMode";
+            this.btnDarkMode.ToolTipText = "Toggle between Dark and Light mode";
+            this.btnDarkMode.Click += new System.EventHandler(this.btnDarkMode_Click);
             // 
             // statusStrip
             // 
@@ -275,6 +278,7 @@ namespace JSONConfigManager
             // jsonTreeView
             // 
             this.jsonTreeView.AllowDrop = true;
+            this.jsonTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.jsonTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.jsonTreeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.jsonTreeView.FullRowSelect = true;
@@ -296,7 +300,7 @@ namespace JSONConfigManager
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Margin = new System.Windows.Forms.Padding(2);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(0);
             this.splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
@@ -320,7 +324,7 @@ namespace JSONConfigManager
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Margin = new System.Windows.Forms.Padding(2);
+            this.splitContainer3.Margin = new System.Windows.Forms.Padding(0);
             this.splitContainer3.Name = "splitContainer3";
             this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -342,14 +346,31 @@ namespace JSONConfigManager
             // 
             this.userControlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.userControlContainer.Location = new System.Drawing.Point(0, 0);
-            this.userControlContainer.Margin = new System.Windows.Forms.Padding(2);
+            this.userControlContainer.Margin = new System.Windows.Forms.Padding(0);
             this.userControlContainer.MinimumSize = new System.Drawing.Size(0, 81);
             this.userControlContainer.Name = "userControlContainer";
             this.userControlContainer.Size = new System.Drawing.Size(270, 185);
             this.userControlContainer.TabIndex = 1;
             // 
+            // txtLog
+            // 
+            this.txtLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.txtLog.Location = new System.Drawing.Point(0, 0);
+            this.txtLog.Margin = new System.Windows.Forms.Padding(0);
+            this.txtLog.Name = "txtLog";
+            this.txtLog.ReadOnly = true;
+            this.txtLog.Size = new System.Drawing.Size(270, 396);
+            this.txtLog.TabIndex = 0;
+            this.txtLog.TabStop = false;
+            this.txtLog.Text = "";
+            this.txtLog.TextChanged += new System.EventHandler(this.tbLog_TextChanged);
+            // 
             // txtJson
             // 
+            this.txtJson.BackColor = System.Drawing.SystemColors.Window;
+            this.txtJson.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtJson.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtJson.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.txtJson.Location = new System.Drawing.Point(0, 0);
@@ -401,7 +422,7 @@ namespace JSONConfigManager
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox txtLog;
+        private QuickScrollRichTextBox txtLog;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripComboBox ddlSelectedMod;
         private System.Windows.Forms.ToolStripButton btnSelectGameLocation;
@@ -423,7 +444,8 @@ namespace JSONConfigManager
         private System.Windows.Forms.Panel userControlContainer;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.RichTextBox txtJson;
+        private QuickScrollRichTextBox txtJson;
+        private System.Windows.Forms.ToolStripButton btnDarkMode;
     }
 }
 

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,7 @@ namespace JSONConfigManager
         private const string SETTING_SPLIT_3 = "split3";
         private const string SETTING_MOD_LIST = "modList";
         private const string SETTING_GAME_DIR = "gameDir";
+        private const string SETTING_DARK_THEME = "useDarkTheme";
 
         public string settingsDir = AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".json";
 
@@ -71,6 +73,11 @@ namespace JSONConfigManager
 
         private string lastJsonText = string.Empty;
 
+        private bool? isDarkMode = null;
+
+        private Color[] DarkColors = { Color.FromArgb(30, 30, 30), Color.FromArgb(50, 50, 50), Color.White };
+        private Color[] LightColors = { Color.FromArgb(230, 230, 230), Color.FromArgb(190, 190, 190), Color.Black };
+
         public Form1()
         {
             InitializeComponent();
@@ -83,6 +90,19 @@ namespace JSONConfigManager
             set
             {
                 lblStatus.Text = value;
+            }
+        }
+
+        public bool? IsDarkMode
+        {
+            get => isDarkMode;
+            set
+            {
+                if (value != isDarkMode)
+                {
+                    isDarkMode = value;
+                    ToggleDarkMode();
+                }
             }
         }
 
@@ -143,6 +163,7 @@ namespace JSONConfigManager
                 settings[SETTING_SPLIT_1] = splitContainer1.SplitterDistance;
                 settings[SETTING_SPLIT_2] = splitContainer2.SplitterDistance;
                 settings[SETTING_SPLIT_3] = splitContainer3.SplitterDistance;
+                settings[SETTING_DARK_THEME] = isDarkMode;
 
                 File.WriteAllText(settingsDir, settings.ToString());
                 logStatus = $"Settings saved!";
@@ -150,6 +171,58 @@ namespace JSONConfigManager
             catch (Exception ex)
             {
                 MessageBox.Show($"Error saving settings:{Environment.NewLine}{ex}", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        #endregion
+
+        #region DARK MODE
+        private void InitializeDarkTheme(Control control)
+        {
+            toolStrip1.BackColor = DarkColors[1];
+            toolStrip1.ForeColor = DarkColors[2];
+            statusStrip.BackColor = DarkColors[1];
+            statusStrip.ForeColor = DarkColors[2];
+            userControlContainer.BackColor = DarkColors[1];
+            userControlContainer.ForeColor = DarkColors[2];
+            txtLog.BackColor = DarkColors[1];
+            txtLog.ForeColor = DarkColors[2];
+            txtJson.BackColor = DarkColors[0];
+            txtJson.ForeColor = DarkColors[2];
+            jsonTreeView.BackColor = DarkColors[0];
+            jsonTreeView.ForeColor = DarkColors[2];
+            splitContainer1.BackColor = DarkColors[0];
+            splitContainer2.BackColor = DarkColors[0];
+            splitContainer3.BackColor = DarkColors[0];
+        }
+
+        private void ResetDarkTheme(Control control)
+        {
+            toolStrip1.BackColor = LightColors[1];
+            toolStrip1.ForeColor = LightColors[2];
+            statusStrip.BackColor = LightColors[1];
+            statusStrip.ForeColor = LightColors[2];
+            userControlContainer.BackColor = LightColors[1];
+            userControlContainer.ForeColor = LightColors[2];
+            txtLog.BackColor = LightColors[1];
+            txtLog.ForeColor = LightColors[2];
+            txtJson.BackColor = LightColors[0];
+            txtJson.ForeColor = LightColors[2];
+            jsonTreeView.BackColor = LightColors[0];
+            jsonTreeView.ForeColor = LightColors[2];
+            splitContainer1.BackColor = LightColors[0];
+            splitContainer2.BackColor = LightColors[0];
+            splitContainer3.BackColor = LightColors[0];
+        }
+
+        private void ToggleDarkMode()
+        {
+            if (IsDarkMode.Value)
+            {
+                InitializeDarkTheme(this);
+            }
+            else
+            {
+                ResetDarkTheme(this);
             }
         }
         #endregion
@@ -1046,6 +1119,8 @@ namespace JSONConfigManager
             if (settings[SETTING_SPLIT_1] != null) splitContainer1.SplitterDistance = (int)settings[SETTING_SPLIT_1];
             if (settings[SETTING_SPLIT_2] != null) splitContainer2.SplitterDistance = (int)settings[SETTING_SPLIT_2];
             if (settings[SETTING_SPLIT_3] != null) splitContainer3.SplitterDistance = (int)settings[SETTING_SPLIT_3];
+            if (settings[SETTING_DARK_THEME] != null) IsDarkMode = (bool)settings[SETTING_DARK_THEME];
+            else IsDarkMode = false;
         }
 
         private void Form1_Shown(object sender, EventArgs e)
@@ -1177,5 +1252,9 @@ namespace JSONConfigManager
         }
         #endregion
 
+        private void btnDarkMode_Click(object sender, EventArgs e)
+        {
+            IsDarkMode = !IsDarkMode;
+        }
     }
 }

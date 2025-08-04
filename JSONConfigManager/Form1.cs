@@ -14,7 +14,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace JSONConfigManager
 {
@@ -587,7 +586,7 @@ namespace JSONConfigManager
                 }
                 else if (isXml)
                 {
-                    string cnf = config.ToString().Replace("\r\n", "\n").Replace("\n", "\r\n"); ;
+                    string cnf = config.ToString();
                     XmlDocument doc = (XmlDocument)JsonConvert.DeserializeXmlNode(cnf);
                     doc.Save(gameDir + file);
                     hasCommentsInFile = false;
@@ -1121,6 +1120,7 @@ namespace JSONConfigManager
                         userControlContainer.Controls.Add(nodeCopyUserControl);
                         userControlContainer.Controls.Add(uc);
                         nodeEditUserControl = uc;
+                        uc.ddlType.Focus();
                         break;
                     }
                 case JTokenType.Array:
@@ -1133,6 +1133,7 @@ namespace JSONConfigManager
                         userControlContainer.Controls.Add(uc);
                         uc.Top = nodeCopyUserControl.Height;
                         nodeEditUserControl = uc;
+                        uc.ddlType.Focus();
                         break;
                     }
                 case JTokenType.Integer:
@@ -1151,6 +1152,7 @@ namespace JSONConfigManager
                         uc.numericUpDown.ValueChanged += NumericUpDownInt_ValueChanged;
                         userControlContainer.Controls.Add(uc);
                         nodeEditUserControl = uc;
+                        uc.numericUpDown.Focus();
                         break;
                     }
                 case JTokenType.Float:
@@ -1162,6 +1164,7 @@ namespace JSONConfigManager
                         uc.numericUpDown.ValueChanged += NumericUpDown_ValueChanged;
                         userControlContainer.Controls.Add(uc);
                         nodeEditUserControl = uc;
+                        uc.numericUpDown.Focus();
                         break;
                     }
                 case JTokenType.Boolean:
@@ -1173,6 +1176,7 @@ namespace JSONConfigManager
                         uc.checkBox.CheckedChanged += CheckBox_CheckedChanged;
                         userControlContainer.Controls.Add(uc);
                         nodeEditUserControl = uc;
+                        uc.checkBox.Focus();
                         break;
                     }
                 case JTokenType.String:
@@ -1184,6 +1188,7 @@ namespace JSONConfigManager
                         uc.textBox.LostFocus += TextBox_LostFocus;
                         userControlContainer.Controls.Add(uc);
                         nodeEditUserControl = uc;
+                        uc.textBox.Focus();
                         break;
                     }
                 default:

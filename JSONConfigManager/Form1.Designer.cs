@@ -299,7 +299,7 @@ namespace JSONConfigManager
             this.dummyToolStripMenuItem});
             this.ddlRestoreBackup.Image = global::JSONConfigManager.Properties.Resources.Restore;
             this.ddlRestoreBackup.Name = "ddlRestoreBackup";
-            this.ddlRestoreBackup.ShortcutKeyDisplayString = "";
+            this.ddlRestoreBackup.ShortcutKeyDisplayString = "Alt+R";
             this.ddlRestoreBackup.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.R)));
             this.ddlRestoreBackup.Size = new System.Drawing.Size(272, 28);
             this.ddlRestoreBackup.Text = "Restore Backup";
@@ -309,7 +309,7 @@ namespace JSONConfigManager
             // dummyToolStripMenuItem
             // 
             this.dummyToolStripMenuItem.Name = "dummyToolStripMenuItem";
-            this.dummyToolStripMenuItem.Size = new System.Drawing.Size(152, 28);
+            this.dummyToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
             this.dummyToolStripMenuItem.Text = "dummy";
             // 
             // btnSelectGameLocation

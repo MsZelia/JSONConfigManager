@@ -30,6 +30,7 @@ namespace JSONConfigManager
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAddNewModConfig = new System.Windows.Forms.ToolStripSplitButton();
             this.btnWeb = new System.Windows.Forms.ToolStripButton();
@@ -281,7 +282,7 @@ namespace JSONConfigManager
             // dummyToolStripMenuItem
             // 
             this.dummyToolStripMenuItem.Name = "dummyToolStripMenuItem";
-            this.dummyToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
+            this.dummyToolStripMenuItem.Size = new System.Drawing.Size(152, 28);
             this.dummyToolStripMenuItem.Text = "dummy";
             // 
             // btnSelectGameLocation
@@ -462,6 +463,7 @@ namespace JSONConfigManager
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.toolStrip1);
             this.HelpButton = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(1327, 728);

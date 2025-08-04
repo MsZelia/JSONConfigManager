@@ -35,6 +35,8 @@ namespace JSONConfigManager
         private const string SUFFIX_INI = ".ini";
         private const string SUFFIX_XML = ".xml";
 
+        private const string BACKUP_TIMESTAMP_FORMAT = "yyyy-MM-dd-HH-mm-ss";
+
         public string settingsDir = $"{AppDomain.CurrentDomain.BaseDirectory}{Process.GetCurrentProcess().ProcessName}{SUFFIX_JSON}";
 
         public string initDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Fallout76\\Data\\";
@@ -328,7 +330,7 @@ namespace JSONConfigManager
                 return;
             }
             string file = ddlSelectedMod.Text;
-            string backupTimeStampDir = backupDir + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + "\\";
+            string backupTimeStampDir = backupDir + DateTime.Now.ToString(BACKUP_TIMESTAMP_FORMAT) + "\\";
 
             try
             {
@@ -369,26 +371,38 @@ namespace JSONConfigManager
             {
                 logStatus = $"Backup failed";
                 MessageBox.Show($"Error making backup:{Environment.NewLine}{ex}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                try
-                {
-                    if (Directory.GetFiles(backupTimeStampDir).Length == 0)
-                    {
-                        Directory.Delete(backupTimeStampDir);
-                    }
-                }
-                catch (Exception) { }
             }
+            try
+            {
+                if (Directory.GetFiles(backupTimeStampDir).Length == 0)
+                {
+                    Directory.Delete(backupTimeStampDir);
+                }
+            }
+            catch (Exception) { }
         }
 
         private bool BackupFile(string file, string directory)
         {
             try
             {
+                string directoryToCreate = directory;
                 if (File.Exists(gameDir + file))
                 {
-                    if (!Directory.Exists(directory))
+                    if(file.Contains('\\'))
                     {
-                        Directory.CreateDirectory(directory);
+                        string[] subdirectories = file.Split('\\');
+                        if(subdirectories.Length > 1)
+                        {
+                            for (int i = 0; i < subdirectories.Length - 1; i++)
+                            {
+                                directoryToCreate = $"{directoryToCreate}{subdirectories[i]}\\";
+                            }
+                        }
+                    }
+                    if (!Directory.Exists(directoryToCreate))
+                    {
+                        Directory.CreateDirectory(directoryToCreate);
                     }
                     File.Copy(gameDir + file, directory + file, false);
                 }
@@ -409,7 +423,7 @@ namespace JSONConfigManager
                 if (isDir)
                 {
                     int restored = 0;
-                    foreach (var file in Directory.GetFiles(dir))
+                    foreach (var file in Directory.GetFiles(dir,"*.*",SearchOption.AllDirectories))
                     {
                         if (RestoreFile(file)) restored++;
                     }
@@ -438,7 +452,9 @@ namespace JSONConfigManager
             {
                 if (File.Exists(file))
                 {
-                    File.Copy(file, gameDir + file.Substring(file.LastIndexOf('\\') + 1), true);
+                    // .\Backups\Timestamp\[Subdirs\]Filename
+                    string fileName = string.Join("\\", file.Split('\\').Skip(3));
+                    File.Copy(file, gameDir + fileName, true);
                     return true;
                 }
             }
@@ -464,9 +480,10 @@ namespace JSONConfigManager
                     {
                         ToolStripMenuItem tsmi = new ToolStripMenuItem(directory.Substring(directory.LastIndexOf("\\") + 1));
                         tsmi.DropDownItems.Add(new ToolStripMenuItem("RESTORE ALL") { Tag = (directory, true) });
-                        foreach (var file in Directory.GetFiles(directory))
+                        foreach (var file in Directory.GetFiles(directory,"*.*",SearchOption.AllDirectories))
                         {
-                            tsmi.DropDownItems.Add(new ToolStripMenuItem(file.Substring(file.LastIndexOf("\\") + 1)) { Tag = (file, false) });
+                            string fileName = file.Replace(directory, string.Empty).Substring(1);
+                            tsmi.DropDownItems.Add(new ToolStripMenuItem(fileName) { Tag = (file, false) });
                         }
                         tsmi.DropDownItemClicked += restoreBackup_DropDownItemClicked;
                         ddlRestoreBackup.DropDownItems.Add(tsmi);
@@ -649,13 +666,15 @@ namespace JSONConfigManager
             try
             {
                 btnAddNewModConfig.DropDownItems.Clear();
-                foreach (var file in Directory.EnumerateFiles(gameDir)
-                    .Where(fileName => fileName.ToLower().EndsWith(SUFFIX_JSON) || fileName.ToLower().EndsWith(SUFFIX_INI) || fileName.ToLower().EndsWith(SUFFIX_XML)))
+                foreach (var file in Directory.EnumerateFiles(gameDir, "*.*", SearchOption.AllDirectories)
+                    .Where(fileName => fileName.ToLower().EndsWith(SUFFIX_JSON)
+                        || fileName.ToLower().EndsWith(SUFFIX_INI)
+                        || fileName.ToLower().EndsWith(SUFFIX_XML)))
                 {
-                    FileInfo info = new FileInfo(file);
-                    if (!modList.ContainsKey(info.Name))
+                    string fileName = file.Replace(gameDir, string.Empty);
+                    if (!modList.ContainsKey(fileName))
                     {
-                        btnAddNewModConfig.DropDownItems.Add(info.Name);
+                        btnAddNewModConfig.DropDownItems.Add(fileName);
                     }
                 }
                 logStatus = $"Config files loaded: {btnAddNewModConfig.DropDownItems.Count}";
@@ -687,7 +706,7 @@ namespace JSONConfigManager
         {
             foreach (string filePath in files)
             {
-                string fileName = filePath.Substring(filePath.LastIndexOf("\\") + 1);
+                string fileName = filePath.Replace(gameDir, string.Empty);
                 if (filePath.IndexOf(gameDir) == -1)
                 {
                     log = $"Not adding config file {fileName}, not located in game directory!";

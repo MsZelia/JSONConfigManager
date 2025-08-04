@@ -248,24 +248,24 @@ namespace JSONConfigManager
             // 
             this.btnBackupSingle.Image = global::JSONConfigManager.Properties.Resources.Backup;
             this.btnBackupSingle.Name = "btnBackupSingle";
-            this.btnBackupSingle.Size = new System.Drawing.Size(322, 28);
-            this.btnBackupSingle.Text = "Backup (Ctrl+B)";
+            this.btnBackupSingle.Size = new System.Drawing.Size(277, 28);
+            this.btnBackupSingle.Text = "Backup (Alt+B)";
             this.btnBackupSingle.Click += new System.EventHandler(this.btnBackupSingle_Click);
             // 
             // btnBackupAll
             // 
             this.btnBackupAll.Image = global::JSONConfigManager.Properties.Resources.Backup;
             this.btnBackupAll.Name = "btnBackupAll";
-            this.btnBackupAll.Size = new System.Drawing.Size(322, 28);
-            this.btnBackupAll.Text = "Backup All (Ctrl+Shift+B)";
+            this.btnBackupAll.Size = new System.Drawing.Size(277, 28);
+            this.btnBackupAll.Text = "Backup All (Alt+Shift+B)";
             this.btnBackupAll.Click += new System.EventHandler(this.btnBackupAll_Click);
             // 
             // btnOpenBackupDirectory
             // 
             this.btnOpenBackupDirectory.Image = global::JSONConfigManager.Properties.Resources.Browse;
             this.btnOpenBackupDirectory.Name = "btnOpenBackupDirectory";
-            this.btnOpenBackupDirectory.Size = new System.Drawing.Size(322, 28);
-            this.btnOpenBackupDirectory.Text = "Open Directory (Ctrl+Shift+D)";
+            this.btnOpenBackupDirectory.Size = new System.Drawing.Size(277, 28);
+            this.btnOpenBackupDirectory.Text = "Open Directory (Alt+D)";
             this.btnOpenBackupDirectory.Click += new System.EventHandler(this.btnOpenBackupDirectory_Click);
             // 
             // ddlRestoreBackup
@@ -274,14 +274,14 @@ namespace JSONConfigManager
             this.dummyToolStripMenuItem});
             this.ddlRestoreBackup.Image = global::JSONConfigManager.Properties.Resources.Restore;
             this.ddlRestoreBackup.Name = "ddlRestoreBackup";
-            this.ddlRestoreBackup.Size = new System.Drawing.Size(322, 28);
-            this.ddlRestoreBackup.Text = "Restore Backup (Ctrl+Shift+R)";
+            this.ddlRestoreBackup.Size = new System.Drawing.Size(277, 28);
+            this.ddlRestoreBackup.Text = "Restore Backup (Alt+R)";
             this.ddlRestoreBackup.DropDownOpened += new System.EventHandler(this.ddlRestoreBackup_DropDownOpened);
             // 
             // dummyToolStripMenuItem
             // 
             this.dummyToolStripMenuItem.Name = "dummyToolStripMenuItem";
-            this.dummyToolStripMenuItem.Size = new System.Drawing.Size(152, 28);
+            this.dummyToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
             this.dummyToolStripMenuItem.Text = "dummy";
             // 
             // btnSelectGameLocation

@@ -9,9 +9,12 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace JSONConfigManager
 {
@@ -105,6 +108,7 @@ namespace JSONConfigManager
         private object lastSelectedModItem;
 
         private bool isIni = false;
+        private bool isXml = false;
 
         private string configIni = string.Empty;
 
@@ -175,7 +179,7 @@ namespace JSONConfigManager
                         customLinks.Add(customLink.Name, customLink.Value.ToString());
                     }
                 }
-                logStatus = $"Settings loaded!";
+                logStatus = $"Settings loaded";
             }
             catch (FileNotFoundException)
             {
@@ -218,10 +222,11 @@ namespace JSONConfigManager
                 settings[SETTING_CUSTOM_LINKS] = JToken.FromObject(customLinks);
 
                 File.WriteAllText(settingsDir, settings.ToString());
-                logStatus = $"Settings saved!";
+                logStatus = $"Settings saved";
             }
             catch (Exception ex)
             {
+                logStatus = $"Error saving settings";
                 MessageBox.Show($"Error saving settings:{Environment.NewLine}{ex/*.Message*/}", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -301,13 +306,14 @@ namespace JSONConfigManager
                     if (Directory.Exists(selectedDir))
                     {
                         gameDir = selectedDir;
-                        logStatus = $"Game dir set: {selectedDir}";
                         SaveSettings();
                         UpdateToolbarButtons();
                         InitLoadedModConfigs();
+                        logStatus = $"Game dir set: {selectedDir}";
                     }
                     else
                     {
+                        logStatus = $"Game dir does not exist";
                         MessageBox.Show($"Invalid game directory, folder does not exist!{Environment.NewLine}{selectedDir}", "Game dir error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -334,6 +340,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
+                logStatus = $"Backup failed";
                 MessageBox.Show($"Error making backup directory:{Environment.NewLine}{ex}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -346,18 +353,22 @@ namespace JSONConfigManager
                     {
                         BackupFile(item.ToString(), backupTimeStampDir);
                     }
-                    MessageBox.Show($"Backing up finished!{Environment.NewLine}{Directory.GetFiles(backupTimeStampDir).Length} config files backed up.", "Backup All", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    var count = Directory.GetFiles(backupTimeStampDir).Length;
+                    logStatus = $"Backed up: {count} files";
+                    MessageBox.Show($"Backing up finished!{Environment.NewLine}{count} config files backed up.", "Backup All", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
                     if (BackupFile(file, backupTimeStampDir))
                     {
+                        logStatus = $"Backed up: {file}";
                         MessageBox.Show($"{file} backed up!", "Backup File", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
             catch (Exception ex)
             {
+                logStatus = $"Backup failed";
                 MessageBox.Show($"Error making backup:{Environment.NewLine}{ex}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 try
                 {
@@ -403,18 +414,21 @@ namespace JSONConfigManager
                     {
                         if (RestoreFile(file)) restored++;
                     }
+                    logStatus = $"Backup restored: {restored} files";
                     MessageBox.Show($"Backup restoration finished, restored {restored} files!", "Restore All", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
                     if (RestoreFile(dir))
                     {
+                        logStatus = $"File restored: {dir}";
                         MessageBox.Show($"{dir} restored!", "Restore File", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
             catch (Exception ex)
             {
+                logStatus = $"Backup restore failed";
                 MessageBox.Show($"Error restoring files:{Environment.NewLine}{ex/*.Message*/}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -479,9 +493,11 @@ namespace JSONConfigManager
                     Directory.CreateDirectory(backupDir);
                     OpenBackupDirectory();
                 }
+                logStatus = $"Backup directory open";
             }
             catch (Exception ex)
             {
+                logStatus = $"Open backup directory failed";
                 MessageBox.Show($"Error opening backup directory:{Environment.NewLine}{ex}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -493,9 +509,11 @@ namespace JSONConfigManager
             try
             {
                 Process.Start(url);
+                logStatus = $"URL open: {url}";
             }
             catch (Exception ex)
             {
+                logStatus = $"Open URL failed";
                 MessageBox.Show($"Error opening URL:{Environment.NewLine}{ex/*.Message*/}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -535,7 +553,7 @@ namespace JSONConfigManager
             }
             else
             {
-                log = $"URL invalid, not adding custom URL {unicode}!";
+                log = $"URL invalid, not adding URL {unicode}";
             }
         }
         #endregion
@@ -549,7 +567,7 @@ namespace JSONConfigManager
                 {
                     return;
                 }
-                if(hasCommentsInFile)
+                if (hasCommentsInFile)
                 {
                     if (MessageBox.Show($"Comments detected in config file:{Environment.NewLine}Saving will remove all comments and reset formatting!{Environment.NewLine}{Environment.NewLine}Are you sure you want to proceed?", "Reset formatting and Save file?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
                     {
@@ -567,19 +585,26 @@ namespace JSONConfigManager
                     File.WriteAllText(gameDir + file, cnf);
                     configIni = txtJson.Text;
                 }
+                else if (isXml)
+                {
+                    string cnf = config.ToString().Replace("\r\n", "\n").Replace("\n", "\r\n"); ;
+                    XmlDocument doc = (XmlDocument)JsonConvert.DeserializeXmlNode(cnf);
+                    doc.Save(gameDir + file);
+                    hasCommentsInFile = false;
+                }
                 else
                 {
                     string cnf = config.ToString();
                     File.WriteAllText(gameDir + file, cnf);
                     hasCommentsInFile = false;
                 }
-                logStatus = $"Saved all changes to {file}";
                 configEdited = false;
-
+                logStatus = $"Saved: {file}";
                 MessageBox.Show($"Saved all changes to {file}.", "Save file", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
+                logStatus = $"File not saved";
                 MessageBox.Show($"Error Saving file:{Environment.NewLine}{ex/*.Message*/}", "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -592,11 +617,12 @@ namespace JSONConfigManager
                 modList.Add(file, file);
                 InitLoadedModConfigs();
                 ddlSelectedMod.SelectedIndex = ddlSelectedMod.Items.Count - 1;
-                logStatus = $"Config file {file} added!";
+                logStatus = $"Config file added: {file}";
                 SaveSettings();
             }
             catch (Exception ex)
             {
+                logStatus = $"Config file not added";
                 MessageBox.Show($"Error adding config file:{Environment.NewLine}{ex/*.Message*/}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -608,14 +634,15 @@ namespace JSONConfigManager
                 return;
             }
             modList.Remove(ddlSelectedMod.Text);
-            logStatus = $"Config file {ddlSelectedMod.Text} removed!";
             InitLoadedModConfigs(true);
             SaveSettings();
             UpdateToolbarButtons();
             jsonTreeView.Nodes.Clear();
             isIni = false;
+            isXml = false;
             txtJson.Text = string.Empty;
             lastJsonText = string.Empty;
+            logStatus = $"Config file removed";
         }
 
         private void LoadModConfigFiles()
@@ -623,7 +650,6 @@ namespace JSONConfigManager
             try
             {
                 btnAddNewModConfig.DropDownItems.Clear();
-                logStatus = "Loading...";
                 foreach (var file in Directory.EnumerateFiles(gameDir)
                     .Where(fileName => fileName.ToLower().EndsWith(SUFFIX_JSON) || fileName.ToLower().EndsWith(SUFFIX_INI) || fileName.ToLower().EndsWith(SUFFIX_XML)))
                 {
@@ -633,10 +659,11 @@ namespace JSONConfigManager
                         btnAddNewModConfig.DropDownItems.Add(info.Name);
                     }
                 }
-                logStatus = "Config files loaded";
+                logStatus = $"Config files loaded: {btnAddNewModConfig.DropDownItems.Count}";
             }
             catch (Exception ex)
             {
+                logStatus = "Config files not loaded";
                 MessageBox.Show($"Error loading config files:{Environment.NewLine}{ex/*.Message*/}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -1019,7 +1046,8 @@ namespace JSONConfigManager
                 lastSelectedModItem = ddlSelectedMod.SelectedItem;
                 return;
             }
-            isIni = ddlSelectedMod.SelectedItem.ToString().ToLower().EndsWith(SUFFIX_INI) || ddlSelectedMod.SelectedItem.ToString().ToLower().EndsWith(SUFFIX_XML);
+            isIni = ddlSelectedMod.SelectedItem.ToString().ToLower().EndsWith(SUFFIX_INI);
+            isXml = ddlSelectedMod.SelectedItem.ToString().ToLower().EndsWith(SUFFIX_XML);
 
             string file = string.Empty;
             try
@@ -1036,14 +1064,25 @@ namespace JSONConfigManager
                 }
                 else
                 {
-                    hasCommentsInFile = fileContent.IndexOf("//") != -1 || fileContent.IndexOf("/*") != -1;
+                    if (isXml)
+                    {
+                        hasCommentsInFile = fileContent.IndexOf("<!--") != -1;
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(fileContent);
+                        fileContent = JsonConvert.SerializeXmlNode(doc);
+                    }
+                    else
+                    {
+                        hasCommentsInFile = fileContent.IndexOf("//") != -1 || fileContent.IndexOf("/*") != -1;
+                    }
                     RefreshConfigTree(fileContent);
                 }
-                logStatus = $"Config file {file} loaded!";
+                logStatus = $"Config file loaded: {file}";
                 lastSelectedModItem = ddlSelectedMod.SelectedItem;
             }
             catch (Exception ex)
             {
+                logStatus = $"Config file not loaded";
                 MessageBox.Show($"Error loading config {file}:{Environment.NewLine}{ex}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 ddlSelectedMod.SelectedItem = lastSelectedModItem;
             }
@@ -1351,7 +1390,7 @@ namespace JSONConfigManager
                     }
                 case Keys.B:
                     {
-                        if (e.Control)
+                        if (e.Alt)
                         {
                             Backup(e.Shift);
                         }
@@ -1359,7 +1398,7 @@ namespace JSONConfigManager
                     }
                 case Keys.R:
                     {
-                        if (e.Control && e.Shift)
+                        if (e.Alt)
                         {
                             btnBackup.DropDown.Show();
                             ddlRestoreBackup.DropDown.Show();
@@ -1368,7 +1407,7 @@ namespace JSONConfigManager
                     }
                 case Keys.D:
                     {
-                        if (e.Control && e.Shift)
+                        if (e.Alt)
                         {
                             OpenBackupDirectory();
                         }

@@ -52,11 +52,11 @@ namespace JSONConfigManager
 
         public string nexus76HomeURL = "https://www.nexusmods.com/fallout76/mods/";
 
-        public string githubPageURL = "https://github.com/MsZelia/JSONConfigManager";
-
-        public string nexusPageURL = "https://next.nexusmods.com/profile/MsZelia"; //TODO
+        public string nexusPageURL = "https://www.nexusmods.com/fallout76/mods/3341";
 
         public string nexusUserPageURL = "https://next.nexusmods.com/profile/MsZelia/mods";
+
+        public string githubPageURL = "https://github.com/MsZelia/JSONConfigManager";
 
         public string kofiURL = "https://ko-fi.com/zelia";
 

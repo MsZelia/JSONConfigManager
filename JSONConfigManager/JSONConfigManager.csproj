@@ -99,6 +99,12 @@
     <Compile Include="UserControlDecimal.Designer.cs">
       <DependentUpon>UserControlDecimal.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControlDelete.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlDelete.Designer.cs">
+      <DependentUpon>UserControlDelete.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControlInteger.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -142,6 +148,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControlDecimal.resx">
       <DependentUpon>UserControlDecimal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlDelete.resx">
+      <DependentUpon>UserControlDelete.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControlInteger.resx">
       <DependentUpon>UserControlInteger.cs</DependentUpon>

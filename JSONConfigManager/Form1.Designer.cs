@@ -35,14 +35,15 @@ namespace JSONConfigManager
             this.btnAddNewModConfig = new System.Windows.Forms.ToolStripSplitButton();
             this.btnWeb = new System.Windows.Forms.ToolStripButton();
             this.ddlSelectedMod = new System.Windows.Forms.ToolStripComboBox();
-            this.btnDarkMode = new System.Windows.Forms.ToolStripButton();
-            this.btnAbout = new System.Windows.Forms.ToolStripSplitButton();
+            this.ddlAbout = new System.Windows.Forms.ToolStripSplitButton();
             this.btnGithub = new System.Windows.Forms.ToolStripMenuItem();
             this.btnNexusMods = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnNexusUserPage = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnKofi = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnDarkMode = new System.Windows.Forms.ToolStripButton();
             this.btnRemoveModConfig = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.btnBackup = new System.Windows.Forms.ToolStripSplitButton();
@@ -52,14 +53,19 @@ namespace JSONConfigManager
             this.ddlRestoreBackup = new System.Windows.Forms.ToolStripMenuItem();
             this.dummyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSelectGameLocation = new System.Windows.Forms.ToolStripButton();
+            this.ddlBrowse = new System.Windows.Forms.ToolStripDropDownButton();
+            this.btnBrowseBackupDir = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnBrowseIniDir = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnBrowseGameDir = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnBrowseProgramDir = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSplitButtonProfile = new System.Windows.Forms.ToolStripComboBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.jsonTreeView = new Alex75.JsonViewer.WindowsForm.JsonTreeView();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.userControlContainer = new System.Windows.Forms.Panel();
+            this.jsonTreeView = new Alex75.JsonViewer.WindowsForm.JsonTreeView();
             this.txtLog = new JSONConfigManager.QuickScrollRichTextBox();
             this.txtJson = new JSONConfigManager.QuickScrollRichTextBox();
             this.toolStrip1.SuspendLayout();
@@ -87,11 +93,12 @@ namespace JSONConfigManager
             this.btnAddNewModConfig,
             this.btnWeb,
             this.ddlSelectedMod,
+            this.ddlAbout,
             this.btnDarkMode,
-            this.btnAbout,
             this.btnRemoveModConfig,
             this.btnSave,
             this.btnBackup,
+            this.ddlBrowse,
             this.btnSelectGameLocation,
             this.toolStripSplitButtonProfile});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -138,6 +145,75 @@ namespace JSONConfigManager
             this.ddlSelectedMod.Size = new System.Drawing.Size(351, 31);
             this.ddlSelectedMod.SelectedIndexChanged += new System.EventHandler(this.ddlSelectedMod_SelectedIndexChanged);
             // 
+            // ddlAbout
+            // 
+            this.ddlAbout.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.ddlAbout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ddlAbout.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnGithub,
+            this.btnNexusMods,
+            this.toolStripSeparator3,
+            this.btnNexusUserPage,
+            this.btnKofi,
+            this.toolStripSeparator2,
+            this.btnAbout});
+            this.ddlAbout.Image = global::JSONConfigManager.Properties.Resources.Info;
+            this.ddlAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ddlAbout.Name = "ddlAbout";
+            this.ddlAbout.Size = new System.Drawing.Size(39, 28);
+            this.ddlAbout.Text = "About";
+            this.ddlAbout.ButtonClick += new System.EventHandler(this.ddlAbout_ButtonClick);
+            // 
+            // btnGithub
+            // 
+            this.btnGithub.Image = global::JSONConfigManager.Properties.Resources.Github;
+            this.btnGithub.Name = "btnGithub";
+            this.btnGithub.Size = new System.Drawing.Size(316, 28);
+            this.btnGithub.Text = "Open on GitHub";
+            this.btnGithub.Click += new System.EventHandler(this.btnGithub_Click);
+            // 
+            // btnNexusMods
+            // 
+            this.btnNexusMods.Image = global::JSONConfigManager.Properties.Resources.Nexus;
+            this.btnNexusMods.Name = "btnNexusMods";
+            this.btnNexusMods.Size = new System.Drawing.Size(316, 28);
+            this.btnNexusMods.Text = "Open on NexusMods";
+            this.btnNexusMods.Click += new System.EventHandler(this.btnNexusMods_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(313, 6);
+            // 
+            // btnNexusUserPage
+            // 
+            this.btnNexusUserPage.Image = global::JSONConfigManager.Properties.Resources.Nexus;
+            this.btnNexusUserPage.Name = "btnNexusUserPage";
+            this.btnNexusUserPage.Size = new System.Drawing.Size(316, 28);
+            this.btnNexusUserPage.Text = "My other mods";
+            this.btnNexusUserPage.Click += new System.EventHandler(this.btnNexusUserPage_Click);
+            // 
+            // btnKofi
+            // 
+            this.btnKofi.Image = global::JSONConfigManager.Properties.Resources.Kofi;
+            this.btnKofi.Name = "btnKofi";
+            this.btnKofi.Size = new System.Drawing.Size(316, 28);
+            this.btnKofi.Text = "Donate/Support me on Ko-Fi";
+            this.btnKofi.Click += new System.EventHandler(this.btnKofi_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(313, 6);
+            // 
+            // btnAbout
+            // 
+            this.btnAbout.Image = global::JSONConfigManager.Properties.Resources.Info;
+            this.btnAbout.Name = "btnAbout";
+            this.btnAbout.Size = new System.Drawing.Size(316, 28);
+            this.btnAbout.Text = "About";
+            this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
+            // 
             // btnDarkMode
             // 
             this.btnDarkMode.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -149,65 +225,6 @@ namespace JSONConfigManager
             this.btnDarkMode.Text = "DarkMode";
             this.btnDarkMode.ToolTipText = "Toggle between Light and Dark mode";
             this.btnDarkMode.Click += new System.EventHandler(this.btnDarkMode_Click);
-            // 
-            // btnAbout
-            // 
-            this.btnAbout.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.btnAbout.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnGithub,
-            this.btnNexusMods,
-            this.toolStripSeparator1,
-            this.btnNexusUserPage,
-            this.toolStripSeparator2,
-            this.btnKofi});
-            this.btnAbout.Image = global::JSONConfigManager.Properties.Resources.Info;
-            this.btnAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnAbout.Name = "btnAbout";
-            this.btnAbout.Size = new System.Drawing.Size(96, 28);
-            this.btnAbout.Text = "About";
-            this.btnAbout.ButtonClick += new System.EventHandler(this.btnAbout_ButtonClick);
-            // 
-            // btnGithub
-            // 
-            this.btnGithub.Image = global::JSONConfigManager.Properties.Resources.Github;
-            this.btnGithub.Name = "btnGithub";
-            this.btnGithub.Size = new System.Drawing.Size(261, 28);
-            this.btnGithub.Text = "Open on Github";
-            this.btnGithub.Click += new System.EventHandler(this.btnGithub_Click);
-            // 
-            // btnNexusMods
-            // 
-            this.btnNexusMods.Image = global::JSONConfigManager.Properties.Resources.Nexus;
-            this.btnNexusMods.Name = "btnNexusMods";
-            this.btnNexusMods.Size = new System.Drawing.Size(261, 28);
-            this.btnNexusMods.Text = "Open on NexusMods";
-            this.btnNexusMods.Click += new System.EventHandler(this.btnNexusMods_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(258, 6);
-            // 
-            // btnNexusUserPage
-            // 
-            this.btnNexusUserPage.Image = global::JSONConfigManager.Properties.Resources.Nexus;
-            this.btnNexusUserPage.Name = "btnNexusUserPage";
-            this.btnNexusUserPage.Size = new System.Drawing.Size(261, 28);
-            this.btnNexusUserPage.Text = "Check my other mods";
-            this.btnNexusUserPage.Click += new System.EventHandler(this.btnNexusUserPage_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(258, 6);
-            // 
-            // btnKofi
-            // 
-            this.btnKofi.Image = global::JSONConfigManager.Properties.Resources.Kofi;
-            this.btnKofi.Name = "btnKofi";
-            this.btnKofi.Size = new System.Drawing.Size(261, 28);
-            this.btnKofi.Text = "Support me on Ko-Fi";
-            this.btnKofi.Click += new System.EventHandler(this.btnKofi_Click);
             // 
             // btnRemoveModConfig
             // 
@@ -249,24 +266,31 @@ namespace JSONConfigManager
             // 
             this.btnBackupSingle.Image = global::JSONConfigManager.Properties.Resources.Backup;
             this.btnBackupSingle.Name = "btnBackupSingle";
-            this.btnBackupSingle.Size = new System.Drawing.Size(277, 28);
-            this.btnBackupSingle.Text = "Backup (Alt+B)";
+            this.btnBackupSingle.ShortcutKeyDisplayString = "";
+            this.btnBackupSingle.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.B)));
+            this.btnBackupSingle.Size = new System.Drawing.Size(272, 28);
+            this.btnBackupSingle.Text = "Backup";
             this.btnBackupSingle.Click += new System.EventHandler(this.btnBackupSingle_Click);
             // 
             // btnBackupAll
             // 
             this.btnBackupAll.Image = global::JSONConfigManager.Properties.Resources.Backup;
             this.btnBackupAll.Name = "btnBackupAll";
-            this.btnBackupAll.Size = new System.Drawing.Size(277, 28);
-            this.btnBackupAll.Text = "Backup All (Alt+Shift+B)";
+            this.btnBackupAll.ShortcutKeyDisplayString = "";
+            this.btnBackupAll.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.B)));
+            this.btnBackupAll.Size = new System.Drawing.Size(272, 28);
+            this.btnBackupAll.Text = "Backup All";
             this.btnBackupAll.Click += new System.EventHandler(this.btnBackupAll_Click);
             // 
             // btnOpenBackupDirectory
             // 
             this.btnOpenBackupDirectory.Image = global::JSONConfigManager.Properties.Resources.Browse;
             this.btnOpenBackupDirectory.Name = "btnOpenBackupDirectory";
-            this.btnOpenBackupDirectory.Size = new System.Drawing.Size(277, 28);
-            this.btnOpenBackupDirectory.Text = "Open Directory (Alt+D)";
+            this.btnOpenBackupDirectory.ShortcutKeyDisplayString = "";
+            this.btnOpenBackupDirectory.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.D)));
+            this.btnOpenBackupDirectory.Size = new System.Drawing.Size(272, 28);
+            this.btnOpenBackupDirectory.Text = "Open Directory";
             this.btnOpenBackupDirectory.Click += new System.EventHandler(this.btnOpenBackupDirectory_Click);
             // 
             // ddlRestoreBackup
@@ -275,9 +299,12 @@ namespace JSONConfigManager
             this.dummyToolStripMenuItem});
             this.ddlRestoreBackup.Image = global::JSONConfigManager.Properties.Resources.Restore;
             this.ddlRestoreBackup.Name = "ddlRestoreBackup";
-            this.ddlRestoreBackup.Size = new System.Drawing.Size(277, 28);
-            this.ddlRestoreBackup.Text = "Restore Backup (Alt+R)";
+            this.ddlRestoreBackup.ShortcutKeyDisplayString = "";
+            this.ddlRestoreBackup.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.R)));
+            this.ddlRestoreBackup.Size = new System.Drawing.Size(272, 28);
+            this.ddlRestoreBackup.Text = "Restore Backup";
             this.ddlRestoreBackup.DropDownOpened += new System.EventHandler(this.ddlRestoreBackup_DropDownOpened);
+            this.ddlRestoreBackup.Click += new System.EventHandler(this.ddlRestoreBackup_Click);
             // 
             // dummyToolStripMenuItem
             // 
@@ -296,6 +323,61 @@ namespace JSONConfigManager
             this.btnSelectGameLocation.Text = "Select Game Dir";
             this.btnSelectGameLocation.ToolTipText = "Select your Fallout 76 game folder or data directory";
             this.btnSelectGameLocation.Click += new System.EventHandler(this.btnSelectGameLocation_Click);
+            // 
+            // ddlBrowse
+            // 
+            this.ddlBrowse.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.ddlBrowse.AutoToolTip = false;
+            this.ddlBrowse.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnBrowseBackupDir,
+            this.btnBrowseIniDir,
+            this.btnBrowseGameDir,
+            this.btnBrowseProgramDir});
+            this.ddlBrowse.Image = global::JSONConfigManager.Properties.Resources.Browse;
+            this.ddlBrowse.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ddlBrowse.Name = "ddlBrowse";
+            this.ddlBrowse.Size = new System.Drawing.Size(98, 28);
+            this.ddlBrowse.Text = "Browse";
+            this.ddlBrowse.Click += new System.EventHandler(this.ddlBrowse_Click);
+            // 
+            // btnBrowseBackupDir
+            // 
+            this.btnBrowseBackupDir.Image = global::JSONConfigManager.Properties.Resources.Browse;
+            this.btnBrowseBackupDir.Name = "btnBrowseBackupDir";
+            this.btnBrowseBackupDir.ShortcutKeyDisplayString = "";
+            this.btnBrowseBackupDir.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.D)));
+            this.btnBrowseBackupDir.Size = new System.Drawing.Size(242, 28);
+            this.btnBrowseBackupDir.Text = "Backups";
+            this.btnBrowseBackupDir.Click += new System.EventHandler(this.btnBrowseBackupDir_Click);
+            // 
+            // btnBrowseIniDir
+            // 
+            this.btnBrowseIniDir.Image = global::JSONConfigManager.Properties.Resources.Browse;
+            this.btnBrowseIniDir.Name = "btnBrowseIniDir";
+            this.btnBrowseIniDir.ShortcutKeyDisplayString = "";
+            this.btnBrowseIniDir.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
+            this.btnBrowseIniDir.Size = new System.Drawing.Size(242, 28);
+            this.btnBrowseIniDir.Text = "Game INIs";
+            this.btnBrowseIniDir.Click += new System.EventHandler(this.btnBrowseIniDir_Click);
+            // 
+            // btnBrowseGameDir
+            // 
+            this.btnBrowseGameDir.Image = global::JSONConfigManager.Properties.Resources.Browse;
+            this.btnBrowseGameDir.Name = "btnBrowseGameDir";
+            this.btnBrowseGameDir.ShortcutKeyDisplayString = "";
+            this.btnBrowseGameDir.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.G)));
+            this.btnBrowseGameDir.Size = new System.Drawing.Size(242, 28);
+            this.btnBrowseGameDir.Text = "Game Data";
+            this.btnBrowseGameDir.Click += new System.EventHandler(this.btnBrowseGameDir_Click);
+            // 
+            // btnBrowseProgramDir
+            // 
+            this.btnBrowseProgramDir.Image = global::JSONConfigManager.Properties.Resources.Browse;
+            this.btnBrowseProgramDir.Name = "btnBrowseProgramDir";
+            this.btnBrowseProgramDir.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.H)));
+            this.btnBrowseProgramDir.Size = new System.Drawing.Size(242, 28);
+            this.btnBrowseProgramDir.Text = "Program Dir";
+            this.btnBrowseProgramDir.Click += new System.EventHandler(this.btnBrowseProgramDir_Click);
             // 
             // toolStripSplitButtonProfile
             // 
@@ -348,27 +430,6 @@ namespace JSONConfigManager
             this.splitContainer1.SplitterDistance = 400;
             this.splitContainer1.TabIndex = 4;
             // 
-            // jsonTreeView
-            // 
-            this.jsonTreeView.AllowDrop = true;
-            this.jsonTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.jsonTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.jsonTreeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.jsonTreeView.FullRowSelect = true;
-            this.jsonTreeView.HideSelection = false;
-            this.jsonTreeView.ImageIndex = 0;
-            this.jsonTreeView.Location = new System.Drawing.Point(0, 0);
-            this.jsonTreeView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.jsonTreeView.MinimumSize = new System.Drawing.Size(352, 5);
-            this.jsonTreeView.Name = "jsonTreeView1";
-            this.jsonTreeView.SelectedImageIndex = 0;
-            this.jsonTreeView.Size = new System.Drawing.Size(400, 721);
-            this.jsonTreeView.TabIndex = 0;
-            this.jsonTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.jsonTreeView_AfterSelect);
-            this.jsonTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.jsonTreeView_NodeMouseClick);
-            this.jsonTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
-            this.jsonTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
-            // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -404,7 +465,7 @@ namespace JSONConfigManager
             // splitContainer3.Panel1
             // 
             this.splitContainer3.Panel1.Controls.Add(this.userControlContainer);
-            this.splitContainer3.Panel1MinSize = 100;
+            this.splitContainer3.Panel1MinSize = 180;
             // 
             // splitContainer3.Panel2
             // 
@@ -423,6 +484,27 @@ namespace JSONConfigManager
             this.userControlContainer.Name = "userControlContainer";
             this.userControlContainer.Size = new System.Drawing.Size(270, 227);
             this.userControlContainer.TabIndex = 1;
+            // 
+            // jsonTreeView
+            // 
+            this.jsonTreeView.AllowDrop = true;
+            this.jsonTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.jsonTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.jsonTreeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.jsonTreeView.FullRowSelect = true;
+            this.jsonTreeView.HideSelection = false;
+            this.jsonTreeView.ImageIndex = 0;
+            this.jsonTreeView.Location = new System.Drawing.Point(0, 0);
+            this.jsonTreeView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.jsonTreeView.MinimumSize = new System.Drawing.Size(352, 5);
+            this.jsonTreeView.Name = "jsonTreeView1";
+            this.jsonTreeView.SelectedImageIndex = 0;
+            this.jsonTreeView.Size = new System.Drawing.Size(400, 721);
+            this.jsonTreeView.TabIndex = 0;
+            this.jsonTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.jsonTreeView_AfterSelect);
+            this.jsonTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.jsonTreeView_NodeMouseClick);
+            this.jsonTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
+            this.jsonTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
             // 
             // txtLog
             // 
@@ -522,13 +604,19 @@ namespace JSONConfigManager
         private System.Windows.Forms.SplitContainer splitContainer3;
         private QuickScrollRichTextBox txtJson;
         private System.Windows.Forms.ToolStripButton btnDarkMode;
-        private System.Windows.Forms.ToolStripSplitButton btnAbout;
+        private System.Windows.Forms.ToolStripSplitButton ddlAbout;
         private System.Windows.Forms.ToolStripMenuItem btnNexusMods;
         private System.Windows.Forms.ToolStripMenuItem btnGithub;
         private System.Windows.Forms.ToolStripMenuItem btnKofi;
         private System.Windows.Forms.ToolStripMenuItem btnNexusUserPage;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem btnAbout;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripDropDownButton ddlBrowse;
+        private System.Windows.Forms.ToolStripMenuItem btnBrowseGameDir;
+        private System.Windows.Forms.ToolStripMenuItem btnBrowseIniDir;
+        private System.Windows.Forms.ToolStripMenuItem btnBrowseBackupDir;
+        private System.Windows.Forms.ToolStripMenuItem btnBrowseProgramDir;
     }
 }
 

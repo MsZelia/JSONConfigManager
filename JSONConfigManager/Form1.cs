@@ -10,6 +10,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -43,6 +44,10 @@ namespace JSONConfigManager
 
         public string gameDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Fallout76\\Data\\";
 
+        public string iniDocsDir = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\My Games\\Fallout 76";
+
+        public string thisDir = ".";
+
         public string backupDir = ".\\Backups\\";
 
         public string nexus76HomeURL = "https://www.nexusmods.com/fallout76/mods/";
@@ -62,6 +67,8 @@ namespace JSONConfigManager
             { "betterseasons.ini", "2824" },
             { "buffsmeter.json", "2821" },
             { "campswaplock.json", "3267" },
+            { "configuration\\chatmod.ini", "151" },
+            { "configuration\\hudimprovedbars.json", "3106" },
             { "customcrosshair.xml", "953" },
             { "customradios.json", "2901" },
             { "fanfarefree.ini", "1293" },
@@ -97,6 +104,8 @@ namespace JSONConfigManager
 
         private UserControlCopy nodeCopyUserControl;
 
+        private UserControlDelete nodeDeleteUserControl;
+
         private bool configEdited = false;
 
         private string lastJsonText = string.Empty;
@@ -119,8 +128,11 @@ namespace JSONConfigManager
         {
             InitializeComponent();
             LoadSettings();
-            InitCopyUserControl();
+            InitUserControls();
+            Text += $" - {Version}";
         }
+
+        public string Version => Assembly.GetEntryAssembly().GetName().Version.ToString();
 
         public string logStatus
         {
@@ -139,8 +151,6 @@ namespace JSONConfigManager
                 txtLog.Text += $"> {value}{Environment.NewLine}";
             }
         }
-
-
 
         public bool IsDarkMode
         {
@@ -389,10 +399,10 @@ namespace JSONConfigManager
                 string directoryToCreate = directory;
                 if (File.Exists(gameDir + file))
                 {
-                    if(file.Contains('\\'))
+                    if (file.Contains('\\'))
                     {
                         string[] subdirectories = file.Split('\\');
-                        if(subdirectories.Length > 1)
+                        if (subdirectories.Length > 1)
                         {
                             for (int i = 0; i < subdirectories.Length - 1; i++)
                             {
@@ -423,7 +433,7 @@ namespace JSONConfigManager
                 if (isDir)
                 {
                     int restored = 0;
-                    foreach (var file in Directory.GetFiles(dir,"*.*",SearchOption.AllDirectories))
+                    foreach (var file in Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories))
                     {
                         if (RestoreFile(file)) restored++;
                     }
@@ -474,13 +484,14 @@ namespace JSONConfigManager
                     tsmi.DropDownItemClicked -= restoreBackup_DropDownItemClicked;
                 }
                 ddlRestoreBackup.DropDownItems.Clear();
+                ddlRestoreBackup.ShowShortcutKeys = true;
                 if (Directory.Exists(backupDir))
                 {
                     foreach (string directory in Directory.GetDirectories(backupDir))
                     {
                         ToolStripMenuItem tsmi = new ToolStripMenuItem(directory.Substring(directory.LastIndexOf("\\") + 1));
                         tsmi.DropDownItems.Add(new ToolStripMenuItem("RESTORE ALL") { Tag = (directory, true) });
-                        foreach (var file in Directory.GetFiles(directory,"*.*",SearchOption.AllDirectories))
+                        foreach (var file in Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories))
                         {
                             string fileName = file.Replace(directory, string.Empty).Substring(1);
                             tsmi.DropDownItems.Add(new ToolStripMenuItem(fileName) { Tag = (file, false) });
@@ -515,6 +526,22 @@ namespace JSONConfigManager
             {
                 logStatus = $"Open backup directory failed";
                 MessageBox.Show($"Error opening backup directory:{Environment.NewLine}{ex}", "Backup error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OpenDirectory(string dir)
+        {
+            try
+            {
+                if (Directory.Exists(dir))
+                {
+                    Process.Start("explorer.exe", dir);
+                    logStatus = $"Directory open: {dir}";
+                }
+            }
+            catch (Exception)
+            {
+                logStatus = $"Open directory failed";
             }
         }
         #endregion
@@ -733,7 +760,7 @@ namespace JSONConfigManager
         {
             try
             {
-                if (isIni || txtJson.Text.Trim() == string.Empty)
+                if (isIni || txtJson.Text.Trim() == string.Empty || lastJsonText == string.Empty)
                 {
                     return;
                 }
@@ -807,7 +834,7 @@ namespace JSONConfigManager
             }
             else
             {
-                log = $"Parent is {token.Parent.Type}: {token.Parent}";
+                log = $"Error SetConfigValue, parent is {token.Parent.Type}: {token.Parent}";
             }
         }
 
@@ -865,7 +892,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                log = $"Error changing numeric value:{Environment.NewLine}{ex/*.Message*/}";
+                log = $"Error changing decimal value:{Environment.NewLine}{ex/*.Message*/}";
             }
         }
 
@@ -880,7 +907,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                log = $"Error changing numeric value:{Environment.NewLine}{ex/*.Message*/}";
+                log = $"Error changing integer value:{Environment.NewLine}{ex/*.Message*/}";
             }
         }
 
@@ -1042,6 +1069,63 @@ namespace JSONConfigManager
             }
         }
 
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+            RemoveNode();
+        }
+
+        private void RemoveNode()
+        {
+            if (selectedNodeToken != null && selectedNodeToken.Parent != null)
+            {
+                try
+                {
+                    if (selectedNodeToken.Parent.Type == JTokenType.Array)
+                    {
+                        string type = selectedNodeToken.Type.ToString();
+                        string path = selectedNodeToken.Parent.Path;
+                        selectedNodeToken.Remove();
+                        RefreshConfigTree();
+                        log = $"Removed {type} from array {path}";
+                        return;
+                    }
+
+                    JToken parent = selectedNodeToken.Parent;
+                    while (parent != config && parent != null)
+                    {
+                        if (parent is JObject)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            parent = parent.Parent;
+                        }
+                    }
+                    if (parent == null)
+                    {
+                        log = $"Unable to remove {selectedNodeToken.Path}";
+                        return;
+                    }
+
+                    if (!(selectedNodeToken is JProperty) && selectedNodeToken.Parent is JProperty)
+                    {
+                        (parent as JObject).Property((selectedNodeToken.Parent as JProperty).Name).Remove();
+                        log = $"Removed {(selectedNodeToken.Parent as JProperty).Name} from {(parent.Path.Length == 0 ? "root" : parent.Path)}";
+                    }
+                    RefreshConfigTree();
+                }
+                catch (Exception ex)
+                {
+                    log = $"Error removing selected node: {ex}";
+                }
+            }
+            else
+            {
+                log = $"Unable to remove root";
+            }
+        }
+
         private void SelectModConfigFile()
         {
             if (lastSelectedModItem == ddlSelectedMod.SelectedItem)
@@ -1057,6 +1141,7 @@ namespace JSONConfigManager
                 }
             }
             configEdited = false;
+            txtLog.Text = string.Empty;
             UpdateToolbarButtons();
 
             if (ddlSelectedMod.SelectedIndex == -1)
@@ -1138,6 +1223,8 @@ namespace JSONConfigManager
                         uc.TextFieldDataSubmit += TextBoxProperty_DataSubmit;
                         userControlContainer.Controls.Add(nodeCopyUserControl);
                         userControlContainer.Controls.Add(uc);
+                        userControlContainer.Controls.Add(nodeDeleteUserControl);
+                        nodeDeleteUserControl.Top = uc.Bottom;
                         nodeEditUserControl = uc;
                         uc.ddlType.Focus();
                         break;
@@ -1150,7 +1237,8 @@ namespace JSONConfigManager
                         uc.TextFieldDataSubmit += TextBoxArray_DataSubmit;
                         userControlContainer.Controls.Add(nodeCopyUserControl);
                         userControlContainer.Controls.Add(uc);
-                        uc.Top = nodeCopyUserControl.Height;
+                        userControlContainer.Controls.Add(nodeDeleteUserControl);
+                        nodeDeleteUserControl.Top = uc.Bottom;
                         nodeEditUserControl = uc;
                         uc.ddlType.Focus();
                         break;
@@ -1170,6 +1258,8 @@ namespace JSONConfigManager
                         }
                         uc.numericUpDown.ValueChanged += NumericUpDownInt_ValueChanged;
                         userControlContainer.Controls.Add(uc);
+                        userControlContainer.Controls.Add(nodeDeleteUserControl);
+                        nodeDeleteUserControl.Top = uc.Bottom;
                         nodeEditUserControl = uc;
                         uc.numericUpDown.Focus();
                         break;
@@ -1182,6 +1272,8 @@ namespace JSONConfigManager
                         uc.numericUpDown.Value = decimal.Parse(selectedNodeToken.ToString());
                         uc.numericUpDown.ValueChanged += NumericUpDown_ValueChanged;
                         userControlContainer.Controls.Add(uc);
+                        userControlContainer.Controls.Add(nodeDeleteUserControl);
+                        nodeDeleteUserControl.Top = uc.Bottom;
                         nodeEditUserControl = uc;
                         uc.numericUpDown.Focus();
                         break;
@@ -1194,6 +1286,8 @@ namespace JSONConfigManager
                         uc.checkBox.Checked = bool.Parse(selectedNodeToken.ToString());
                         uc.checkBox.CheckedChanged += CheckBox_CheckedChanged;
                         userControlContainer.Controls.Add(uc);
+                        userControlContainer.Controls.Add(nodeDeleteUserControl);
+                        nodeDeleteUserControl.Top = uc.Bottom;
                         nodeEditUserControl = uc;
                         uc.checkBox.Focus();
                         break;
@@ -1206,6 +1300,8 @@ namespace JSONConfigManager
                         uc.textBox.Text = selectedNodeToken.ToString();
                         uc.textBox.LostFocus += TextBox_LostFocus;
                         userControlContainer.Controls.Add(uc);
+                        userControlContainer.Controls.Add(nodeDeleteUserControl);
+                        nodeDeleteUserControl.Top = uc.Bottom;
                         nodeEditUserControl = uc;
                         uc.textBox.Focus();
                         break;
@@ -1363,10 +1459,12 @@ namespace JSONConfigManager
             userControlContainer.Controls.Clear();
         }
 
-        private void InitCopyUserControl()
+        private void InitUserControls()
         {
             nodeCopyUserControl = new UserControlCopy();
             nodeCopyUserControl.btnCopy.Click += BtnCopy_Click;
+            nodeDeleteUserControl = new UserControlDelete();
+            nodeDeleteUserControl.btnDelete.Click += BtnDelete_Click;
         }
         #endregion
 
@@ -1412,14 +1510,6 @@ namespace JSONConfigManager
                         }
                         break;
                     }
-                case Keys.B:
-                    {
-                        if (e.Alt)
-                        {
-                            Backup(e.Shift);
-                        }
-                        break;
-                    }
                 case Keys.R:
                     {
                         if (e.Alt)
@@ -1429,17 +1519,9 @@ namespace JSONConfigManager
                         }
                         break;
                     }
-                case Keys.D:
-                    {
-                        if (e.Alt)
-                        {
-                            OpenBackupDirectory();
-                        }
-                        break;
-                    }
                 case Keys.F1:
                     {
-                        btnAbout.DropDown.Show();
+                        ddlAbout.DropDown.Show();
                         break;
                     }
                 default:
@@ -1494,6 +1576,8 @@ namespace JSONConfigManager
 
         private void ddlRestoreBackup_DropDownOpened(object sender, EventArgs e) => ListBackups();
 
+        private void ddlRestoreBackup_Click(object sender, EventArgs e) => ListBackups();
+
         private void restoreBackup_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             ValueTuple<string, bool> fileToRestore = (ValueTuple<string, bool>)(e.ClickedItem as ToolStripMenuItem).Tag;
@@ -1530,7 +1614,10 @@ namespace JSONConfigManager
 
         private void jsonTreeView_AfterSelect(object sender, TreeViewEventArgs e) => InitializeSelectedConfigEditControls(e.Node);
 
-        private void btnAbout_ButtonClick(object sender, EventArgs e) => btnAbout.DropDown.Show();
+        private void ddlAbout_ButtonClick(object sender, EventArgs e) => ddlAbout.DropDown.Show();
+
+        private void btnAbout_Click(object sender, EventArgs e) => MessageBox.Show($"{Process.GetCurrentProcess().ProcessName} v{Version}{Environment.NewLine}by Zelia{Environment.NewLine}{Environment.NewLine}Management and Configuration tool for Fallout 76 mod config files{Environment.NewLine}Supported file types: JSON, XML, and INI{Environment.NewLine}Main Features:{Environment.NewLine} - User interface for easy navigation, editing, deleting and adding config elements{Environment.NewLine} - Text editor for manual edits and for INI files{Environment.NewLine} - Backup/Restore functionality{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}See GitHub or NexusMods pages for more info"
+           , "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         private void btnNexusMods_Click(object sender, EventArgs e) => OpenURL(nexusPageURL);
 
@@ -1539,6 +1626,17 @@ namespace JSONConfigManager
         private void btnKofi_Click(object sender, EventArgs e) => OpenURL(kofiURL);
 
         private void btnNexusUserPage_Click(object sender, EventArgs e) => OpenURL(nexusUserPageURL);
+
+
+        private void ddlBrowse_Click(object sender, EventArgs e) => ddlBrowse.DropDown.Show();
+
+        private void btnBrowseBackupDir_Click(object sender, EventArgs e) => OpenBackupDirectory();
+
+        private void btnBrowseGameDir_Click(object sender, EventArgs e) => OpenDirectory(gameDir);
+
+        private void btnBrowseIniDir_Click(object sender, EventArgs e) => OpenDirectory(iniDocsDir);
+
+        private void btnBrowseProgramDir_Click(object sender, EventArgs e) => OpenDirectory(thisDir);
         #endregion
     }
 }

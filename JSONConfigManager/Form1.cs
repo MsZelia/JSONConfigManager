@@ -28,6 +28,7 @@ namespace JSONConfigManager
         private const string SETTING_SPLIT_2 = "split2";
         private const string SETTING_SPLIT_3 = "split3";
         private const string SETTING_DARK_THEME = "useDarkTheme";
+        private const string SETTING_ONLY_TEXT_EDIT = "onlyManualEdit";
         private const string SETTING_GAME_DIR = "gameDir";
         private const string SETTING_MOD_LIST = "modList";
         private const string SETTING_CUSTOM_LINKS = "customLinks";
@@ -124,6 +125,8 @@ namespace JSONConfigManager
 
         private bool hasCommentsInFile = false;
 
+        private bool isOnlyTextEdit = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -133,6 +136,8 @@ namespace JSONConfigManager
         }
 
         public string Version => Assembly.GetEntryAssembly().GetName().Version.ToString();
+
+        public string ProgramName => Assembly.GetEntryAssembly().GetName().Name;
 
         public string logStatus
         {
@@ -165,6 +170,34 @@ namespace JSONConfigManager
             }
         }
 
+        public bool IsOnlyTextEdit
+        {
+            get => isOnlyTextEdit;
+            set
+            {
+                if (value != isOnlyTextEdit)
+                {
+                    if (ddlSelectedMod.SelectedIndex == -1 || MessageBox.Show($"You are about to turn {(value ? "on": "off")} manual text edit-only mode.{Environment.NewLine}{Environment.NewLine}This will unload selected config file.{Environment.NewLine}Are you sure you want to discard changes and continue?", "Discard Changes and Continue?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                    {
+                        UpdateToolbarButtons();
+                        ddlSelectedMod.SelectedIndex = -1;
+                        jsonTreeView.Nodes.Clear();
+                        isIni = false;
+                        isXml = false;
+                        isOnlyTextEdit = value;
+                        txtJson.Text = string.Empty;
+                        lastJsonText = string.Empty;
+                        btnOnlyTextEditor.Checked = value;
+                        btnOnlyTextEditor.Font = new Font(btnOnlyTextEditor.Font, isOnlyTextEdit ? FontStyle.Bold : FontStyle.Regular);
+                    }
+                    else
+                    {
+                        btnOnlyTextEditor.Checked = !value;
+                    }
+                }
+            }
+        }
+
         #region SETTINGS
         private void LoadSettings()
         {
@@ -172,6 +205,10 @@ namespace JSONConfigManager
             {
                 string fileContent = File.ReadAllText(settingsDir);
                 settings = JObject.Parse(fileContent);
+                if (settings[SETTING_ONLY_TEXT_EDIT] != null)
+                {
+                    IsOnlyTextEdit = (bool)settings[SETTING_ONLY_TEXT_EDIT];
+                }
                 if (settings[SETTING_GAME_DIR] != null)
                 {
                     gameDir = (string)settings[SETTING_GAME_DIR];
@@ -226,6 +263,7 @@ namespace JSONConfigManager
                 settings[SETTING_SPLIT_2] = splitContainer2.SplitterDistance;
                 settings[SETTING_SPLIT_3] = splitContainer3.SplitterDistance;
                 settings[SETTING_DARK_THEME] = IsDarkMode;
+                settings[SETTING_ONLY_TEXT_EDIT] = isOnlyTextEdit;
                 settings[SETTING_GAME_DIR] = gameDir;
                 var keys = modList.Keys.ToArray();
                 Array.Sort(keys);
@@ -292,6 +330,7 @@ namespace JSONConfigManager
             {
                 ResetDarkTheme(this);
             }
+            ClearJsonSearchSelection();
         }
         #endregion
 
@@ -618,7 +657,7 @@ namespace JSONConfigManager
                     }
                 }
                 string file = ddlSelectedMod.SelectedItem.ToString();
-                if (isIni)
+                if (isIni || isOnlyTextEdit)
                 {
                     if (configIni == txtJson.Text)
                     {
@@ -673,6 +712,10 @@ namespace JSONConfigManager
         private void RemoveModConfigFile()
         {
             if (!modList.ContainsKey(ddlSelectedMod.Text))
+            {
+                return;
+            }
+            if (MessageBox.Show($"Are you sure you want to remove selected config from {ProgramName}?{Environment.NewLine}{ddlSelectedMod.Text}", $"Remove config?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 return;
             }
@@ -760,7 +803,7 @@ namespace JSONConfigManager
         {
             try
             {
-                if (isIni || txtJson.Text.Trim() == string.Empty || lastJsonText == string.Empty)
+                if (isIni || isOnlyTextEdit || txtJson.Text.Trim() == string.Empty || lastJsonText == string.Empty)
                 {
                     return;
                 }
@@ -1132,7 +1175,7 @@ namespace JSONConfigManager
             {
                 return;
             }
-            if (configEdited || isIni && configIni != txtJson.Text)
+            if (ddlSelectedMod.SelectedIndex != -1 && (configEdited || isIni && configIni != txtJson.Text))
             {
                 if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and switch to selected config?", "Discard Changes and Switch?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
                 {
@@ -1157,7 +1200,7 @@ namespace JSONConfigManager
             {
                 file = ddlSelectedMod.SelectedItem.ToString();
                 string fileContent = File.ReadAllText(gameDir + file);
-                if (isIni)
+                if (isIni || isOnlyTextEdit)
                 {
                     hasCommentsInFile = false;
                     txtJson.Text = fileContent;
@@ -1394,6 +1437,31 @@ namespace JSONConfigManager
             return null;
         }
 
+        private IEnumerable<TreeNode> FindNodes(TreeNode node, string searchPhrase)
+        {
+            List<TreeNode> foundNodes = new List<TreeNode>();
+            foreach (TreeNode tn in node.Nodes)
+            {
+                if (tn.Text.ToLower().Contains(searchPhrase))
+                {
+                    foundNodes.Add(tn);
+                }
+                else
+                {
+                    var tnPath = (tn.Tag as JToken)?.Path ?? string.Empty;
+                    if (tnPath.ToLower().Contains(searchPhrase))
+                    {
+                        foundNodes.Add(tn);
+                    }
+                }
+                if (tn.Nodes.Count > 0)
+                {
+                    foundNodes.AddRange(FindNodes(tn, searchPhrase));
+                }
+            }
+            return foundNodes;
+        }
+
         private void UpdateToolbarButtons()
         {
             btnAddNewModConfig.Enabled = Directory.Exists(gameDir);
@@ -1466,6 +1534,60 @@ namespace JSONConfigManager
             nodeDeleteUserControl = new UserControlDelete();
             nodeDeleteUserControl.btnDelete.Click += BtnDelete_Click;
         }
+
+        private void FindMatches(string searchPhrase)
+        {
+            if (!string.IsNullOrEmpty(searchPhrase))
+            {
+                log = $"Searching for {searchPhrase}:";
+                searchPhrase = searchPhrase.ToLower();
+                if (jsonTreeView.Nodes.Count > 0)
+                {
+                    RefreshConfigTree();
+                    var foundNodes = FindNodes(jsonTreeView.TopNode, searchPhrase);
+                    if (foundNodes.Count() > 0)
+                    {
+                        log = $"Found nodes: {foundNodes.Count()}";
+                        foreach (var node in foundNodes)
+                        {
+                            node.BackColor = Color.Yellow;
+                            node.ForeColor = Color.Red;
+                        }
+                    }
+                    else
+                    {
+                        log = $"No nodes found";
+                    }
+                }
+                if (!string.IsNullOrEmpty(txtJson.Text))
+                {
+                    ClearJsonSearchSelection();
+                    var text = txtJson.Text.ToLower();
+                    int startIndex = 0;
+                    int matches = 0;
+                    int index;
+                    while ((index = text.IndexOf(searchPhrase, startIndex)) != -1)
+                    {
+                        txtJson.Select(index, searchPhrase.Length);
+                        txtJson.SelectionColor = Color.Red;
+                        txtJson.SelectionBackColor = Color.Yellow;
+                        startIndex = index + searchPhrase.Length;
+                        matches++;
+                    }
+                    log = $"Found in text: {matches}";
+                }
+            }
+        }
+
+        private void ClearJsonSearchSelection()
+        {
+            txtJson.SelectionStart = 0;
+            txtJson.SelectionLength = txtJson.TextLength;
+            txtJson.SelectionColor = txtJson.ForeColor;
+            txtJson.SelectionBackColor = txtJson.BackColor;
+            txtJson.SelectionStart = 0;
+            txtJson.SelectionLength = 0;
+        }
         #endregion
 
         #region FORM EVENTS
@@ -1502,6 +1624,14 @@ namespace JSONConfigManager
         {
             switch (e.KeyCode)
             {
+                case Keys.F:
+                    {
+                        if (e.Control)
+                        {
+                            txtSearch.Focus();
+                        }
+                        break;
+                    }
                 case Keys.S:
                     {
                         if (e.Control)
@@ -1616,8 +1746,7 @@ namespace JSONConfigManager
 
         private void ddlAbout_ButtonClick(object sender, EventArgs e) => ddlAbout.DropDown.Show();
 
-        private void btnAbout_Click(object sender, EventArgs e) => MessageBox.Show($"{Process.GetCurrentProcess().ProcessName} v{Version}{Environment.NewLine}by Zelia{Environment.NewLine}{Environment.NewLine}Management and Configuration tool for Fallout 76 mod config files{Environment.NewLine}Supported file types: JSON, XML, and INI{Environment.NewLine}Main Features:{Environment.NewLine} - User interface for easy navigation, editing, deleting and adding config elements{Environment.NewLine} - Text editor for manual edits and for INI files{Environment.NewLine} - Backup/Restore functionality{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}See GitHub or NexusMods pages for more info"
-           , "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        private void btnAbout_Click(object sender, EventArgs e) => MessageBox.Show($"{Process.GetCurrentProcess().ProcessName} v{Version}{Environment.NewLine}by Zelia{Environment.NewLine}{Environment.NewLine}Management and Configuration tool for Fallout 76 mod config files{Environment.NewLine}Supported file types: JSON, XML, and INI{Environment.NewLine}Main Features:{Environment.NewLine} - User interface for easy navigation, editing, deleting and adding config elements{Environment.NewLine} - Text editor for manual edits and for INI files{Environment.NewLine} - Backup/Restore functionality{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}See GitHub or NexusMods pages for more info", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         private void btnNexusMods_Click(object sender, EventArgs e) => OpenURL(nexusPageURL);
 
@@ -1626,7 +1755,6 @@ namespace JSONConfigManager
         private void btnKofi_Click(object sender, EventArgs e) => OpenURL(kofiURL);
 
         private void btnNexusUserPage_Click(object sender, EventArgs e) => OpenURL(nexusUserPageURL);
-
 
         private void ddlBrowse_Click(object sender, EventArgs e) => ddlBrowse.DropDown.Show();
 
@@ -1637,6 +1765,18 @@ namespace JSONConfigManager
         private void btnBrowseIniDir_Click(object sender, EventArgs e) => OpenDirectory(iniDocsDir);
 
         private void btnBrowseProgramDir_Click(object sender, EventArgs e) => OpenDirectory(thisDir);
-        #endregion
+
+        private void btnOnlyTextEditor_CheckedChanged(object sender, EventArgs e) => IsOnlyTextEdit = btnOnlyTextEditor.Checked;
+
+        private void txtSearch_Enter(object sender, EventArgs e) => txtSearch.Text = string.Empty;
+
+        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                FindMatches(txtSearch.Text);
+            }
+        }
     }
+    #endregion
 }

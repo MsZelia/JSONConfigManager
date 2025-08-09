@@ -1,0 +1,72 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"properties": {
+		"hideTextShadow": {
+			"type": "boolean"
+		},
+		"hideTeamsAvailablePopup": {
+			"type": "boolean"
+		},
+		"showFriendCount": {
+			"type": "boolean"
+		},
+		"showRecentCount": {
+			"type": "boolean"
+		},
+		"createTeamDelay": {
+			"type": "number"
+		},
+		"showNameFormat": {
+			"type": "string"
+		},
+		"showTeamMemberCount": {
+			"type": "boolean"
+		},
+		"hideOfflineFriends": {
+			"type": "boolean"
+		},
+		"hideDisconnectedRecent": {
+			"type": "boolean"
+		},
+		"defaultSelectionJoin": {
+			"type": "boolean"
+		},
+		"disableFriendsGrouping": {
+			"type": "boolean"
+		},
+		"hudModLoader": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"delayModLoader": {
+			"type": "number"
+		},
+		"topSortFriends": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"hideVignette": {
+			"type": "boolean"
+		},
+		"notificationHideDelay": {
+			"type": "number"
+		},
+		"hideBestBuildNotification": {
+			"type": "boolean"
+		},
+		"hideSelfName": {
+			"type": "boolean"
+		},
+		"hideAllPlayerNames": {
+			"type": "boolean"
+		},
+		"hideAllPlayerNamesReplacement": {
+			"type": "string"
+		}
+	}
+}

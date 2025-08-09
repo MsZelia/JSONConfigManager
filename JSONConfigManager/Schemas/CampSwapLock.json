@@ -1,0 +1,185 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"properties": {
+		"Best_Build": {
+			"type": "object",
+			"properties": {
+				"Enable": {
+					"type": "boolean"
+				}
+			}
+		},
+		"Camp_Blocked": {
+			"type": "object",
+			"properties": {
+				"Enable": {
+					"type": "boolean"
+				}
+			}
+		},
+		"Camp_Name": {
+			"type": "object",
+			"properties": {
+				"Enable": {
+					"type": "boolean"
+				},
+				"Name": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"Camp_Unplaced": {
+			"type": "object",
+			"properties": {
+				"Enable": {
+					"type": "boolean"
+				}
+			}
+		},
+		"Slot_Lock": {
+			"type": "object",
+			"properties": {
+				"Enable": {
+					"type": "boolean"
+				},
+				"Slots": {
+					"type": "array",
+					"items": {
+						"type": "number"
+					}
+				}
+			}
+		},
+		"Starting_Character": {
+			"type": "object",
+			"properties": {
+				"Enable": {
+					"type": "boolean"
+				},
+				"Starting_Characters": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"Mod_Options": {
+			"type": "object",
+			"properties": {
+				"Multi_Sound_Delay": {
+					"type": "object",
+					"properties": {
+						"Milliseconds": {
+							"type": "number"
+						}
+					}
+				},
+				"Startup_PopUp": {
+					"type": "object",
+					"properties": {
+						"Enable": {
+							"type": "boolean"
+						}
+					}
+				},
+				"Protected_PopUp": {
+					"type": "object",
+					"properties": {
+						"Enable": {
+							"type": "boolean"
+						},
+						"Text": {
+							"type": "string"
+						}
+					}
+				},
+				"Protected_Sound": {
+					"type": "object",
+					"properties": {
+						"Enable": {
+							"type": "boolean"
+						},
+						"Sound": {
+							"type": "string"
+						}
+					}
+				},
+				"UnProtected_PopUp": {
+					"type": "object",
+					"properties": {
+						"Enable": {
+							"type": "boolean"
+						},
+						"Text": {
+							"type": "string"
+						}
+					}
+				},
+				"UnProtected_Sound": {
+					"type": "object",
+					"properties": {
+						"Enable": {
+							"type": "boolean"
+						},
+						"Sound": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"required": [
+				"Multi_Sound_Delay",
+				"Startup_PopUp",
+				"Protected_PopUp",
+				"Protected_Sound",
+				"UnProtected_PopUp",
+				"UnProtected_Sound"
+			]
+		},
+		"Advance_Options": {
+			"type": "object",
+			"properties": {
+				"Invert": {
+					"type": "object",
+					"properties": {
+						"Enable": {
+							"type": "boolean"
+						}
+					}
+				},
+				"Camp_List": {
+					"type": "object",
+					"properties": {
+						"Enable": {
+							"type": "boolean"
+						}
+					}
+				},
+				"HARD_LOCK": {
+					"type": "object",
+					"properties": {
+						"Enable": {
+							"type": "boolean"
+						},
+						"Text": {
+							"type": "string"
+						},
+						"Sound": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"required": [
+				"Invert",
+				"Camp_List",
+				"HARD_LOCK"
+			]
+		}
+	}
+}

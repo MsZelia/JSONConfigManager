@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -50,6 +51,8 @@ namespace JSONConfigManager
         public string thisDir = ".";
 
         public string backupDir = ".\\Backups\\";
+
+        public string schemaDir = ".\\Schemas\\";
 
         public string nexus76HomeURL = "https://www.nexusmods.com/fallout76/mods/";
 
@@ -177,7 +180,7 @@ namespace JSONConfigManager
             {
                 if (value != isOnlyTextEdit)
                 {
-                    if (ddlSelectedMod.SelectedIndex == -1 || MessageBox.Show($"You are about to turn {(value ? "on": "off")} manual text edit-only mode.{Environment.NewLine}{Environment.NewLine}This will unload selected config file.{Environment.NewLine}Are you sure you want to discard changes and continue?", "Discard Changes and Continue?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                    if (ddlSelectedMod.SelectedIndex == -1 || MessageBox.Show($"You are about to turn {(value ? "on" : "off")} manual text edit-only mode.{Environment.NewLine}{Environment.NewLine}This will unload selected config file.{Environment.NewLine}Are you sure you want to discard changes and continue?", "Discard Changes and Continue?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                     {
                         UpdateToolbarButtons();
                         ddlSelectedMod.SelectedIndex = -1;
@@ -803,7 +806,21 @@ namespace JSONConfigManager
         {
             try
             {
-                if (isIni || isOnlyTextEdit || txtJson.Text.Trim() == string.Empty || lastJsonText == string.Empty)
+                if (isIni || txtJson.Text.Trim() == string.Empty)
+                {
+                    return;
+                }
+                if (isOnlyTextEdit)
+                {
+                    try
+                    {
+                        var configJson = JObject.Parse(txtJson.Text.Trim());
+                        ValidateBySchema(configJson);
+                    }
+                    catch (Exception) { }
+                    return;
+                }
+                if (lastJsonText == string.Empty)
                 {
                     return;
                 }
@@ -922,6 +939,33 @@ namespace JSONConfigManager
             config = jsonTreeView.JSON;
             txtJson.Text = config.ToString();
             lastJsonText = txtJson.Text;
+            ValidateBySchema(config);
+        }
+
+        private void ValidateBySchema(JToken jsonToken)
+        {
+            if (ddlSelectedMod.SelectedIndex != -1)
+            {
+                var schemaPath = schemaDir + ddlSelectedMod.Text;
+                if (File.Exists(schemaPath))
+                {
+                    var schemaJson = File.ReadAllText(schemaPath);
+                    var schema = JSchema.Parse(schemaJson);
+                    bool isValid = jsonToken.IsValid(schema, out IList<string> errorMessages);
+                    log = $"Schema validation: {(isValid ? "VALID" : "NOT VALID")}";
+                    if (errorMessages.Count > 0)
+                    {
+                        foreach (var msg in errorMessages)
+                        {
+                            log = msg;
+                        }
+                    }
+                }
+                else
+                {
+                    log = "JSON Schema not available";
+                }
+            }
         }
 
         private void NumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -1207,6 +1251,12 @@ namespace JSONConfigManager
                     configIni = txtJson.Text;
                     jsonTreeView.Nodes.Clear();
                     ResetSelectedConfigControls();
+                    try
+                    {
+                        var configJson = JObject.Parse(configIni);
+                        ValidateBySchema(configJson);
+                    }
+                    catch (Exception) { }
                 }
                 else
                 {
@@ -1777,6 +1827,6 @@ namespace JSONConfigManager
                 FindMatches(txtSearch.Text);
             }
         }
+        #endregion
     }
-    #endregion
 }

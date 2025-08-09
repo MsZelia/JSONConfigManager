@@ -35,10 +35,20 @@
 			"type": "boolean"
 		},
 		"SkipCustom": {
-			"type": "object"
+			"type": "object",
+			"patternProperties": {
+				".*": {
+					"type": "integer"
+				}
+			}
 		},
 		"SkipCustomRegex": {
-			"type": "object"
+			"type": "object",
+			"patternProperties": {
+				".*": {
+					"type": "integer"
+				}
+			}
 		}
 	}
 }

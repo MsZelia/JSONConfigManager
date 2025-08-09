@@ -174,7 +174,9 @@
 					"type": "string"
 				},
 				{
-					"type": "number"
+					"type": "number",
+					"minimum": 0,
+					"maximum": 16777215
 				}
 			]
 		},
@@ -267,7 +269,9 @@
 								"type": "string"
 							},
 							{
-								"type": "number"
+								"type": "number",
+								"minimum": 0,
+								"maximum": 16777215
 							}
 						]
 					}

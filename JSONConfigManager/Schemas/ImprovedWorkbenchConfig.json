@@ -1,0 +1,268 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"definitions": {
+		"point": {
+			"type": "object",
+			"properties": {
+				"x": {
+					"type": "number"
+				},
+				"y": {
+					"type": "number"
+				}
+			}
+		},
+		"alignPoint": {
+			"type": "object",
+			"properties": {
+				"x": {
+					"type": "number"
+				},
+				"y": {
+					"type": "number"
+				},
+				"align": {
+					"type": "string",
+					"enum": [
+						"left",
+						"center",
+						"right"
+					]
+				}
+			}
+		}
+	},
+	"type": "object",
+	"properties": {
+		"debug": {
+			"type": "boolean"
+		},
+		"hideLoadMessage": {
+			"type": "boolean"
+		},
+		"showDurabilityValue": {
+			"type": "boolean"
+		},
+		"enableExamineRepairAll": {
+			"type": "boolean"
+		},
+		"enableQuickRepairButton": {
+			"type": "boolean"
+		},
+		"enableImprovedQuantityMenu": {
+			"type": "boolean"
+		},
+		"enableLegendaryModTracking": {
+			"type": "boolean"
+		},
+		"legendaryModTrackingLoadFileDirectory": {
+			"type": "string"
+		},
+		"defaultCraftAmount": {
+			"type": "number"
+		},
+		"showInventoryItemCount": {
+			"type": "boolean"
+		},
+		"customRepairKitRepairHotkey": {
+			"type": "number"
+		},
+		"customWorkbenchRepairHotkey": {
+			"type": "number"
+		},
+		"autoUseRepairKit": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"conditionUnder": {
+					"type": "number",
+					"minimum": 0
+				},
+				"exitAfterRepair": {
+					"type": "boolean"
+				},
+				"exitDelay": {
+					"type": "number"
+				}
+			}
+		},
+		"perkCardsConfig": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"textField": {
+					"type": "object",
+					"properties": {
+						"x": {
+							"type": "number"
+						},
+						"y": {
+							"type": "number"
+						},
+						"textSize": {
+							"type": "number"
+						},
+						"textFont": {
+							"type": "string",
+							"enum": [
+								"$76HandwrittenNeat_Font",
+								"$76HandwrittenIlliterate",
+								"$BerlinDemi",
+								"$BRODY",
+								"$Brush_Script_Std",
+								"$ChowderHead",
+								"$ConsoleFont",
+								"$DebugTextFont",
+								"$DotMatrix_Font",
+								"$evaScript_Font",
+								"$Futura_Bold",
+								"$HandwrittenFont",
+								"$KiddieCocktails",
+								"$Leiascript_Font",
+								"$MAIN_Font",
+								"$MAIN_Font_Bold",
+								"$MAIN_Font_Light",
+								"$NixieTube_Font",
+								"$Portico_Font_Regular",
+								"$Slate_Mobile",
+								"$Terminal_Font",
+								"$Typewriter_Font"
+							]
+						},
+						"textAlign": {
+							"type": "string",
+							"enum": [
+								"left",
+								"center",
+								"right"
+							]
+						},
+						"textColor": {
+							"oneOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"textShadow": {
+							"type": "boolean"
+						}
+					}
+				},
+				"headerText": {
+					"type": "string"
+				},
+				"showOnlyEquipped": {
+					"type": "boolean"
+				},
+				"showOnlyUnequipped": {
+					"type": "boolean"
+				},
+				"colorEquipped": {
+					"oneOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "number"
+						}
+					]
+				},
+				"colorUnequipped": {
+					"oneOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "number"
+						}
+					]
+				},
+				"formatEquipped": {
+					"type": "string"
+				},
+				"formatUnequipped": {
+					"type": "string"
+				},
+				"perkCards": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"legendaryPerkCards": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"uiConfig": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"craftMenu": {
+					"type": "boolean"
+				},
+				"modifyMenu": {
+					"type": "boolean"
+				},
+				"examineMenu": {
+					"type": "boolean"
+				},
+				"hideVignette": {
+					"type": "boolean"
+				},
+				"hideBackground": {
+					"type": "boolean"
+				},
+				"hideHeader": {
+					"type": "boolean"
+				},
+				"ItemName": {
+					"$ref": "#/definitions/alignPoint"
+				},
+				"ItemDescription": {
+					"$ref": "#/definitions/alignPoint"
+				},
+				"ItemCard": {
+					"$ref": "#/definitions/point"
+				},
+				"Inventory": {
+					"$ref": "#/definitions/point"
+				},
+				"CraftingHierarchy": {
+					"$ref": "#/definitions/point"
+				},
+				"KnownMods": {
+					"$ref": "#/definitions/point"
+				},
+				"ModDescription": {
+					"$ref": "#/definitions/point"
+				},
+				"Mods": {
+					"$ref": "#/definitions/point"
+				},
+				"PerksLabel": {
+					"$ref": "#/definitions/point"
+				},
+				"PerksPanel1": {
+					"$ref": "#/definitions/point"
+				},
+				"PerksPanel2": {
+					"$ref": "#/definitions/point"
+				}
+			}
+		}
+	}
+}

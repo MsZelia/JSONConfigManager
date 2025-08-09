@@ -1,0 +1,481 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"properties": {
+		"x": {
+			"type": "number"
+		},
+		"y": {
+			"type": "number"
+		},
+		"anchor": {
+			"type": "string",
+			"enum": [
+				"top",
+				"bottom"
+			]
+		},
+		"ySpacing": {
+			"type": "number"
+		},
+		"width": {
+			"type": "number"
+		},
+		"textSize": {
+			"type": "number"
+		},
+		"textFont": {
+			"type": "string",
+			"enum": [
+				"$76HandwrittenNeat_Font",
+				"$76HandwrittenIlliterate",
+				"$BerlinDemi",
+				"$BRODY",
+				"$Brush_Script_Std",
+				"$ChowderHead",
+				"$ConsoleFont",
+				"$DebugTextFont",
+				"$DotMatrix_Font",
+				"$evaScript_Font",
+				"$Futura_Bold",
+				"$HandwrittenFont",
+				"$KiddieCocktails",
+				"$Leiascript_Font",
+				"$MAIN_Font",
+				"$MAIN_Font_Bold",
+				"$MAIN_Font_Light",
+				"$NixieTube_Font",
+				"$Portico_Font_Regular",
+				"$Slate_Mobile",
+				"$Terminal_Font",
+				"$Typewriter_Font"
+			]
+		},
+		"textAlign": {
+			"type": "string",
+			"enum": [
+				"left",
+				"center",
+				"right"
+			]
+		},
+		"textColor": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "number"
+				}
+			]
+		},
+		"textShadow": {
+			"type": "boolean"
+		},
+		"background": {
+			"type": "boolean"
+		},
+		"backgroundColor": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "number"
+				}
+			]
+		},
+		"alpha": {
+			"type": "number"
+		},
+		"backgroundAlpha": {
+			"type": "number"
+		},
+		"blendMode": {
+			"type": "string",
+			"enum": [
+				"add",
+				"alpha",
+				"darken",
+				"difference",
+				"erase",
+				"hardlight",
+				"invert",
+				"layer",
+				"lighten",
+				"multiply",
+				"normal",
+				"overlay",
+				"screen",
+				"shader",
+				"subtract"
+			]
+		},
+		"textBlendMode": {
+			"type": "string",
+			"enum": [
+				"add",
+				"alpha",
+				"darken",
+				"difference",
+				"erase",
+				"hardlight",
+				"invert",
+				"layer",
+				"lighten",
+				"multiply",
+				"normal",
+				"overlay",
+				"screen",
+				"shader",
+				"subtract"
+			]
+		},
+		
+		"disableRealTimeEdit": {
+			"type": "boolean"
+		},
+		"debugKeys": {
+			"type": "boolean"
+		},
+		"toggleVisibilityHotkey": {
+			"type": "number"
+		},
+		"forceHideHotkey": {
+			"type": "number"
+		},
+		"refresh": {
+			"type": "number"
+		},
+		
+		"formats": {
+			"type": "object",
+			"properties": {
+				"daily": {
+					"type": "string"
+				},
+				"weekly": {
+					"type": "string"
+				},
+				"monthly": {
+					"type": "string"
+				},
+				"events": {
+					"type": "string"
+				},
+				"seasonal": {
+					"type": "string"
+				},
+				"character": {
+					"type": "string"
+				},
+				"survival": {
+					"type": "string"
+				},
+				"combat": {
+					"type": "string"
+				},
+				"social": {
+					"type": "string"
+				},
+				"world": {
+					"type": "string"
+				},
+				"fishing": {
+					"type": "string"
+				},
+				"mutatedEvent": {
+					"type": "string"
+				},
+				"publicEvent": {
+					"type": "string"
+				},
+				"worldEvent": {
+					"type": "string"
+				},
+				"caravan": {
+					"type": "string"
+				},
+				"showSeasonEndTime": {
+					"type": "string"
+				}
+			}
+		},
+		"xpBar": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"text": {
+					"type": "string"
+				},
+				"alignVertical": {
+					"type": "string",
+					"enum": [
+						"top",
+						"center",
+						"bottom"
+					]
+				},
+				"alignHorizontal": {
+					"type": "string",
+					"enum": [
+						"left",
+						"center",
+						"right"
+					]
+				},
+				"height": {
+					"type": "number"
+				}
+			}
+		},
+		"scoreBar": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"text": {
+					"type": "string"
+				},
+				"alignVertical": {
+					"type": "string",
+					"enum": [
+						"top",
+						"center",
+						"bottom"
+					]
+				},
+				"alignHorizontal": {
+					"type": "string",
+					"enum": [
+						"left",
+						"center",
+						"right"
+					]
+				},
+				"height": {
+					"type": "number"
+				}
+			}
+		},
+		"offsetUTC": {
+			"type": "number"
+		},
+		"minerva": {
+			"type": "object",
+			"properties": {
+				"offsetHours": {
+					"type": "number"
+				},
+				"availableText": {
+					"type": "string"
+				},
+				"notAvailableText": {
+					"type": "string"
+				},
+				"locations": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"minItems": 4,
+					"maxItems": 4
+				}
+			}
+		},
+		"nuclearCodes": {
+			"type": "object",
+			"properties": {
+				"offsetHours": {
+					"type": "number"
+				},
+				"text": {
+					"type": "string"
+				}
+			}
+		},
+		"eventTimer": {
+			"type": "object",
+			"properties": {
+				"showWithDurationBelowMinutes": {
+					"type": "number"
+				},
+				"eventTimestamps": {
+					"type": "array",
+					"items": {
+						"type": "number"
+					}
+				},
+				"text": {
+					"type": "string"
+				}
+			}
+		},
+		"miniSeason": {
+			"type": "object",
+			"properties": {
+				"hideIfInactive": {
+					"type": "boolean"
+				},
+				"hideIfRewardsClaimed": {
+					"type": "boolean"
+				},
+				"activeText": {
+					"type": "string"
+				},
+				"inactiveText": {
+					"type": "string"
+				}
+			}
+		},
+		"verdantSeason": {
+			"type": "object",
+			"properties": {
+				"hideEndedSeasonAfter": {
+					"type": "number"
+				},
+				"activeText": {
+					"type": "string"
+				},
+				"endedText": {
+					"type": "string"
+				}
+			}
+		},
+		"showOnlyTrackedChallenges": {
+			"type": "object",
+			"properties": {
+				"daily": {
+					"type": "boolean"
+				},
+				"weekly": {
+					"type": "boolean"
+				},
+				"monthly": {
+					"type": "boolean"
+				},
+				"events": {
+					"type": "boolean"
+				},
+				"seasonal": {
+					"type": "boolean"
+				},
+				"character": {
+					"type": "boolean"
+				},
+				"survival": {
+					"type": "boolean"
+				},
+				"combat": {
+					"type": "boolean"
+				},
+				"social": {
+					"type": "boolean"
+				},
+				"world": {
+					"type": "boolean"
+				},
+				"fishing": {
+					"type": "boolean"
+				}
+			}
+		},
+		"displayData": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"customColors": {
+			"type": "object"
+		},
+		"customEventChallengeColors": {
+			"type": "object"
+		},
+		"hideChallengesState": {
+			"type": "string",
+			"enum": [
+				"shown",
+				"hidden"
+			]
+		},
+		"hideChallenges": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"hideEventsState": {
+			"type": "string",
+			"enum": [
+				"shown",
+				"hidden"
+			]
+		},
+		"hideEvents": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"HUDModesState": {
+			"type": "string",
+			"enum": [
+				"shown",
+				"hidden"
+			]
+		},
+		"HUDModes": {
+			"type": "array",
+			"items": {
+				"type": "string",
+				"enum": [
+					"ActivateTypeMode",
+					"All",
+					"AutoVanity",
+					"CameraScopeMenu",
+					"CampPlacement",
+					"CampPlacementMode",
+					"ContainerMode",
+					"CrosshairAndActivateOnly",
+					"DeathRespawnMode",
+					"DefaultScopeMenu",
+					"DialogueMode",
+					"EndOfMatch",
+					"ExamineConfirmMode",
+					"Fishing",
+					"FurnitureEnterExit",
+					"InsideMemory",
+					"InspectMode",
+					"IronSights",
+					"LegendaryPerksMode",
+					"Loading",
+					"LockpickingMode",
+					"LooksMenu",
+					"MapMenu",
+					"MessageMode",
+					"MovementDisabled",
+					"NoHud",
+					"PauseMode",
+					"PerksMode",
+					"Pipboy",
+					"PowerArmor",
+					"RadialMenu",
+					"ScopeMenu",
+					"SelfieMode",
+					"SitWaitMode",
+					"SpectatorMode",
+					"TerminalMode",
+					"VATS",
+					"VATSPlayback",
+					"VertibirdMode",
+					"WorkshopCaravanMode",
+					"WorkshopMode"
+				]
+			}
+		}
+	}
+}

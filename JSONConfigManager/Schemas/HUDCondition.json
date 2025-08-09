@@ -262,7 +262,14 @@
 						"minimum": 0
 					},
 					"color": {
-						"type": "string"
+						"oneOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "number"
+							}
+						]
 					}
 				}
 			}

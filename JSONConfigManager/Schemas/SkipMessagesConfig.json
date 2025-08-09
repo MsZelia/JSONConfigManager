@@ -1,0 +1,44 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"properties": {
+		"debug": {
+			"type": "boolean"
+		},
+		"testRun": {
+			"type": "boolean"
+		},
+		"SkipDelay": {
+			"type": "number"
+		},
+		"SkipScrapComponentsView": {
+			"type": "object",
+			"properties": {
+				"Enabled": {
+					"type": "boolean"
+				},
+				"Legendary": {
+					"type": "boolean"
+				},
+				"NonLegendary": {
+					"type": "boolean"
+				}
+			}
+		},
+		"AutoUseRepairKit": {
+			"type": "boolean"
+		},
+		"ScrapLegendary": {
+			"type": "boolean"
+		},
+		"ScrapPremium": {
+			"type": "boolean"
+		},
+		"SkipCustom": {
+			"type": "object"
+		},
+		"SkipCustomRegex": {
+			"type": "object"
+		}
+	}
+}

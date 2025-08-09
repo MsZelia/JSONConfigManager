@@ -7,279 +7,17 @@
 					"type": "string"
 				},
 				{
+					"type": "array",
 					"items": {
 						"type": "string"
-					},
-					"type": "array"
+					}
 				}
 			]
 		}
 	},
+	"type": "object",
 	"properties": {
-		"additionalColumnsConfig": {
-			"properties": {
-				"columns": {
-					"patternProperties": {
-						".*": {
-							"oneOf": [
-								{
-									"minLength": 1,
-									"type": "string"
-								},
-								{
-									"type": "boolean"
-								}
-							]
-						}
-					},
-					"type": "object"
-				},
-				"enabled": {
-					"type": "boolean"
-				},
-				"offsetInventories": {
-					"type": "number"
-				}
-			},
-			"type": "object"
-		},
-		"buyConfig": {
-			"properties": {
-				"configs": {
-					"items": {
-						"properties": {
-							"accountName": {
-								"$ref": "#/definitions/stringOrArray"
-							},
-							"amount": {
-								"type": "number"
-							},
-							"characterName": {
-								"$ref": "#/definitions/stringOrArray"
-							},
-							"checkAccountName": {
-								"type": "boolean"
-							},
-							"checkCharacterName": {
-								"type": "boolean"
-							},
-							"enabled": {
-								"type": "boolean"
-							},
-							"itemNames": {
-								"items": {
-									"type": "string"
-								},
-								"type": "array"
-							},
-							"matchMode": {
-								"enum": [
-									"CONTAINS",
-									"STARTS",
-									"EXACT",
-									"NOT_CONTAINS",
-									"NOT_EXACT",
-									"ALL"
-								],
-								"type": "string"
-							},
-							"maxPrice": {
-								"type": "number"
-							},
-							"types": {
-								"items": {
-									"enum": [
-										"WEAPON",
-										"ARMOR",
-										"APPAREL",
-										"FOOD_WATER",
-										"AID",
-										"NOTES",
-										"HOLO",
-										"AMMO",
-										"MISC",
-										"MODS",
-										"JUNK"
-									],
-									"type": "string"
-								},
-								"type": "array"
-							}
-						},
-						"type": "object"
-					},
-					"type": "array"
-				},
-				"debug": {
-					"type": "boolean"
-				},
-				"delayCampVendor": {
-					"type": "number"
-				},
-				"delayNpcVendor": {
-					"type": "number"
-				},
-				"enabled": {
-					"type": "boolean"
-				},
-				"hotkey": {
-					"type": "number"
-				},
-				"maxItems": {
-					"type": "number"
-				},
-				"name": {
-					"type": "string"
-				},
-				"repeat": {
-					"type": "number"
-				},
-				"showButton": {
-					"type": "boolean"
-				},
-				"showMessage": {
-					"oneOf": [
-						{
-							"type": "boolean"
-						},
-						{
-							"enum": [
-								"FULL"
-							],
-							"type": "string"
-						}
-					]
-				},
-				"testRun": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
-		},
-		"campAssignConfig": {
-			"properties": {
-				"amount": {
-					"type": "number"
-				},
-				"debug": {
-					"type": "boolean"
-				},
-				"delay": {
-					"type": "number"
-				},
-				"enabled": {
-					"type": "boolean"
-				},
-				"hotkey": {
-					"type": "number"
-				},
-				"name": {
-					"type": "string"
-				}
-			},
-			"type": "object"
-		},
-		"categoryWeightConfig": {
-			"properties": {
-				"debug": {
-					"type": "boolean"
-				},
-				"enabled": {
-					"type": "boolean"
-				},
-				"hotkey": {
-					"type": "number"
-				},
-				"itemCardDelay": {
-					"type": "number"
-				},
-				"itemCardFilters": {
-					"items": {
-						"enum": [
-							"POWER_ARMOR",
-							"WEAPON",
-							"ARMOR",
-							"APPAREL",
-							"FOOD_WATER",
-							"AID",
-							"NOTES",
-							"HOLO",
-							"AMMO",
-							"MISC",
-							"MODS",
-							"JUNK"
-						],
-						"type": "string"
-					},
-					"type": "array"
-				},
-				"weightLabelWidth": {
-					"type": "number"
-				}
-			},
-			"type": "object"
-		},
-		"currencyLimitConfig": {
-			"properties": {
-				"debug": {
-					"type": "boolean"
-				},
-				"defaultColor": {
-					"oneOf": [
-						{
-							"type": "string"
-						},
-						{
-							"maximum": 16777215,
-							"minimum": 0,
-							"type": "number"
-						}
-					]
-				},
-				"enabled": {
-					"type": "boolean"
-				},
-				"limitHigh": {
-					"maximum": 100,
-					"minimum": 0,
-					"type": "number"
-				},
-				"limitHighColor": {
-					"oneOf": [
-						{
-							"type": "string"
-						},
-						{
-							"maximum": 16777215,
-							"minimum": 0,
-							"type": "number"
-						}
-					]
-				},
-				"limitLow": {
-					"maximum": 100,
-					"minimum": 0,
-					"type": "number"
-				},
-				"limitLowColor": {
-					"oneOf": [
-						{
-							"type": "string"
-						},
-						{
-							"maximum": 16777215,
-							"minimum": 0,
-							"type": "number"
-						}
-					]
-				}
-			},
-			"type": "object"
-		},
 		"debug": {
-			"type": "boolean"
-		},
-		"debugKeys": {
 			"type": "boolean"
 		},
 		"debugX": {
@@ -288,7 +26,50 @@
 		"debugY": {
 			"type": "number"
 		},
+		"debugKeys": {
+			"type": "boolean"
+		},
+		"toggleDebugHotkey": {
+			"type": "number"
+		},
+		"hideLoadMessage": {
+			"type": "boolean"
+		},
+		"showCategoryItemCount": {
+			"type": "boolean"
+		},
+		"showDurabilityValue": {
+			"type": "boolean"
+		},
+		"maintainScrollPosition": {
+			"type": "boolean"
+		},
+		"hideTakeAllConfirm": {
+			"type": "boolean"
+		},
+		"defaultVendorItemPrice": {
+			"type": "number"
+		},
+		"notifyLegendaryModLearnedOnScrap": {
+			"type": "boolean"
+		},
+		"hideHeader": {
+			"type": "boolean"
+		},
+		"hideVignette": {
+			"type": "boolean"
+		},
+		"swapToPlayerInventoryHotkey": {
+			"type": "number"
+		},
+		"swapToContainerInventoryHotkey": {
+			"type": "number"
+		},
+		"hideUnknownGamepadButtonIcons": {
+			"type": "boolean"
+		},
 		"defaultSelectedTab": {
+			"type": "string",
 			"enum": [
 				"NEW",
 				"INVENTORY",
@@ -304,168 +85,60 @@
 				"JUNK",
 				"MODS",
 				"AMMO"
-			],
-			"type": "string"
+			]
 		},
-		"defaultVendorItemPrice": {
-			"type": "number"
-		},
-		"extractConfig": {
+		"additionalColumnsConfig": {
+			"type": "object",
 			"properties": {
-				"additionalItemDataForAll": {
-					"type": "boolean"
-				},
-				"apiMethods": {
-					"type": "array"
-				},
-				"customFormat": {
-					"properties": {
-						"columns": {
-							"items": {
-								"type": "string"
-							},
-							"type": "array"
-						},
-						"delimiter": {
-							"type": "string"
-						},
-						"delimiterLine": {
-							"type": "string"
-						},
-						"displayColumnNames": {
-							"type": "boolean"
-						},
-						"format": {
-							"items": {
-								"enum": [
-									"json",
-									"csv",
-									"json_to_csv",
-									"JSON",
-									"CSV",
-									"JSON_TO_CSV"
-								],
-								"type": "string"
-							},
-							"type": "string"
-						},
-						"itemsmodJSONFile": {
-							"type": "string"
-						},
-						"valueNotFound": {
-							"type": "string"
-						}
-					},
-					"type": "object"
-				},
 				"enabled": {
 					"type": "boolean"
 				},
-				"hotkey": {
+				"offsetInventories": {
 					"type": "number"
 				},
-				"itemCardEntryDelayStep": {
-					"type": "number"
-				},
-				"name": {
-					"type": "string"
-				},
-				"showButton": {
-					"type": "boolean"
-				},
-				"types": {
-					"items": {
-						"enum": [
-							"WEAPON",
-							"ARMOR",
-							"APPAREL",
-							"FOOD_WATER",
-							"AID",
-							"NOTES",
-							"HOLO",
-							"AMMO",
-							"MISC",
-							"MODS",
-							"JUNK"
-						],
-						"type": "string"
-					},
-					"type": "array"
-				},
-				"useCustomFormat": {
-					"type": "boolean"
-				},
-				"verboseOutput": {
-					"type": "boolean"
+				"columns": {
+					"type": "object",
+					"patternProperties": {
+						".*": {
+							"oneOf": [
+								{
+									"type": "string",
+									"minLength": 1
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						}
+					}
 				}
-			},
-			"type": "object"
-		},
-		"hideHeader": {
-			"type": "boolean"
-		},
-		"hideLoadMessage": {
-			"type": "boolean"
-		},
-		"hideTakeAllConfirm": {
-			"type": "boolean"
-		},
-		"hideUnknownGamepadButtonIcons": {
-			"type": "boolean"
-		},
-		"hideVignette": {
-			"type": "boolean"
+			}
 		},
 		"itemNamesGroupConfig": {
+			"type": "object",
 			"patternProperties": {
 				".*": {
+					"type": "array",
 					"items": {
 						"type": "string"
-					},
-					"type": "array"
+					}
 				}
-			},
-			"type": "object"
+			}
 		},
 		"legendaryModsConfig": {
+			"type": "object",
 			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
 				"debug": {
 					"type": "boolean"
 				},
-				"enabled": {
+				"showUnknownModsAmongAllChars": {
 					"type": "boolean"
 				},
-				"learnableFromArmorText": {
-					"type": "string"
-				},
-				"learnableFromWeaponText": {
-					"type": "string"
-				},
-				"learnableText": {
-					"type": "string"
-				},
-				"learnableTextColor": {
-					"oneOf": [
-						{
-							"type": "string"
-						},
-						{
-							"maximum": 16777215,
-							"minimum": 0,
-							"type": "number"
-						}
-					]
-				},
-				"learnableTextColorStyle": {
-					"enum": [
-						"PREFIX",
-						"LINE",
-						"NONE"
-					],
-					"type": "string"
-				},
-				"loadFileDirectory": {
-					"type": "string"
+				"showInWorkbench": {
+					"type": "boolean"
 				},
 				"showInStash": {
 					"type": "boolean"
@@ -473,126 +146,318 @@
 				"showInVendors": {
 					"type": "boolean"
 				},
-				"showInWorkbench": {
-					"type": "boolean"
-				},
 				"showInWorldContainers": {
 					"type": "boolean"
 				},
-				"showUnknownModsAmongAllChars": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
-		},
-		"localizationConfig": {
-			"properties": {
-				"ARMOR_GRADES": {
-					"patternProperties": {
-						".*": {
-							"type": "string"
-						}
-					},
-					"type": "object"
-				},
-				"ARMOR_MOD_LEADED": {
+				"learnableText": {
 					"type": "string"
 				},
-				"ARMOR_PIECES": {
-					"patternProperties": {
-						".*": {
-							"type": "string"
-						}
-					},
-					"type": "object"
+				"learnableFromArmorText": {
+					"type": "string"
 				},
-				"ARMOR_PREFIXES": {
-					"patternProperties": {
-						".*": {
-							"type": "string"
-						}
-					},
-					"type": "object"
+				"learnableFromWeaponText": {
+					"type": "string"
 				},
-				"ARMOR_TYPES": {
-					"patternProperties": {
-						".*": {
+				"learnableTextColorStyle": {
+					"type": "string",
+					"enum": [
+						"PREFIX",
+						"LINE",
+						"NONE"
+					]
+				},
+				"learnableTextColor": {
+					"oneOf": [
+						{
 							"type": "string"
-						}
-					},
-					"type": "object"
-				}
-			},
-			"type": "object"
-		},
-		"lootConfig": {
-			"properties": {
-				"configs": {
-					"items": {
-						"properties": {
-							"accountName": {
-								"type": "string"
-							},
-							"characterName": {
-								"type": "string"
-							},
-							"checkAccountName": {
-								"type": "boolean"
-							},
-							"checkCharacterName": {
-								"type": "boolean"
-							},
-							"enabled": {
-								"type": "boolean"
-							},
-							"itemNames": {
-								"items": {
-									"type": "string"
-								},
-								"type": "array"
-							}
 						},
-						"type": "object"
-					},
-					"type": "array"
+						{
+							"type": "number",
+							"minimum": 0,
+							"maximum": 16777215
+						}
+					]
 				},
-				"debug": {
+				"loadFileDirectory": {
+					"type": "string"
+				}
+			}
+		},
+		"categoryWeightConfig": {
+			"type": "object",
+			"properties": {
+				"enabled": {
 					"type": "boolean"
 				},
-				"delay": {
-					"type": "number"
-				},
-				"enabled": {
+				"debug": {
 					"type": "boolean"
 				},
 				"hotkey": {
 					"type": "number"
 				},
-				"itemNames": {
-					"items": {
-						"type": "string"
-					},
-					"type": "array"
-				},
-				"matchMode": {
-					"enum": [
-						"CONTAINS",
-						"STARTS",
-						"EXACT",
-						"NOT_CONTAINS",
-						"NOT_EXACT",
-						"ALL"
-					],
-					"type": "string"
-				},
-				"maxItems": {
+				"weightLabelWidth": {
 					"type": "number"
 				},
+				"itemCardDelay": {
+					"type": "number"
+				},
+				"itemCardFilters": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"enum": [
+							"POWER_ARMOR",
+							"WEAPON",
+							"ARMOR",
+							"APPAREL",
+							"FOOD_WATER",
+							"AID",
+							"NOTES",
+							"HOLO",
+							"AMMO",
+							"MISC",
+							"MODS",
+							"JUNK"
+						]
+					}
+				}
+			}
+		},
+		"protectionConfig": {
+			"type": "object",
+			"properties": {
+				"debug": {
+					"type": "boolean"
+				},
+				"checkOnSelectionChange": {
+					"type": "boolean"
+				},
+				"saleProtection": {
+					"type": "object",
+					"properties": {
+						"enabled": {
+							"type": "boolean"
+						},
+						"favorite": {
+							"type": "boolean"
+						},
+						"equipped": {
+							"type": "boolean"
+						},
+						"maxCurrency": {
+							"type": "boolean"
+						},
+						"knownLegendaryMods": {
+							"type": "boolean"
+						},
+						"named": {
+							"type": "boolean"
+						},
+						"matchMode": {
+							"type": "string",
+							"enum": [
+								"CONTAINS",
+								"STARTS",
+								"EXACT",
+								"ALL"
+							]
+						},
+						"itemNames": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"scrapProtection": {
+					"type": "object",
+					"properties": {
+						"enabled": {
+							"type": "boolean"
+						},
+						"favorite": {
+							"type": "boolean"
+						},
+						"equipped": {
+							"type": "boolean"
+						},
+						"knownLegendaryMods": {
+							"type": "boolean"
+						},
+						"named": {
+							"type": "boolean"
+						},
+						"matchMode": {
+							"type": "string",
+							"enum": [
+								"CONTAINS",
+								"STARTS",
+								"EXACT",
+								"ALL"
+							]
+						},
+						"itemNames": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"transferProtection": {
+					"type": "object",
+					"properties": {
+						"enabled": {
+							"type": "boolean"
+						},
+						"favorite": {
+							"type": "boolean"
+						},
+						"equipped": {
+							"type": "boolean"
+						},
+						"knownLegendaryMods": {
+							"type": "boolean"
+						},
+						"named": {
+							"type": "boolean"
+						},
+						"matchMode": {
+							"type": "string",
+							"enum": [
+								"CONTAINS",
+								"STARTS",
+								"EXACT",
+								"ALL"
+							]
+						},
+						"itemNames": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"disableForContainers": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		},
+		"tabsConfig": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"maxTabs": {
+					"type": "number",
+					"minimum": 1,
+					"maximum": 14
+				},
+				"labelWidthScale": {
+					"type": "number"
+				}
+			}
+		},
+		"currencyLimitConfig": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"debug": {
+					"type": "boolean"
+				},
+				"defaultColor": {
+					"oneOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "number",
+							"minimum": 0,
+							"maximum": 16777215
+						}
+					]
+				},
+				"limitLow": {
+					"type": "number",
+					"minimum": 0,
+					"maximum": 100
+				},
+				"limitLowColor": {
+					"oneOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "number",
+							"minimum": 0,
+							"maximum": 16777215
+						}
+					]
+				},
+				"limitHigh": {
+					"type": "number",
+					"minimum": 0,
+					"maximum": 100
+				},
+				"limitHighColor": {
+					"oneOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "number",
+							"minimum": 0,
+							"maximum": 16777215
+						}
+					]
+				}
+			}
+		},
+		"campAssignConfig": {
+			"type": "object",
+			"properties": {
 				"name": {
 					"type": "string"
 				},
-				"repeat": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"debug": {
+					"type": "boolean"
+				},
+				"hotkey": {
 					"type": "number"
+				},
+				"amount": {
+					"type": "number"
+				},
+				"delay": {
+					"type": "number"
+				}
+			}
+		},
+		"buyConfig": {
+			"type": "object",
+			"properties": {
+				"name": {
+					"type": "string"
+				},
+				"testRun": {
+					"type": "boolean"
+				},
+				"enabled": {
+					"type": "boolean"
+				},
+				"debug": {
+					"type": "boolean"
 				},
 				"showButton": {
 					"type": "boolean"
@@ -603,15 +468,250 @@
 							"type": "boolean"
 						},
 						{
+							"type": "string",
 							"enum": [
 								"FULL"
-							],
-							"type": "string"
+							]
 						}
 					]
 				},
+				"hotkey": {
+					"type": "number"
+				},
+				"maxItems": {
+					"type": "number"
+				},
+				"delayNpcVendor": {
+					"type": "number"
+				},
+				"delayCampVendor": {
+					"type": "number"
+				},
+				"repeat": {
+					"type": "number"
+				},
+				"configs": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"enabled": {
+								"type": "boolean"
+							},
+							"amount": {
+								"type": "number"
+							},
+							"maxPrice": {
+								"type": "number"
+							},
+							"types": {
+								"type": "array",
+								"items": {
+									"type": "string",
+									"enum": [
+										"WEAPON",
+										"ARMOR",
+										"APPAREL",
+										"FOOD_WATER",
+										"AID",
+										"NOTES",
+										"HOLO",
+										"AMMO",
+										"MISC",
+										"MODS",
+										"JUNK"
+									]
+								}
+							},
+							"matchMode": {
+								"type": "string",
+								"enum": [
+									"CONTAINS",
+									"STARTS",
+									"EXACT",
+									"NOT_CONTAINS",
+									"NOT_EXACT",
+									"ALL"
+								]
+							},
+							"itemNames": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"checkCharacterName": {
+								"type": "boolean"
+							},
+							"characterName": {
+								"$ref": "#/definitions/stringOrArray"
+							},
+							"checkAccountName": {
+								"type": "boolean"
+							},
+							"accountName": {
+								"$ref": "#/definitions/stringOrArray"
+							}
+						}
+					}
+				}
+			}
+		},
+		"npcSellConfig": {
+			"type": "object",
+			"properties": {
 				"testRun": {
 					"type": "boolean"
+				},
+				"name": {
+					"type": "string"
+				},
+				"enabled": {
+					"type": "boolean"
+				},
+				"debug": {
+					"type": "boolean"
+				},
+				"showButton": {
+					"type": "boolean"
+				},
+				"showMessage": {
+					"oneOf": [
+						{
+							"type": "boolean"
+						},
+						{
+							"type": "string",
+							"enum": [
+								"FULL"
+							]
+						}
+					]
+				},
+				"hotkey": {
+					"type": "number"
+				},
+				"maxItems": {
+					"type": "number"
+				},
+				"delay": {
+					"type": "number"
+				},
+				"repeat": {
+					"type": "number"
+				},
+				"configs": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"enabled": {
+								"type": "boolean"
+							},
+							"amount": {
+								"type": "number"
+							},
+							"sellFavorite": {
+								"type": "boolean"
+							},
+							"sellEquipped": {
+								"type": "boolean"
+							},
+							"types": {
+								"type": "array",
+								"items": {
+									"type": "string",
+									"enum": [
+										"WEAPON",
+										"ARMOR",
+										"APPAREL",
+										"FOOD_WATER",
+										"AID",
+										"NOTES",
+										"HOLO",
+										"AMMO",
+										"MISC",
+										"MODS",
+										"JUNK"
+									]
+								}
+							},
+							"matchMode": {
+								"type": "string",
+								"enum": [
+									"CONTAINS",
+									"STARTS",
+									"EXACT",
+									"NOT_CONTAINS",
+									"NOT_EXACT",
+									"ALL"
+								]
+							},
+							"itemNames": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"checkCharacterName": {
+								"type": "boolean"
+							},
+							"characterName": {
+								"$ref": "#/definitions/stringOrArray"
+							},
+							"checkAccountName": {
+								"type": "boolean"
+							},
+							"accountName": {
+								"$ref": "#/definitions/stringOrArray"
+							}
+						}
+					}
+				}
+			}
+		},
+		"lootConfig": {
+			"type": "object",
+			"properties": {
+				"name": {
+					"type": "string"
+				},
+				"testRun": {
+					"type": "boolean"
+				},
+				"enabled": {
+					"type": "boolean"
+				},
+				"debug": {
+					"type": "boolean"
+				},
+				"showMessage": {
+					"oneOf": [
+						{
+							"type": "boolean"
+						},
+						{
+							"type": "string",
+							"enum": [
+								"FULL"
+							]
+						}
+					]
+				},
+				"showButton": {
+					"type": "boolean"
+				},
+				"hotkey": {
+					"type": "number"
+				},
+				"maxItems": {
+					"type": "number"
+				},
+				"delay": {
+					"type": "number"
+				},
+				"repeat": {
+					"type": "number"
 				},
 				"transferLegendaries": {
 					"oneOf": [
@@ -619,10 +719,10 @@
 							"type": "boolean"
 						},
 						{
+							"type": "array",
 							"items": {
 								"type": "integer"
-							},
-							"type": "array"
+							}
 						}
 					]
 				},
@@ -630,7 +730,9 @@
 					"type": "boolean"
 				},
 				"types": {
+					"type": "array",
 					"items": {
+						"type": "string",
 						"enum": [
 							"WEAPON",
 							"ARMOR",
@@ -643,30 +745,36 @@
 							"MISC",
 							"MODS",
 							"JUNK"
-						],
-						"type": "string"
-					},
-					"type": "array"
-				}
-			},
-			"type": "object"
-		},
-		"maintainScrollPosition": {
-			"type": "boolean"
-		},
-		"notifyLegendaryModLearnedOnScrap": {
-			"type": "boolean"
-		},
-		"npcSellConfig": {
-			"properties": {
-				"configs": {
+						]
+					}
+				},
+				"matchMode": {
+					"type": "string",
+					"enum": [
+						"CONTAINS",
+						"STARTS",
+						"EXACT",
+						"NOT_CONTAINS",
+						"NOT_EXACT",
+						"ALL"
+					]
+				},
+				"itemNames": {
+					"type": "array",
 					"items": {
+						"type": "string"
+					}
+				},
+				"configs": {
+					"type": "array",
+					"items": {
+						"type": "object",
 						"properties": {
-							"accountName": {
-								"$ref": "#/definitions/stringOrArray"
+							"enabled": {
+								"type": "boolean"
 							},
-							"amount": {
-								"type": "number"
+							"checkCharacterName": {
+								"type": "boolean"
 							},
 							"characterName": {
 								"$ref": "#/definitions/stringOrArray"
@@ -674,79 +782,34 @@
 							"checkAccountName": {
 								"type": "boolean"
 							},
-							"checkCharacterName": {
-								"type": "boolean"
-							},
-							"enabled": {
-								"type": "boolean"
+							"accountName": {
+								"$ref": "#/definitions/stringOrArray"
 							},
 							"itemNames": {
+								"type": "array",
 								"items": {
 									"type": "string"
-								},
-								"type": "array"
-							},
-							"matchMode": {
-								"enum": [
-									"CONTAINS",
-									"STARTS",
-									"EXACT",
-									"NOT_CONTAINS",
-									"NOT_EXACT",
-									"ALL"
-								],
-								"type": "string"
-							},
-							"sellEquipped": {
-								"type": "boolean"
-							},
-							"sellFavorite": {
-								"type": "boolean"
-							},
-							"types": {
-								"items": {
-									"enum": [
-										"WEAPON",
-										"ARMOR",
-										"APPAREL",
-										"FOOD_WATER",
-										"AID",
-										"NOTES",
-										"HOLO",
-										"AMMO",
-										"MISC",
-										"MODS",
-										"JUNK"
-									],
-									"type": "string"
-								},
-								"type": "array"
+								}
 							}
-						},
-						"type": "object"
-					},
-					"type": "array"
-				},
-				"debug": {
+						}
+					}
+				}
+			}
+		},
+		"scrapConfig": {
+			"type": "object",
+			"properties": {
+				"testRun": {
 					"type": "boolean"
-				},
-				"delay": {
-					"type": "number"
-				},
-				"enabled": {
-					"type": "boolean"
-				},
-				"hotkey": {
-					"type": "number"
-				},
-				"maxItems": {
-					"type": "number"
 				},
 				"name": {
 					"type": "string"
 				},
-				"repeat": {
-					"type": "number"
+				"enabled": {
+					"type": "boolean"
+				},
+				"debug": {
+					"type": "boolean"
 				},
 				"showButton": {
 					"type": "boolean"
@@ -757,198 +820,52 @@
 							"type": "boolean"
 						},
 						{
+							"type": "string",
 							"enum": [
 								"FULL"
-							],
-							"type": "string"
+							]
 						}
 					]
 				},
-				"testRun": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
-		},
-		"protectionConfig": {
-			"properties": {
-				"checkOnSelectionChange": {
-					"type": "boolean"
+				"hotkey": {
+					"type": "number"
 				},
-				"debug": {
-					"type": "boolean"
+				"maxItems": {
+					"type": "number"
 				},
-				"saleProtection": {
-					"properties": {
-						"enabled": {
-							"type": "boolean"
-						},
-						"equipped": {
-							"type": "boolean"
-						},
-						"favorite": {
-							"type": "boolean"
-						},
-						"itemNames": {
-							"items": {
-								"type": "string"
-							},
-							"type": "array"
-						},
-						"knownLegendaryMods": {
-							"type": "boolean"
-						},
-						"matchMode": {
-							"enum": [
-								"CONTAINS",
-								"STARTS",
-								"EXACT",
-								"ALL"
-							],
-							"type": "string"
-						},
-						"maxCurrency": {
-							"type": "boolean"
-						},
-						"named": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+				"delay": {
+					"type": "number"
 				},
-				"scrapProtection": {
-					"properties": {
-						"enabled": {
-							"type": "boolean"
-						},
-						"equipped": {
-							"type": "boolean"
-						},
-						"favorite": {
-							"type": "boolean"
-						},
-						"itemNames": {
-							"items": {
-								"type": "string"
-							},
-							"type": "array"
-						},
-						"knownLegendaryMods": {
-							"type": "boolean"
-						},
-						"matchMode": {
-							"enum": [
-								"CONTAINS",
-								"STARTS",
-								"EXACT",
-								"ALL"
-							],
-							"type": "string"
-						},
-						"named": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+				"repeat": {
+					"type": "number"
 				},
-				"transferProtection": {
-					"properties": {
-						"disableForContainers": {
-							"items": {
-								"type": "string"
-							},
-							"type": "array"
-						},
-						"enabled": {
-							"type": "boolean"
-						},
-						"equipped": {
-							"type": "boolean"
-						},
-						"favorite": {
-							"type": "boolean"
-						},
-						"itemNames": {
-							"items": {
-								"type": "string"
-							},
-							"type": "array"
-						},
-						"knownLegendaryMods": {
-							"type": "boolean"
-						},
-						"matchMode": {
-							"enum": [
-								"CONTAINS",
-								"STARTS",
-								"EXACT",
-								"ALL"
-							],
-							"type": "string"
-						},
-						"named": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
-				}
-			},
-			"type": "object"
-		},
-		"scrapConfig": {
-			"properties": {
 				"configs": {
+					"type": "array",
 					"items": {
+						"type": "object",
 						"properties": {
-							"accountName": {
-								"type": "string"
-							},
-							"characterName": {
-								"type": "string"
-							},
-							"checkAccountName": {
-								"type": "boolean"
-							},
-							"checkCharacterName": {
-								"type": "boolean"
-							},
 							"enabled": {
-								"type": "boolean"
-							},
-							"excluded": {
-								"items": {
-									"type": "string"
-								},
-								"type": "array"
-							},
-							"matchMode": {
-								"enum": [
-									"CONTAINS",
-									"STARTS",
-									"EXACT",
-									"NOT_CONTAINS",
-									"NOT_EXACT",
-									"ALL"
-								],
-								"type": "string"
-							},
-							"onlyLegendaries": {
-								"type": "boolean"
-							},
-							"scrapByLegendaryStar": {
-								"items": {
-									"type": "integer"
-								},
-								"type": "array"
-							},
-							"scrapEquipped": {
 								"type": "boolean"
 							},
 							"scrapFavorite": {
 								"type": "boolean"
 							},
-							"types": {
+							"scrapEquipped": {
+								"type": "boolean"
+							},
+							"onlyLegendaries": {
+								"type": "boolean"
+							},
+							"scrapByLegendaryStar": {
+								"type": "array",
 								"items": {
+									"type": "integer"
+								}
+							},
+							"types": {
+								"type": "array",
+								"items": {
+									"type": "string",
 									"enum": [
 										"WEAPON",
 										"ARMOR",
@@ -961,200 +878,59 @@
 										"MISC",
 										"MODS",
 										"JUNK"
-									],
+									]
+								}
+							},
+							"matchMode": {
+								"type": "string",
+								"enum": [
+									"CONTAINS",
+									"STARTS",
+									"EXACT",
+									"NOT_CONTAINS",
+									"NOT_EXACT",
+									"ALL"
+								]
+							},
+							"excluded": {
+								"type": "array",
+								"items": {
 									"type": "string"
-								},
-								"type": "array"
+								}
+							},
+							"checkCharacterName": {
+								"type": "boolean"
+							},
+							"characterName": {
+								"$ref": "#/definitions/stringOrArray"
+							},
+							"checkAccountName": {
+								"type": "boolean"
+							},
+							"accountName": {
+								"$ref": "#/definitions/stringOrArray"
 							}
-						},
-						"type": "object"
-					},
-					"type": "array"
-				},
-				"debug": {
-					"type": "boolean"
-				},
-				"delay": {
-					"type": "number"
-				},
-				"enabled": {
-					"type": "boolean"
-				},
-				"hotkey": {
-					"type": "number"
-				},
-				"maxItems": {
-					"type": "number"
-				},
-				"name": {
-					"type": "string"
-				},
-				"repeat": {
-					"type": "number"
-				},
-				"showButton": {
-					"type": "boolean"
-				},
-				"showMessage": {
-					"oneOf": [
-						{
-							"type": "boolean"
-						},
-						{
-							"enum": [
-								"FULL"
-							],
-							"type": "string"
 						}
-					]
-				},
-				"testRun": {
-					"type": "number"
+					}
 				}
-			},
-			"type": "object"
-		},
-		"showCategoryItemCount": {
-			"type": "boolean"
-		},
-		"showDurabilityValue": {
-			"type": "boolean"
-		},
-		"swapToContainerInventoryHotkey": {
-			"type": "number"
-		},
-		"swapToPlayerInventoryHotkey": {
-			"type": "number"
-		},
-		"tabsConfig": {
-			"properties": {
-				"enabled": {
-					"type": "boolean"
-				},
-				"labelWidthScale": {
-					"type": "number"
-				},
-				"maxTabs": {
-					"maximum": 14,
-					"minimum": 1,
-					"type": "number"
-				}
-			},
-			"type": "object"
-		},
-		"toggleDebugHotkey": {
-			"type": "number"
+			}
 		},
 		"transferConfig": {
+			"type": "array",
 			"items": {
+				"type": "object",
 				"properties": {
-					"accountName": {
-						"type": "string"
-					},
-					"amount": {
-						"type": "number"
-					},
-					"armorGrades": {
-						"items": {
-							"enum": [
-								"LIGHT",
-								"STURDY",
-								"HEAVY",
-								"POWER"
-							],
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"characterName": {
-						"type": "string"
-					},
-					"checkAccountName": {
+					"testRun": {
 						"type": "boolean"
 					},
-					"checkArmorGrade": {
-						"type": "boolean"
-					},
-					"checkCharacterName": {
-						"type": "boolean"
-					},
-					"checkLegendaryEffects": {
-						"type": "boolean"
-					},
-					"debug": {
-						"type": "boolean"
-					},
-					"delay": {
-						"type": "number"
-					},
-					"delayItemCardStep": {
-						"type": "number"
-					},
-					"direction": {
-						"enum": [
-							"FROM_CONTAINER",
-							"TO_CONTAINER"
-						],
+					"name": {
 						"type": "string"
 					},
 					"enabled": {
 						"type": "boolean"
 					},
-					"exactAmountInDestination": {
+					"debug": {
 						"type": "boolean"
-					},
-					"hotkey": {
-						"type": "number"
-					},
-					"itemNames": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"legendaryEffects": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"legendaryEffectsMatchMode": {
-						"enum": [
-							"CONTAINS",
-							"EXACT",
-							"NOT_CONTAINS",
-							"NOT_EXACT"
-						],
-						"type": "string"
-					},
-					"matchMode": {
-						"enum": [
-							"CONTAINS",
-							"STARTS",
-							"EXACT",
-							"NOT_CONTAINS",
-							"NOT_EXACT",
-							"ALL"
-						],
-						"type": "string"
-					},
-					"maxItems": {
-						"type": "number"
-					},
-					"name": {
-						"type": "string"
-					},
-					"onlyHighlightedItem": {
-						"type": "boolean"
-					},
-					"onlyKnownPlans": {
-						"type": "boolean"
-					},
-					"onlyUnknownPlans": {
-						"type": "boolean"
-					},
-					"repeat": {
-						"type": "number"
 					},
 					"showButton": {
 						"type": "boolean"
@@ -1165,20 +941,32 @@
 								"type": "boolean"
 							},
 							{
+								"type": "string",
 								"enum": [
 									"FULL"
-								],
-								"type": "string"
+								]
 							}
 						]
 					},
-					"singleItemPerName": {
+					"hotkey": {
+						"type": "number"
+					},
+					"maxItems": {
+						"type": "number"
+					},
+					"amount": {
+						"type": "number"
+					},
+					"delay": {
+						"type": "number"
+					},
+					"repeat": {
+						"type": "number"
+					},
+					"exactAmountInDestination": {
 						"type": "boolean"
 					},
-					"testRun": {
-						"type": "boolean"
-					},
-					"transferAssigned": {
+					"onlyHighlightedItem": {
 						"type": "boolean"
 					},
 					"transferEquipped": {
@@ -1187,21 +975,35 @@
 					"transferFavorite": {
 						"type": "boolean"
 					},
+					"transferAssigned": {
+						"type": "boolean"
+					},
+					"onlyKnownPlans": {
+						"type": "boolean"
+					},
+					"onlyUnknownPlans": {
+						"type": "boolean"
+					},
+					"singleItemPerName": {
+						"type": "boolean"
+					},
 					"transferLegendaries": {
 						"oneOf": [
 							{
 								"type": "boolean"
 							},
 							{
+								"type": "array",
 								"items": {
 									"type": "integer"
-								},
-								"type": "array"
+								}
 							}
 						]
 					},
 					"types": {
+						"type": "array",
 						"items": {
+							"type": "string",
 							"enum": [
 								"WEAPON",
 								"ARMOR",
@@ -1214,27 +1016,235 @@
 								"MISC",
 								"MODS",
 								"JUNK"
-							],
-							"type": "string"
-						},
-						"type": "array"
+							]
+						}
+					},
+					"matchMode": {
+						"type": "string",
+						"enum": [
+							"CONTAINS",
+							"STARTS",
+							"EXACT",
+							"NOT_CONTAINS",
+							"NOT_EXACT",
+							"ALL"
+						]
+					},
+					"itemNames": {
+						"type": "array",
+						"items": {
+							"oneOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							]
+						}
+					},
+					"direction": {
+						"type": "string",
+						"enum": [
+							"FROM_CONTAINER",
+							"TO_CONTAINER"
+						]
+					},
+					"checkCharacterName": {
+						"type": "boolean"
+					},
+					"characterName": {
+						"$ref": "#/definitions/stringOrArray"
+					},
+					"checkAccountName": {
+						"type": "boolean"
+					},
+					"accountName": {
+						"$ref": "#/definitions/stringOrArray"
+					},
+					"delayItemCardStep": {
+						"type": "number"
+					},
+					"checkArmorGrade": {
+						"type": "boolean"
+					},
+					"armorGrades": {
+						"type": "array",
+						"items": {
+							"type": "string",
+							"enum": [
+								"LIGHT",
+								"STURDY",
+								"HEAVY",
+								"POWER"
+							]
+						}
 					},
 					"weaponTypes": {
+						"type": "array",
 						"items": {
+							"type": "string",
 							"enum": [
 								"THROWN",
 								"RANGED",
 								"MELEE"
-							],
+							]
+						}
+					},
+					"checkLegendaryEffects": {
+						"type": "boolean"
+					},
+					"legendaryEffectsMatchMode": {
+						"type": "string",
+						"enum": [
+							"CONTAINS",
+							"EXACT",
+							"NOT_CONTAINS",
+							"NOT_EXACT"
+						]
+					},
+					"legendaryEffects": {
+						"type": "array",
+						"items": {
 							"type": "string"
-						},
-						"type": "array"
+						}
+					}
+				}
+			}
+		},
+		"extractConfig": {
+			"type": "object",
+			"properties": {
+				"name": {
+					"type": "string"
+				},
+				"enabled": {
+					"type": "boolean"
+				},
+				"hotkey": {
+					"type": "number"
+				},
+				"showButton": {
+					"type": "boolean"
+				},
+				"itemCardEntryDelayStep": {
+					"type": "number"
+				},
+				"types": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"enum": [
+							"WEAPON",
+							"ARMOR",
+							"APPAREL",
+							"FOOD_WATER",
+							"AID",
+							"NOTES",
+							"HOLO",
+							"AMMO",
+							"MISC",
+							"MODS",
+							"JUNK"
+						]
 					}
 				},
-				"type": "object"
-			},
-			"type": "array"
+				"additionalItemDataForAll": {
+					"type": "boolean"
+				},
+				"verboseOutput": {
+					"type": "boolean"
+				},
+				"apiMethods": {
+					"type": "array"
+				},
+				"useCustomFormat": {
+					"type": "boolean"
+				},
+				"customFormat": {
+					"type": "object",
+					"properties": {
+						"format": {
+							"type": "string",
+							"items": {
+								"type": "string",
+								"enum": [
+									"json",
+									"csv",
+									"json_to_csv",
+									"JSON",
+									"CSV",
+									"JSON_TO_CSV"
+								]
+							}
+						},
+						"itemsmodJSONFile": {
+							"type": "string"
+						},
+						"delimiter": {
+							"type": "string"
+						},
+						"delimiterLine": {
+							"type": "string"
+						},
+						"valueNotFound": {
+							"type": "string"
+						},
+						"displayColumnNames": {
+							"type": "boolean"
+						},
+						"columns": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		},
+		"localizationConfig": {
+			"type": "object",
+			"properties": {
+				"ARMOR_MOD_LEADED": {
+					"type": "string"
+				},
+				"ARMOR_PREFIXES": {
+					"type": "object",
+					"patternProperties": {
+						".*": {
+							"type": "string"
+						}
+					}
+				},
+				"ARMOR_GRADES": {
+					"type": "object",
+					"patternProperties": {
+						".*": {
+							"type": "string"
+						}
+					}
+				},
+				"ARMOR_PIECES": {
+					"type": "object",
+					"patternProperties": {
+						".*": {
+							"type": "string"
+						}
+					}
+				},
+				"ARMOR_TYPES": {
+					"type": "object",
+					"patternProperties": {
+						".*": {
+							"type": "string"
+						}
+					}
+				}
+			}
 		}
-	},
-	"type": "object"
+	}
 }

@@ -1,0 +1,359 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"properties": {
+		"x": {
+			"type": "number"
+		},
+		"y": {
+			"type": "number"
+		},
+		"anchor": {
+			"type": "string",
+			"enum": [
+				"top",
+				"bottom"
+			]
+		},
+		"ySpacing": {
+			"type": "number"
+		},
+		"width": {
+			"type": "number"
+		},
+		"textSize": {
+			"type": "number"
+		},
+		"textFont": {
+			"type": "string",
+			"enum": [
+				"$76HandwrittenNeat_Font",
+				"$76HandwrittenIlliterate",
+				"$BerlinDemi",
+				"$BRODY",
+				"$Brush_Script_Std",
+				"$ChowderHead",
+				"$ConsoleFont",
+				"$DebugTextFont",
+				"$DotMatrix_Font",
+				"$evaScript_Font",
+				"$Futura_Bold",
+				"$HandwrittenFont",
+				"$KiddieCocktails",
+				"$Leiascript_Font",
+				"$MAIN_Font",
+				"$MAIN_Font_Bold",
+				"$MAIN_Font_Light",
+				"$NixieTube_Font",
+				"$Portico_Font_Regular",
+				"$Slate_Mobile",
+				"$Terminal_Font",
+				"$Typewriter_Font"
+			]
+		},
+		"textAlign": {
+			"type": "string",
+			"enum": [
+				"left",
+				"center",
+				"right"
+			]
+		},
+		"textColor": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "number"
+				}
+			]
+		},
+		"textShadow": {
+			"type": "boolean"
+		},
+		"background": {
+			"type": "boolean"
+		},
+		"backgroundColor": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "number"
+				}
+			]
+		},
+		"alpha": {
+			"type": "number"
+		},
+		"backgroundAlpha": {
+			"type": "number"
+		},
+		"blendMode": {
+			"type": "string",
+			"enum": [
+				"add",
+				"alpha",
+				"darken",
+				"difference",
+				"erase",
+				"hardlight",
+				"invert",
+				"layer",
+				"lighten",
+				"multiply",
+				"normal",
+				"overlay",
+				"screen",
+				"shader",
+				"subtract"
+			]
+		},
+		"textBlendMode": {
+			"type": "string",
+			"enum": [
+				"add",
+				"alpha",
+				"darken",
+				"difference",
+				"erase",
+				"hardlight",
+				"invert",
+				"layer",
+				"lighten",
+				"multiply",
+				"normal",
+				"overlay",
+				"screen",
+				"shader",
+				"subtract"
+			]
+		},
+		"disableRealTimeEdit": {
+			"type": "boolean"
+		},
+		"debugKeys": {
+			"type": "boolean"
+		},
+		"toggleVisibilityHotkey": {
+			"type": "number"
+		},
+		"forceHideHotkey": {
+			"type": "number"
+		},
+		"refresh": {
+			"type": "number"
+		},
+		"format": {
+			"type": "string"
+		},
+		"formats": {
+			"type": "object",
+			"properties": {
+				"bounty": {
+					"type": "string"
+				},
+				"isFriend": {
+					"type": "string"
+				},
+				"isTextChatUser": {
+					"type": "string"
+				},
+				"isHidden": {
+					"type": "string"
+				},
+				"PlayerLocal": {
+					"type": "string"
+				},
+				"PlayerRemote": {
+					"type": "string"
+				},
+				"MostWanted": {
+					"type": "string"
+				},
+				"TeamLeader": {
+					"type": "string"
+				},
+				"TeamMember": {
+					"type": "string"
+				}
+			}
+		},
+		"vendorData": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"usePlayerColor": {
+					"type": "boolean"
+				},
+				"hideVisitedCamps": {
+					"type": "boolean"
+				},
+				"hidePlayersWithoutVendorData": {
+					"type": "array"
+				},
+				"format": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"minItems": 1
+				},
+				"formats": {
+					"type": "object",
+					"properties": {
+						"{APPAREL}": {
+							"type": "string"
+						},
+						"{ARMOR0}": {
+							"type": "string"
+						},
+						"{ARMOR1}": {
+							"type": "string"
+						},
+						"{ARMOR2}": {
+							"type": "string"
+						},
+						"{ARMOR3}": {
+							"type": "string"
+						},
+						"{WEAPON0}": {
+							"type": "string"
+						},
+						"{WEAPON1}": {
+							"type": "string"
+						},
+						"{WEAPON2}": {
+							"type": "string"
+						},
+						"{WEAPON3}": {
+							"type": "string"
+						},
+						"{MODS}": {
+							"type": "string"
+						},
+						"{STIMPAK}": {
+							"type": "string"
+						},
+						"{MEDS}": {
+							"type": "string"
+						},
+						"{FOOD}": {
+							"type": "string"
+						},
+						"{DRINK}": {
+							"type": "string"
+						},
+						"{AMMO}": {
+							"type": "string"
+						},
+						"{EXPLOSIVE}": {
+							"type": "string"
+						},
+						"{JUNK}": {
+							"type": "string"
+						},
+						"{PLAN}": {
+							"type": "string"
+						},
+						"{MISC}": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		},
+		"sortBy": {
+			"type": "string",
+			"enum": [
+				"default",
+				"custom",
+				"property"
+			]
+		},
+		"sortOrder": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"reverseSort": {
+			"type": "boolean"
+		},
+		"displayData": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"customColors": {
+			"type": "object"
+		},
+		"hideTypes": {
+			"type": "array"
+		},
+		"hidePlayers": {
+			"type": "array"
+		},
+		"HUDModesState": {
+			"type": "string",
+			"enum": [
+				"shown",
+				"hidden"
+			]
+		},
+		"HUDModes": {
+			"type": "array",
+			"items": {
+				"type": "string",
+				"enum": [
+					"ActivateTypeMode",
+					"All",
+					"AutoVanity",
+					"CameraScopeMenu",
+					"CampPlacement",
+					"CampPlacementMode",
+					"ContainerMode",
+					"CrosshairAndActivateOnly",
+					"DeathRespawnMode",
+					"DefaultScopeMenu",
+					"DialogueMode",
+					"EndOfMatch",
+					"ExamineConfirmMode",
+					"Fishing",
+					"FurnitureEnterExit",
+					"InsideMemory",
+					"InspectMode",
+					"IronSights",
+					"LegendaryPerksMode",
+					"Loading",
+					"LockpickingMode",
+					"LooksMenu",
+					"MapMenu",
+					"MessageMode",
+					"MovementDisabled",
+					"NoHud",
+					"PauseMode",
+					"PerksMode",
+					"Pipboy",
+					"PowerArmor",
+					"RadialMenu",
+					"ScopeMenu",
+					"SelfieMode",
+					"SitWaitMode",
+					"SpectatorMode",
+					"TerminalMode",
+					"VATS",
+					"VATSPlayback",
+					"VertibirdMode",
+					"WorkshopCaravanMode",
+					"WorkshopMode"
+				]
+			}
+		}
+	}
+}

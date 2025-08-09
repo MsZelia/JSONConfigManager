@@ -1,0 +1,335 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"properties": {
+		"x": {
+			"type": "number"
+		},
+		"y": {
+			"type": "number"
+		},
+		"anchor": {
+			"type": "string",
+			"enum": [
+				"top",
+				"bottom"
+			]
+		},
+		"ySpacing": {
+			"type": "number"
+		},
+		"width": {
+			"type": "number"
+		},
+		"textSize": {
+			"type": "number"
+		},
+		"textFont": {
+			"type": "string",
+			"enum": [
+				"$76HandwrittenNeat_Font",
+				"$76HandwrittenIlliterate",
+				"$BerlinDemi",
+				"$BRODY",
+				"$Brush_Script_Std",
+				"$ChowderHead",
+				"$ConsoleFont",
+				"$DebugTextFont",
+				"$DotMatrix_Font",
+				"$evaScript_Font",
+				"$Futura_Bold",
+				"$HandwrittenFont",
+				"$KiddieCocktails",
+				"$Leiascript_Font",
+				"$MAIN_Font",
+				"$MAIN_Font_Bold",
+				"$MAIN_Font_Light",
+				"$NixieTube_Font",
+				"$Portico_Font_Regular",
+				"$Slate_Mobile",
+				"$Terminal_Font",
+				"$Typewriter_Font"
+			]
+		},
+		"textAlign": {
+			"type": "string",
+			"enum": [
+				"left",
+				"center",
+				"right"
+			]
+		},
+		"textColor": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "number",
+					"minimum": 0,
+					"maximum": 16777215
+				}
+			]
+		},
+		"textColorError": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "number",
+					"minimum": 0,
+					"maximum": 16777215
+				}
+			]
+		},
+		"textShadow": {
+			"type": "boolean"
+		},
+		"background": {
+			"type": "boolean"
+		},
+		"backgroundColor": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "number",
+					"minimum": 0,
+					"maximum": 16777215
+				}
+			]
+		},
+		"alpha": {
+			"type": "number"
+		},
+		"backgroundAlpha": {
+			"type": "number"
+		},
+		"blendMode": {
+			"type": "string",
+			"enum": [
+				"add",
+				"alpha",
+				"darken",
+				"difference",
+				"erase",
+				"hardlight",
+				"invert",
+				"layer",
+				"lighten",
+				"multiply",
+				"normal",
+				"overlay",
+				"screen",
+				"shader",
+				"subtract"
+			]
+		},
+		"textBlendMode": {
+			"type": "string",
+			"enum": [
+				"add",
+				"alpha",
+				"darken",
+				"difference",
+				"erase",
+				"hardlight",
+				"invert",
+				"layer",
+				"lighten",
+				"multiply",
+				"normal",
+				"overlay",
+				"screen",
+				"shader",
+				"subtract"
+			]
+		},
+		"disableRealTimeEdit": {
+			"type": "boolean"
+		},
+		"refresh": {
+			"type": "number"
+		},
+		"HUDModesState": {
+			"type": "string",
+			"enum": [
+				"shown",
+				"hidden"
+			]
+		},
+		"HUDModes": {
+			"type": "array",
+			"items": {
+				"type": "string",
+				"enum": [
+					"ActivateTypeMode",
+					"All",
+					"AutoVanity",
+					"CameraScopeMenu",
+					"CampPlacement",
+					"CampPlacementMode",
+					"ContainerMode",
+					"CrosshairAndActivateOnly",
+					"DeathRespawnMode",
+					"DefaultScopeMenu",
+					"DialogueMode",
+					"EndOfMatch",
+					"ExamineConfirmMode",
+					"Fishing",
+					"FurnitureEnterExit",
+					"InsideMemory",
+					"InspectMode",
+					"IronSights",
+					"LegendaryPerksMode",
+					"Loading",
+					"LockpickingMode",
+					"LooksMenu",
+					"MapMenu",
+					"MessageMode",
+					"MovementDisabled",
+					"NoHud",
+					"PauseMode",
+					"PerksMode",
+					"Pipboy",
+					"PowerArmor",
+					"RadialMenu",
+					"ScopeMenu",
+					"SelfieMode",
+					"SitWaitMode",
+					"SpectatorMode",
+					"TerminalMode",
+					"VATS",
+					"VATSPlayback",
+					"VertibirdMode",
+					"WorkshopCaravanMode",
+					"WorkshopMode"
+				]
+			}
+		},
+		"debug": {
+			"type": "boolean"
+		},
+		"debugKeys": {
+			"type": "boolean"
+		},
+		"Buttons": {
+			"type": "object",
+			"properties": {
+				"x": {
+					"type": "number"
+				},
+				"y": {
+					"type": "number"
+				},
+				"width": {
+					"type": "number"
+				},
+				"height": {
+					"type": "number"
+				}
+			}
+		},
+		"ButtonNames": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"minItems": 5,
+			"maxItems": 5
+		},
+		"Hotkeys": {
+			"type": "object",
+			"properties": {
+				"prevRadio": {
+					"type": "number"
+				},
+				"nextRadio": {
+					"type": "number"
+				},
+				"prevSong": {
+					"type": "number"
+				},
+				"nextSong": {
+					"type": "number"
+				},
+				"playStop": {
+					"type": "number"
+				}
+			}
+		},
+		"Format": {
+			"type": "string"
+		},
+		"FormatRadioOff": {
+			"type": "string"
+		},
+		"FormatRadioTurningOff": {
+			"type": "string"
+		},
+		"FormatRadioSwitching": {
+			"type": "string"
+		},
+		"FormatRadioNoPlaylist": {
+			"type": "string"
+		},
+		"FormatRadioNotExist": {
+			"type": "string"
+		},
+		"Play": {
+			"type": "boolean"
+		},
+		"PlayRadioId": {
+			"type": "number",
+			"minimum": 0
+		},
+		"StartTrackId": {
+				"oneOf": [
+					{
+						"type": "string",
+						"enum": ["RANDOM", "random"]
+					},
+					{
+						"type": "integer",
+						"minimum": 0
+					}
+				]
+		},
+		"Radios": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"order": {
+						"type": "string",
+						"enum": ["RANDOM", "random", "ORDERED", "ordered"]
+					},
+					"playlist": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								},
+								"duration": {
+									"type": "number",
+									"minimum": 0
+								}
+							},
+							"required": ["name", "id", "duration"]
+						}
+					}
+				}
+			}
+		}
+	}
+}

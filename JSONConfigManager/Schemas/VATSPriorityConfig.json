@@ -1,0 +1,89 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"definitions": {
+		"priorityOrName": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"partName": {
+							"type": "string"
+						},
+						"notCrippled": {
+							"type": "boolean"
+						},
+						"minHitChance": {
+							"type": "number",
+							"minimum": -1,
+							"maximum": 100
+						}
+					}
+				}
+			]
+		}
+	},
+	"type": "object",
+	"properties": {
+		"debug": {
+			"type": "number"
+		},
+		"debugHUD": {
+			"type": "number"
+		},
+		"disabled": {
+			"type": "boolean"
+		},
+		"lockPriorityTarget": {
+			"type": "boolean"
+		},
+		"lockPriorityTargetExcluded": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"useTargetSoundIndicator": {
+			"type": "boolean"
+		},
+		"targetSoundIndicator": {
+			"type": "object"
+		},
+		"useTargetNames": {
+			"type": "boolean"
+		},
+		"defaultPriority": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/priorityOrName"
+					}
+				}
+			]
+		},
+		"priorities": {
+			"type": "object",
+			"patternProperties": {
+				".*": {
+					"oneOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/priorityOrName"
+							}
+						}
+					]
+				}
+			}
+		}
+	}
+}

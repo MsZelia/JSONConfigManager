@@ -65,7 +65,9 @@
 					"type": "string"
 				},
 				{
-					"type": "number"
+					"type": "number",
+					"minimum": 0,
+					"maximum": 16777215
 				}
 			]
 		},
@@ -81,7 +83,9 @@
 					"type": "string"
 				},
 				{
-					"type": "number"
+					"type": "number",
+					"minimum": 0,
+					"maximum": 16777215
 				}
 			]
 		},
@@ -131,7 +135,6 @@
 				"subtract"
 			]
 		},
-		
 		"disableRealTimeEdit": {
 			"type": "boolean"
 		},
@@ -147,7 +150,6 @@
 		"refresh": {
 			"type": "number"
 		},
-		
 		"formats": {
 			"type": "object",
 			"properties": {
@@ -390,10 +392,38 @@
 			}
 		},
 		"customColors": {
-			"type": "object"
+			"type": "object",
+			"patternProperties": {
+				".*": {
+					"oneOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "number",
+							"minimum": 0,
+							"maximum": 16777215
+						}
+					]
+				}
+			}
 		},
 		"customEventChallengeColors": {
-			"type": "object"
+			"type": "object",
+			"patternProperties": {
+				".*": {
+					"oneOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "number",
+							"minimum": 0,
+							"maximum": 16777215
+						}
+					]
+				}
+			}
 		},
 		"hideChallengesState": {
 			"type": "string",

@@ -1,0 +1,159 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"definitions": {
+		"stringOrArray": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			]
+		},
+		"loadout": {
+			"type": "object",
+			"properties": {
+				"1": {
+					"$ref": "#/definitions/stringOrArray"
+				},
+				"2": {
+					"$ref": "#/definitions/stringOrArray"
+				},
+				"3": {
+					"$ref": "#/definitions/stringOrArray"
+				},
+				"4": {
+					"$ref": "#/definitions/stringOrArray"
+				},
+				"5": {
+					"$ref": "#/definitions/stringOrArray"
+				},
+				"6": {
+					"$ref": "#/definitions/stringOrArray"
+				},
+				"7": {
+					"$ref": "#/definitions/stringOrArray"
+				},
+				"8": {
+					"$ref": "#/definitions/stringOrArray"
+				},
+				"9": {
+					"$ref": "#/definitions/stringOrArray"
+				},
+				"10": {
+					"$ref": "#/definitions/stringOrArray"
+				},
+				"11": {
+					"$ref": "#/definitions/stringOrArray"
+				},
+				"12": {
+					"$ref": "#/definitions/stringOrArray"
+				},
+				"enabled": {
+					"type": "boolean"
+				},
+				"hotkey": {
+					"type": "number"
+				},
+				"name": {
+					"type": "string"
+				},
+				"account": {
+					"$ref": "#/definitions/stringOrArray"
+				},
+				"character": {
+					"$ref": "#/definitions/stringOrArray"
+				}
+			}
+		}
+	},
+	"type": "object",
+	"properties": {
+		"debug": {
+			"type": "boolean"
+		},
+		"x": {
+			"type": "number"
+		},
+		"y": {
+			"type": "number"
+		},
+		"textSize": {
+			"type": "number"
+		},
+		"textFont": {
+			"type": "string",
+			"enum": [
+				"$76HandwrittenNeat_Font",
+				"$76HandwrittenIlliterate",
+				"$BerlinDemi",
+				"$BRODY",
+				"$Brush_Script_Std",
+				"$ChowderHead",
+				"$ConsoleFont",
+				"$DebugTextFont",
+				"$DotMatrix_Font",
+				"$evaScript_Font",
+				"$Futura_Bold",
+				"$HandwrittenFont",
+				"$KiddieCocktails",
+				"$Leiascript_Font",
+				"$MAIN_Font",
+				"$MAIN_Font_Bold",
+				"$MAIN_Font_Light",
+				"$NixieTube_Font",
+				"$Portico_Font_Regular",
+				"$Slate_Mobile",
+				"$Terminal_Font",
+				"$Typewriter_Font"
+			]
+		},
+		"textAlign": {
+			"type": "string",
+			"enum": [
+				"left",
+				"center",
+				"right"
+			]
+		},
+		"colorEquipped": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "number"
+				}
+			]
+		},
+		"colorUnequipped": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "number"
+				}
+			]
+		},
+		"formatEquipped": {
+			"type": "string"
+		},
+		"formatUnequipped": {
+			"type": "string"
+		},
+		"formatGamepadButtonInfo": {
+			"type": "string"
+		},
+		"loadouts": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/loadout"
+			}
+		}
+	}
+}

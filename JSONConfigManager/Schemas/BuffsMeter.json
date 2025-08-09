@@ -1,0 +1,468 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"properties": {
+		"x": {
+			"type": "number"
+		},
+		"y": {
+			"type": "number"
+		},
+		"anchor": {
+			"type": "string",
+			"enum": [
+				"top",
+				"bottom"
+			]
+		},
+		"ySpacing": {
+			"type": "number"
+		},
+		"width": {
+			"type": "number"
+		},
+		"textSize": {
+			"type": "number"
+		},
+		"textFont": {
+			"type": "string",
+			"enum": [
+				"$76HandwrittenNeat_Font",
+				"$76HandwrittenIlliterate",
+				"$BerlinDemi",
+				"$BRODY",
+				"$Brush_Script_Std",
+				"$ChowderHead",
+				"$ConsoleFont",
+				"$DebugTextFont",
+				"$DotMatrix_Font",
+				"$evaScript_Font",
+				"$Futura_Bold",
+				"$HandwrittenFont",
+				"$KiddieCocktails",
+				"$Leiascript_Font",
+				"$MAIN_Font",
+				"$MAIN_Font_Bold",
+				"$MAIN_Font_Light",
+				"$NixieTube_Font",
+				"$Portico_Font_Regular",
+				"$Slate_Mobile",
+				"$Terminal_Font",
+				"$Typewriter_Font"
+			]
+		},
+		"textAlign": {
+			"type": "string",
+			"enum": [
+				"left",
+				"center",
+				"right"
+			]
+		},
+		"textColor": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "number"
+				}
+			]
+		},
+		"textShadow": {
+			"type": "boolean"
+		},
+		"background": {
+			"type": "boolean"
+		},
+		"backgroundColor": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "number"
+				}
+			]
+		},
+		"alpha": {
+			"type": "number"
+		},
+		"backgroundAlpha": {
+			"type": "number"
+		},
+		"blendMode": {
+			"type": "string",
+			"enum": [
+				"add",
+				"alpha",
+				"darken",
+				"difference",
+				"erase",
+				"hardlight",
+				"invert",
+				"layer",
+				"lighten",
+				"multiply",
+				"normal",
+				"overlay",
+				"screen",
+				"shader",
+				"subtract"
+			]
+		},
+		"textBlendMode": {
+			"type": "string",
+			"enum": [
+				"add",
+				"alpha",
+				"darken",
+				"difference",
+				"erase",
+				"hardlight",
+				"invert",
+				"layer",
+				"lighten",
+				"multiply",
+				"normal",
+				"overlay",
+				"screen",
+				"shader",
+				"subtract"
+			]
+		},
+		"disableRealTimeEdit": {
+			"type": "boolean"
+		},
+		"hideSFEMessage": {
+			"type": "boolean"
+		},
+		"showAllPipboyTabs": {
+			"type": "boolean"
+		},
+		"pipInventoryTabNames": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"minItems": 12,
+			"maxItems": 12
+		},
+		"enableWidgetInPipboy": {
+			"type": "boolean"
+		},
+		"pipboyConfig": {
+			"type": "object"
+		},
+		"enableManualPipBuffDataSync": {
+			"type": "boolean"
+		},
+		"pipBuffDataSyncHotkey": {
+			"type": "number"
+		},
+		"debugKeys": {
+			"type": "boolean"
+		},
+		"toggleVisibilityHotkey": {
+			"type": "number"
+		},
+		"forceHideHotkey": {
+			"type": "number"
+		},
+		"toggleChecklistHotkey": {
+			"type": "number"
+		},
+		"refresh": {
+			"type": "number"
+		},
+		"hidePermanentEffects": {
+			"type": "boolean"
+		},
+		"hideEffectsAboveDuration": {
+			"type": "number"
+		},
+		"hideEffectsBelowDuration": {
+			"type": "number"
+		},
+		"warningBelowDuration": {
+			"type": "number"
+		},
+		"showSubEffects": {
+			"type": "boolean"
+		},
+		"showExpiredSubEffects": {
+			"type": "boolean"
+		},
+		"hideSubEffects": {
+			"type": "array"
+		},
+		"hideSubEffectsFor": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"hideTypes": {
+			"type": "array",
+			"items": {
+				"type": "string",
+				"enum": [
+					"ALCOHOL",
+					"CHEMS",
+					"FOOD",
+					"DRINKTEA",
+					"HUNGER",
+					"MUTATION",
+					"THRIST"
+				]
+			}
+		},
+		"showTypes": {
+			"type": "array",
+			"items": {
+				"type": "string",
+				"enum": [
+					"ALCOHOL",
+					"CHEMS",
+					"FOOD",
+					"DRINKTEA",
+					"HUNGER",
+					"MUTATION",
+					"THRIST"
+				]
+			}
+		},
+		"hideEffectsState": {
+			"type": "string",
+			"enum": [
+				"hidden",
+				"shown"
+			]
+		},
+		"hideEffects": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"debuffs": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"checklistCompareMode": {
+			"type": "string",
+			"enum": [
+				"starts",
+				"exact",
+				"contains"
+			]
+		},
+		"checklist": {
+			"type": "array",
+			"items": {
+				"oneOf": [
+					{
+						"type": "string"
+					},
+					{
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"durationBar": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"alignVertical": {
+					"type": "string",
+					"enum": [
+						"top",
+						"center",
+						"bottom"
+					]
+				},
+				"alignHorizontal": {
+					"type": "string",
+					"enum": [
+						"left",
+						"center",
+						"right"
+					]
+				},
+				"height": {
+					"type": "number"
+				}
+			}
+		},
+		"xpBar": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"text": {
+					"type": "string"
+				},
+				"alignVertical": {
+					"type": "string",
+					"enum": [
+						"top",
+						"center",
+						"bottom"
+					]
+				},
+				"alignHorizontal": {
+					"type": "string",
+					"enum": [
+						"left",
+						"center",
+						"right"
+					]
+				},
+				"height": {
+					"type": "number"
+				}
+			}
+		},
+		"scoreBar": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"text": {
+					"type": "string"
+				},
+				"alignVertical": {
+					"type": "string",
+					"enum": [
+						"top",
+						"center",
+						"bottom"
+					]
+				},
+				"alignHorizontal": {
+					"type": "string",
+					"enum": [
+						"left",
+						"center",
+						"right"
+					]
+				},
+				"height": {
+					"type": "number"
+				}
+			}
+		},
+		"format": {
+			"type": "string"
+		},
+		"formats": {
+			"type": "object",
+			"properties": {
+				"subEffect": {
+					"type": "string"
+				},
+				"expiredBuff": {
+					"type": "string"
+				},
+				"checklist": {
+					"type": "string"
+				}
+			}
+		},
+		"sortBy": {
+			"type": "string",
+			"enum": [
+				"default",
+				"custom",
+				"property"
+			]
+		},
+		"sortOrder": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"reverseSort": {
+			"type": "boolean"
+		},
+		"displayData": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"customColors": {
+			"type": "object"
+		},
+		"customEffectColors": {
+			"type": "object"
+		},
+		"HUDModesState": {
+			"type": "string",
+			"enum": [
+				"shown",
+				"hidden"
+			]
+		},
+		"HUDModes": {
+			"type": "array",
+			"items": {
+				"type": "string",
+				"enum": [
+					"ActivateTypeMode",
+					"All",
+					"AutoVanity",
+					"CameraScopeMenu",
+					"CampPlacement",
+					"CampPlacementMode",
+					"ContainerMode",
+					"CrosshairAndActivateOnly",
+					"DeathRespawnMode",
+					"DefaultScopeMenu",
+					"DialogueMode",
+					"EndOfMatch",
+					"ExamineConfirmMode",
+					"Fishing",
+					"FurnitureEnterExit",
+					"InsideMemory",
+					"InspectMode",
+					"IronSights",
+					"LegendaryPerksMode",
+					"Loading",
+					"LockpickingMode",
+					"LooksMenu",
+					"MapMenu",
+					"MessageMode",
+					"MovementDisabled",
+					"NoHud",
+					"PauseMode",
+					"PerksMode",
+					"Pipboy",
+					"PowerArmor",
+					"RadialMenu",
+					"ScopeMenu",
+					"SelfieMode",
+					"SitWaitMode",
+					"SpectatorMode",
+					"TerminalMode",
+					"VATS",
+					"VATSPlayback",
+					"VertibirdMode",
+					"WorkshopCaravanMode",
+					"WorkshopMode"
+				]
+			}
+		}
+	}
+}

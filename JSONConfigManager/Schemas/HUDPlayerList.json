@@ -65,7 +65,9 @@
 					"type": "string"
 				},
 				{
-					"type": "number"
+					"type": "number",
+					"minimum": 0,
+					"maximum": 16777215
 				}
 			]
 		},
@@ -81,7 +83,9 @@
 					"type": "string"
 				},
 				{
-					"type": "number"
+					"type": "number",
+					"minimum": 0,
+					"maximum": 16777215
 				}
 			]
 		},
@@ -291,7 +295,21 @@
 			}
 		},
 		"customColors": {
-			"type": "object"
+			"type": "object",
+			"patternProperties": {
+				".*": {
+					"oneOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "number",
+							"minimum": 0,
+							"maximum": 16777215
+						}
+					]
+				}
+			}
 		},
 		"hideTypes": {
 			"type": "array"

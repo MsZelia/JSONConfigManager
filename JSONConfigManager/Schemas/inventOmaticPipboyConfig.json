@@ -1,0 +1,355 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"definitions": {
+		"stringOrArray": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			]
+		}
+	},
+	"type": "object",
+	"properties": {
+		"debug": {
+			"type": "boolean"
+		},
+		"debugKeys": {
+			"type": "boolean"
+		},
+		"toggleDebugHotkey": {
+			"type": "number"
+		},
+		"hideLoadMessage": {
+			"type": "boolean"
+		},
+		"orderButtons": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"itemNamesGroupConfig": {
+			"type": "object",
+			"patternProperties": {
+				".*": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"protectionConfig": {
+			"type": "object",
+			"properties": {
+				"debug": {
+					"type": "boolean"
+				},
+				"checkOnSelectionChange": {
+					"type": "boolean"
+				},
+				"dropProtection": {
+					"type": "object",
+					"properties": {
+						"enabled": {
+							"type": "boolean"
+						},
+						"favorite": {
+							"type": "boolean"
+						},
+						"equipped": {
+							"type": "boolean"
+						},
+						"named": {
+							"type": "boolean"
+						},
+						"matchMode": {
+							"type": "string",
+							"enum": [
+								"CONTAINS",
+								"STARTS",
+								"EXACT",
+								"ALL"
+							]
+						},
+						"itemNames": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"equipProtection": {
+					"type": "object",
+					"properties": {
+						"enabled": {
+							"type": "boolean"
+						},
+						"apparel": {
+							"type": "boolean"
+						},
+						"parts": {
+							"type": "array",
+							"items": {
+								"type": "string",
+								"enum": [
+									"UNDERARMOR",
+									"LEFT_LEG",
+									"RIGHT_LEG",
+									"LEFT_ARM",
+									"RIGHT_ARM",
+									"CHEST",
+									"HAT",
+									"EYEWEAR",
+									"MASK"
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		"findForRepair": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"name": {
+					"type": "string"
+				},
+				"showButton": {
+					"type": "boolean"
+				},
+				"showMessage": {
+					"type": "boolean"
+				},
+				"hotkey": {
+					"type": "number"
+				},
+				"types": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"enum": [
+							"WEAPON",
+							"ARMOR",
+							"APPAREL"
+						]
+					}
+				},
+				"onlyIfEquipped": {
+					"type": "boolean"
+				},
+				"onlyIfFavorite": {
+					"type": "boolean"
+				},
+				"conditionUnder": {
+					"type": "number"
+				}
+			}
+		},
+		"consume": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"delay": {
+					"type": "number"
+				},
+				"configs": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"enabled": {
+								"type": "boolean"
+							},
+							"testRun": {
+								"type": "boolean"
+							},
+							"name": {
+								"type": "string"
+							},
+							"showButton": {
+								"type": "boolean"
+							},
+							"showMessage": {
+								"type": "boolean"
+							},
+							"hotkey": {
+								"type": "number"
+							},
+							"delay": {
+								"type": "number"
+							},
+							"onlyInactiveEffects": {
+								"type": "boolean"
+							},
+							"onlyIfNotEquipped": {
+								"type": "boolean"
+							},
+							"onlyIfEquipped": {
+								"type": "boolean"
+							},
+							"matchMode": {
+								"type": "string",
+								"enum": [
+									"CONTAINS",
+									"STARTS",
+									"EXACT",
+									"ALL"
+								]
+							},
+							"itemNames": {
+								"type": "array",
+								"items": {
+									"$ref": "#/definitions/stringOrArray"
+								}
+							},
+							"checkCharacterName": {
+								"type": "boolean"
+							},
+							"characterName": {
+								"$ref": "#/definitions/stringOrArray"
+							},
+							"checkAccountName": {
+								"type": "boolean"
+							},
+							"accountName": {
+								"$ref": "#/definitions/stringOrArray"
+							}
+						}
+					}
+				}
+			}
+		},
+		"drop": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"delay": {
+					"type": "number"
+				},
+				"configs": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"enabled": {
+								"type": "boolean"
+							},
+							"name": {
+								"type": "string"
+							},
+							"showButton": {
+								"type": "boolean"
+							},
+							"showMessage": {
+								"type": "boolean"
+							},
+							"hotkey": {
+								"type": "number"
+							},
+							"delay": {
+								"type": "number"
+							},
+							"amount": {
+								"type": "number"
+							},
+							"dropFavorite": {
+								"type": "boolean"
+							},
+							"dropEquipped": {
+								"type": "boolean"
+							},
+							"conditionUnder": {
+								"type": "number",
+								"minimum": 0,
+								"maximum": 100
+							},
+							"onlyUnusedAmmo": {
+								"type": "boolean"
+							},
+							"matchMode": {
+								"type": "string",
+								"enum": [
+									"CONTAINS",
+									"STARTS",
+									"EXACT",
+									"ALL"
+								]
+							},
+							"itemNames": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"teenoodleTragedyProtection": {
+								"type": "object",
+								"properties": {
+									"ignoreLegendaries": {
+										"type": "boolean"
+									},
+									"ignoreNonTradable": {
+										"type": "boolean"
+									},
+									"excluded": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"typesToDrop": {
+										"type": "array",
+										"items": {
+											"type": "string",
+											"enum": [
+												"POWER_ARMOR",
+												"WEAPON",
+												"ARMOR",
+												"APPAREL",
+												"FOOD_WATER",
+												"AID",
+												"NOTES",
+												"HOLO",
+												"AMMO",
+												"MISC",
+												"MODS",
+												"JUNK"
+											]
+										}
+									}
+								}
+							},
+							"checkCharacterName": {
+								"type": "boolean"
+							},
+							"characterName": {
+								"$ref": "#/definitions/stringOrArray"
+							},
+							"checkAccountName": {
+								"type": "boolean"
+							},
+							"accountName": {
+								"$ref": "#/definitions/stringOrArray"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -939,10 +939,10 @@ namespace JSONConfigManager
             config = jsonTreeView.JSON;
             txtJson.Text = config.ToString();
             lastJsonText = txtJson.Text;
-            ValidateBySchema(config);
+            ValidateBySchema(config, json != null);
         }
 
-        private void ValidateBySchema(JToken jsonToken)
+        private void ValidateBySchema(JToken jsonToken, bool logFNF = false)
         {
             if (ddlSelectedMod.SelectedIndex != -1)
             {
@@ -961,9 +961,9 @@ namespace JSONConfigManager
                         }
                     }
                 }
-                else
+                else if (logFNF)
                 {
-                    log = "JSON Schema not available";
+                    log = "JSON Schema not found";
                 }
             }
         }
@@ -1219,7 +1219,7 @@ namespace JSONConfigManager
             {
                 return;
             }
-            if (ddlSelectedMod.SelectedIndex != -1 && (configEdited || isIni && configIni != txtJson.Text))
+            if (ddlSelectedMod.SelectedIndex != -1 && (configEdited || (isOnlyTextEdit || isIni) && configIni != txtJson.Text))
             {
                 if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and switch to selected config?", "Discard Changes and Switch?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
                 {
@@ -1254,7 +1254,7 @@ namespace JSONConfigManager
                     try
                     {
                         var configJson = JObject.Parse(configIni);
-                        ValidateBySchema(configJson);
+                        ValidateBySchema(configJson, true);
                     }
                     catch (Exception) { }
                 }
@@ -1661,7 +1661,7 @@ namespace JSONConfigManager
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveSettings();
-            if (configEdited)
+            if (configEdited || (isOnlyTextEdit || isIni) && configIni != txtJson.Text)
             {
                 if (MessageBox.Show($"You have unsaved changes.{Environment.NewLine}Are you sure you want to discard changes and exit?", "Discard Changes and Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
                 {

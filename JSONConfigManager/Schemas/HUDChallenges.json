@@ -12,7 +12,9 @@
 			"type": "string",
 			"enum": [
 				"top",
-				"bottom"
+				"bottom",
+				"TOP",
+				"BOTTOM"
 			]
 		},
 		"ySpacing": {
@@ -56,7 +58,10 @@
 			"enum": [
 				"left",
 				"center",
-				"right"
+				"right",
+				"LEFT",
+				"CENTER",
+				"RIGHT"
 			]
 		},
 		"textColor": {
@@ -217,7 +222,10 @@
 					"enum": [
 						"top",
 						"center",
-						"bottom"
+						"bottom",
+						"TOP",
+						"CENTER",
+						"BOTTOM"
 					]
 				},
 				"alignHorizontal": {
@@ -225,7 +233,10 @@
 					"enum": [
 						"left",
 						"center",
-						"right"
+						"right",
+						"LEFT",
+						"CENTER",
+						"RIGHT"
 					]
 				},
 				"height": {
@@ -247,7 +258,10 @@
 					"enum": [
 						"top",
 						"center",
-						"bottom"
+						"bottom",
+						"TOP",
+						"CENTER",
+						"BOTTOM"
 					]
 				},
 				"alignHorizontal": {
@@ -255,7 +269,10 @@
 					"enum": [
 						"left",
 						"center",
-						"right"
+						"right",
+						"LEFT",
+						"CENTER",
+						"RIGHT"
 					]
 				},
 				"height": {
@@ -429,7 +446,9 @@
 			"type": "string",
 			"enum": [
 				"shown",
-				"hidden"
+				"hidden",
+				"SHOWN",
+				"HIDDEN"
 			]
 		},
 		"hideChallenges": {
@@ -442,7 +461,9 @@
 			"type": "string",
 			"enum": [
 				"shown",
-				"hidden"
+				"hidden",
+				"SHOWN",
+				"HIDDEN"
 			]
 		},
 		"hideEvents": {
@@ -455,7 +476,9 @@
 			"type": "string",
 			"enum": [
 				"shown",
-				"hidden"
+				"hidden",
+				"SHOWN",
+				"HIDDEN"
 			]
 		},
 		"HUDModes": {

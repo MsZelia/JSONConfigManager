@@ -12,7 +12,9 @@
 			"type": "string",
 			"enum": [
 				"top",
-				"bottom"
+				"bottom",
+				"TOP",
+				"BOTTOM"
 			]
 		},
 		"ySpacing": {
@@ -56,7 +58,10 @@
 			"enum": [
 				"left",
 				"center",
-				"right"
+				"right",
+				"LEFT",
+				"CENTER",
+				"RIGHT"
 			]
 		},
 		"textColor": {
@@ -157,7 +162,9 @@
 			"type": "string",
 			"enum": [
 				"shown",
-				"hidden"
+				"hidden",
+				"SHOWN",
+				"HIDDEN"
 			]
 		},
 		"HUDModes": {

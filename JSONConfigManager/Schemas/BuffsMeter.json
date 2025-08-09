@@ -12,7 +12,9 @@
 			"type": "string",
 			"enum": [
 				"top",
-				"bottom"
+				"bottom",
+				"TOP",
+				"BOTTOM"
 			]
 		},
 		"ySpacing": {
@@ -56,7 +58,10 @@
 			"enum": [
 				"left",
 				"center",
-				"right"
+				"right",
+				"LEFT",
+				"CENTER",
+				"RIGHT"
 			]
 		},
 		"textColor": {
@@ -239,8 +244,10 @@
 		"hideEffectsState": {
 			"type": "string",
 			"enum": [
+				"shown",
 				"hidden",
-				"shown"
+				"SHOWN",
+				"HIDDEN"
 			]
 		},
 		"hideEffects": {
@@ -260,7 +267,10 @@
 			"enum": [
 				"starts",
 				"exact",
-				"contains"
+				"contains",
+				"STARTS",
+				"EXACT",
+				"CONTAINS"
 			]
 		},
 		"checklist": {
@@ -290,7 +300,10 @@
 					"enum": [
 						"top",
 						"center",
-						"bottom"
+						"bottom",
+						"TOP",
+						"CENTER",
+						"BOTTOM"
 					]
 				},
 				"alignHorizontal": {
@@ -298,7 +311,10 @@
 					"enum": [
 						"left",
 						"center",
-						"right"
+						"right",
+						"LEFT",
+						"CENTER",
+						"RIGHT"
 					]
 				},
 				"height": {
@@ -320,7 +336,10 @@
 					"enum": [
 						"top",
 						"center",
-						"bottom"
+						"bottom",
+						"TOP",
+						"CENTER",
+						"BOTTOM"
 					]
 				},
 				"alignHorizontal": {
@@ -328,7 +347,10 @@
 					"enum": [
 						"left",
 						"center",
-						"right"
+						"right",
+						"LEFT",
+						"CENTER",
+						"RIGHT"
 					]
 				},
 				"height": {
@@ -350,7 +372,10 @@
 					"enum": [
 						"top",
 						"center",
-						"bottom"
+						"bottom",
+						"TOP",
+						"CENTER",
+						"BOTTOM"
 					]
 				},
 				"alignHorizontal": {
@@ -358,7 +383,10 @@
 					"enum": [
 						"left",
 						"center",
-						"right"
+						"right",
+						"LEFT",
+						"CENTER",
+						"RIGHT"
 					]
 				},
 				"height": {
@@ -388,7 +416,10 @@
 			"enum": [
 				"default",
 				"custom",
-				"property"
+				"property",
+				"DEFAULT",
+				"CUSTOM",
+				"PROPERTY"
 			]
 		},
 		"sortOrder": {
@@ -444,7 +475,9 @@
 			"type": "string",
 			"enum": [
 				"shown",
-				"hidden"
+				"hidden",
+				"SHOWN",
+				"HIDDEN"
 			]
 		},
 		"HUDModes": {

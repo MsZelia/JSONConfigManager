@@ -1,5 +1,20 @@
 {
 	"$schema": "http://json-schema.org/draft-07/schema#",
+	"definitions": {
+		"color": {
+			"oneOf": [
+				{
+					"type": "string",
+					"pattern": "^0x[0-9a-f]{1,6}$"
+				},
+				{
+					"type": "number",
+					"minimum": 0,
+					"maximum": 16777215
+				}
+			]
+		}
+	},
 	"type": "object",
 	"properties": {
 		"x": {
@@ -24,7 +39,8 @@
 			"type": "number"
 		},
 		"textSize": {
-			"type": "number"
+			"type": "number",
+			"minimum": 6
 		},
 		"textFont": {
 			"type": "string",
@@ -65,28 +81,10 @@
 			]
 		},
 		"textColor": {
-			"oneOf": [
-				{
-					"type": "string"
-				},
-				{
-					"type": "number",
-					"minimum": 0,
-					"maximum": 16777215
-				}
-			]
+			"$ref": "#/definitions/color"
 		},
 		"textColorError": {
-			"oneOf": [
-				{
-					"type": "string"
-				},
-				{
-					"type": "number",
-					"minimum": 0,
-					"maximum": 16777215
-				}
-			]
+			"$ref": "#/definitions/color"
 		},
 		"textShadow": {
 			"type": "boolean"
@@ -95,22 +93,15 @@
 			"type": "boolean"
 		},
 		"backgroundColor": {
-			"oneOf": [
-				{
-					"type": "string"
-				},
-				{
-					"type": "number",
-					"minimum": 0,
-					"maximum": 16777215
-				}
-			]
+			"$ref": "#/definitions/color"
 		},
 		"alpha": {
-			"type": "number"
+			"type": "number",
+			"minimum": 0
 		},
 		"backgroundAlpha": {
-			"type": "number"
+			"type": "number",
+			"minimum": 0
 		},
 		"blendMode": {
 			"type": "string",
@@ -156,7 +147,8 @@
 			"type": "boolean"
 		},
 		"refresh": {
-			"type": "number"
+			"type": "number",
+			"minimum": 0
 		},
 		"HUDModesState": {
 			"type": "string",
@@ -290,7 +282,7 @@
 			"type": "boolean"
 		},
 		"PlayRadioId": {
-			"type": "number",
+			"type": "integer",
 			"minimum": 0
 		},
 		"StartTrackId": {

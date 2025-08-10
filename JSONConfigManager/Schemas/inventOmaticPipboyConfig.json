@@ -85,6 +85,14 @@
 								"type": "string"
 							}
 						}
+					},
+					"dependentSchemas": {
+						"named": {
+							"required": [
+								"itemNames",
+								"matchMode"
+							]
+						}
 					}
 				},
 				"equipProtection": {
@@ -133,7 +141,8 @@
 					"type": "boolean"
 				},
 				"hotkey": {
-					"type": "number"
+					"type": "number",
+					"minimum": 1
 				},
 				"types": {
 					"type": "array",
@@ -153,7 +162,8 @@
 					"type": "boolean"
 				},
 				"conditionUnder": {
-					"type": "number"
+					"type": "number",
+					"minimum": 0
 				}
 			}
 		},
@@ -164,7 +174,8 @@
 					"type": "boolean"
 				},
 				"delay": {
-					"type": "number"
+					"type": "number",
+					"minimum": 0
 				},
 				"configs": {
 					"type": "array",
@@ -187,7 +198,8 @@
 								"type": "boolean"
 							},
 							"hotkey": {
-								"type": "number"
+								"type": "number",
+								"minimum": 1
 							},
 							"delay": {
 								"type": "number"
@@ -216,6 +228,25 @@
 									"$ref": "#/definitions/stringOrArray"
 								}
 							},
+							"types": {
+								"type": "array",
+								"items": {
+									"type": "string",
+									"enum": [
+										"WEAPON",
+										"ARMOR",
+										"APPAREL",
+										"FOOD_WATER",
+										"AID",
+										"NOTES",
+										"HOLO",
+										"AMMO",
+										"MISC",
+										"MODS",
+										"JUNK"
+									]
+								}
+							},
 							"checkCharacterName": {
 								"type": "boolean"
 							},
@@ -228,10 +259,32 @@
 							"accountName": {
 								"$ref": "#/definitions/stringOrArray"
 							}
+						},
+						"required": [
+							"enabled",
+							"hotkey",
+							"itemNames",
+							"matchMode"
+						],
+						"dependentSchemas": {
+							"checkCharacterName": {
+								"required": [
+									"characterName"
+								]
+							},
+							"checkAccountName": {
+								"required": [
+									"accountName"
+								]
+							}
 						}
 					}
 				}
-			}
+			},
+			"required": [
+				"enabled",
+				"configs"
+			]
 		},
 		"drop": {
 			"type": "object",
@@ -260,7 +313,8 @@
 								"type": "boolean"
 							},
 							"hotkey": {
-								"type": "number"
+								"type": "number",
+								"minimum": 1
 							},
 							"delay": {
 								"type": "number"
@@ -276,8 +330,7 @@
 							},
 							"conditionUnder": {
 								"type": "number",
-								"minimum": 0,
-								"maximum": 100
+								"minimum": 0
 							},
 							"onlyUnusedAmmo": {
 								"type": "boolean"
@@ -346,10 +399,32 @@
 							"accountName": {
 								"$ref": "#/definitions/stringOrArray"
 							}
+						},
+						"required": [
+							"enabled",
+							"hotkey",
+							"itemNames",
+							"matchMode"
+						],
+						"dependentSchemas": {
+							"checkCharacterName": {
+								"required": [
+									"characterName"
+								]
+							},
+							"checkAccountName": {
+								"required": [
+									"accountName"
+								]
+							}
 						}
 					}
 				}
-			}
+			},
+			"required": [
+				"enabled",
+				"configs"
+			]
 		}
 	}
 }

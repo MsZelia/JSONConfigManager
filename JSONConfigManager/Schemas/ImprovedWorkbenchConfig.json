@@ -33,6 +33,19 @@
 					]
 				}
 			}
+		},
+		"color": {
+			"oneOf": [
+				{
+					"type": "string",
+					"pattern": "^0x[0-9a-f]{1,6}$"
+				},
+				{
+					"type": "number",
+					"minimum": 0,
+					"maximum": 16777215
+				}
+			]
 		}
 	},
 	"type": "object",
@@ -62,7 +75,8 @@
 			"type": "string"
 		},
 		"defaultCraftAmount": {
-			"type": "number"
+			"type": "number",
+			"minimum": 0
 		},
 		"showInventoryItemCount": {
 			"type": "boolean"
@@ -87,7 +101,8 @@
 					"type": "boolean"
 				},
 				"exitDelay": {
-					"type": "number"
+					"type": "number",
+					"minimum": 0
 				}
 			}
 		},
@@ -107,7 +122,8 @@
 							"type": "number"
 						},
 						"textSize": {
-							"type": "number"
+							"type": "number",
+							"minimum": 6
 						},
 						"textFont": {
 							"type": "string",
@@ -148,16 +164,7 @@
 							]
 						},
 						"textColor": {
-							"oneOf": [
-								{
-									"type": "string"
-								},
-								{
-									"type": "number",
-									"minimum": 0,
-									"maximum": 16777215
-								}
-							]
+							"$ref": "#/definitions/color"
 						},
 						"textShadow": {
 							"type": "boolean"
@@ -174,28 +181,10 @@
 					"type": "boolean"
 				},
 				"colorEquipped": {
-					"oneOf": [
-						{
-							"type": "string"
-						},
-						{
-							"type": "number",
-							"minimum": 0,
-							"maximum": 16777215
-						}
-					]
+					"$ref": "#/definitions/color"
 				},
 				"colorUnequipped": {
-					"oneOf": [
-						{
-							"type": "string"
-						},
-						{
-							"type": "number",
-							"minimum": 0,
-							"maximum": 16777215
-						}
-					]
+					"$ref": "#/definitions/color"
 				},
 				"formatEquipped": {
 					"type": "string"

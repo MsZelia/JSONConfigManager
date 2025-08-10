@@ -49,7 +49,12 @@
 			"type": "boolean"
 		},
 		"targetSoundIndicator": {
-			"type": "object"
+			"type": "object",
+			"patternProperties": {
+				".*": {
+					"type": "string"
+				}
+			}
 		},
 		"useTargetNames": {
 			"type": "boolean"

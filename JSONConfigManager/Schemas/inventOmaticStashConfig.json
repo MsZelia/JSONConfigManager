@@ -13,6 +13,19 @@
 					}
 				}
 			]
+		},
+		"color": {
+			"oneOf": [
+				{
+					"type": "string",
+					"pattern": "^0x[0-9a-f]{1,6}$"
+				},
+				{
+					"type": "number",
+					"minimum": 0,
+					"maximum": 16777215
+				}
+			]
 		}
 	},
 	"type": "object",
@@ -167,16 +180,7 @@
 					]
 				},
 				"learnableTextColor": {
-					"oneOf": [
-						{
-							"type": "string"
-						},
-						{
-							"type": "number",
-							"minimum": 0,
-							"maximum": 16777215
-						}
-					]
+					"$ref": "#/definitions/color"
 				},
 				"loadFileDirectory": {
 					"type": "string"
@@ -193,7 +197,8 @@
 					"type": "boolean"
 				},
 				"hotkey": {
-					"type": "number"
+					"type": "number",
+					"minimum": 1
 				},
 				"weightLabelWidth": {
 					"type": "number"
@@ -268,6 +273,14 @@
 								"type": "string"
 							}
 						}
+					},
+					"dependentSchemas": {
+						"named": {
+							"required": [
+								"itemNames",
+								"matchMode"
+							]
+						}
 					}
 				},
 				"scrapProtection": {
@@ -302,6 +315,14 @@
 							"items": {
 								"type": "string"
 							}
+						}
+					},
+					"dependentSchemas": {
+						"named": {
+							"required": [
+								"itemNames",
+								"matchMode"
+							]
 						}
 					}
 				},
@@ -344,6 +365,14 @@
 								"type": "string"
 							}
 						}
+					},
+					"dependentSchemas": {
+						"named": {
+							"required": [
+								"itemNames",
+								"matchMode"
+							]
+						}
 					}
 				}
 			}
@@ -374,16 +403,7 @@
 					"type": "boolean"
 				},
 				"defaultColor": {
-					"oneOf": [
-						{
-							"type": "string"
-						},
-						{
-							"type": "number",
-							"minimum": 0,
-							"maximum": 16777215
-						}
-					]
+					"$ref": "#/definitions/color"
 				},
 				"limitLow": {
 					"type": "number",
@@ -391,16 +411,7 @@
 					"maximum": 100
 				},
 				"limitLowColor": {
-					"oneOf": [
-						{
-							"type": "string"
-						},
-						{
-							"type": "number",
-							"minimum": 0,
-							"maximum": 16777215
-						}
-					]
+					"$ref": "#/definitions/color"
 				},
 				"limitHigh": {
 					"type": "number",
@@ -408,16 +419,7 @@
 					"maximum": 100
 				},
 				"limitHighColor": {
-					"oneOf": [
-						{
-							"type": "string"
-						},
-						{
-							"type": "number",
-							"minimum": 0,
-							"maximum": 16777215
-						}
-					]
+					"$ref": "#/definitions/color"
 				}
 			}
 		},
@@ -434,15 +436,23 @@
 					"type": "boolean"
 				},
 				"hotkey": {
-					"type": "number"
+					"type": "number",
+					"minimum": 1
 				},
 				"amount": {
-					"type": "number"
+					"type": "number",
+					"minimum": 1
 				},
 				"delay": {
-					"type": "number"
+					"type": "number",
+					"minimum": 1
 				}
-			}
+			},
+			"required": [
+				"enabled",
+				"amount",
+				"delay"
+			]
 		},
 		"buyConfig": {
 			"type": "object",
@@ -476,7 +486,8 @@
 					]
 				},
 				"hotkey": {
-					"type": "number"
+					"type": "number",
+					"minimum": 1
 				},
 				"maxItems": {
 					"type": "number"
@@ -538,7 +549,8 @@
 								"type": "array",
 								"items": {
 									"type": "string"
-								}
+								},
+								"minItems": 1
 							},
 							"checkCharacterName": {
 								"type": "boolean"
@@ -552,10 +564,32 @@
 							"accountName": {
 								"$ref": "#/definitions/stringOrArray"
 							}
+						},
+						"required": [
+							"enabled",
+							"itemNames",
+							"matchMode"
+						],
+						"dependentSchemas": {
+							"checkCharacterName": {
+								"required": [
+									"characterName"
+								]
+							},
+							"checkAccountName": {
+								"required": [
+									"accountName"
+								]
+							}
 						}
-					}
+					},
+					"minItems": 1
 				}
-			}
+			},
+			"required": [
+				"enabled",
+				"configs"
+			]
 		},
 		"npcSellConfig": {
 			"type": "object",
@@ -589,7 +623,8 @@
 					]
 				},
 				"hotkey": {
-					"type": "number"
+					"type": "number",
+					"minimum": 1
 				},
 				"maxItems": {
 					"type": "number"
@@ -651,7 +686,8 @@
 								"type": "array",
 								"items": {
 									"type": "string"
-								}
+								},
+								"minItems": 1
 							},
 							"checkCharacterName": {
 								"type": "boolean"
@@ -665,10 +701,32 @@
 							"accountName": {
 								"$ref": "#/definitions/stringOrArray"
 							}
+						},
+						"required": [
+							"enabled",
+							"itemNames",
+							"matchMode"
+						],
+						"dependentSchemas": {
+							"checkCharacterName": {
+								"required": [
+									"characterName"
+								]
+							},
+							"checkAccountName": {
+								"required": [
+									"accountName"
+								]
+							}
 						}
-					}
+					},
+					"minItems": 1
 				}
-			}
+			},
+			"required": [
+				"enabled",
+				"configs"
+			]
 		},
 		"lootConfig": {
 			"type": "object",
@@ -702,7 +760,8 @@
 					"type": "boolean"
 				},
 				"hotkey": {
-					"type": "number"
+					"type": "number",
+					"minimum": 1
 				},
 				"maxItems": {
 					"type": "number"
@@ -791,10 +850,31 @@
 									"type": "string"
 								}
 							}
+						},
+						"required": [
+							"enabled",
+							"itemNames"
+						],
+						"dependentSchemas": {
+							"checkCharacterName": {
+								"required": [
+									"characterName"
+								]
+							},
+							"checkAccountName": {
+								"required": [
+									"accountName"
+								]
+							}
 						}
 					}
 				}
-			}
+			},
+			"required": [
+				"enabled",
+				"itemNames",
+				"matchMode"
+			]
 		},
 		"scrapConfig": {
 			"type": "object",
@@ -828,7 +908,8 @@
 					]
 				},
 				"hotkey": {
-					"type": "number"
+					"type": "number",
+					"minimum": 1
 				},
 				"maxItems": {
 					"type": "number"
@@ -896,7 +977,8 @@
 								"type": "array",
 								"items": {
 									"type": "string"
-								}
+								},
+								"minItems": 1
 							},
 							"checkCharacterName": {
 								"type": "boolean"
@@ -910,10 +992,33 @@
 							"accountName": {
 								"$ref": "#/definitions/stringOrArray"
 							}
+						},
+						"required": [
+							"enabled",
+							"types",
+							"excluded",
+							"matchMode"
+						],
+						"dependentSchemas": {
+							"checkCharacterName": {
+								"required": [
+									"characterName"
+								]
+							},
+							"checkAccountName": {
+								"required": [
+									"accountName"
+								]
+							}
 						}
-					}
+					},
+					"minItems": 1
 				}
-			}
+			},
+			"required": [
+				"enabled",
+				"configs"
+			]
 		},
 		"transferConfig": {
 			"type": "array",
@@ -949,7 +1054,8 @@
 						]
 					},
 					"hotkey": {
-						"type": "number"
+						"type": "number",
+						"minimum": 1
 					},
 					"maxItems": {
 						"type": "number"
@@ -1044,7 +1150,8 @@
 									}
 								}
 							]
-						}
+						},
+						"minItems": 1
 					},
 					"direction": {
 						"type": "string",
@@ -1112,6 +1219,40 @@
 							"type": "string"
 						}
 					}
+				},
+				"required": [
+					"enabled",
+					"itemNames",
+					"matchMode",
+					"direction"
+				],
+				"dependentSchemas": {
+					"checkLegendaryEffects": {
+						"required": [
+							"legendaryEffectsMatchMode",
+							"legendaryEffects"
+						]
+					},
+					"checkArmorGrade": {
+						"required": [
+							"armorGrades"
+						]
+					},
+					"exactAmountInDestination": {
+						"required": [
+							"amount"
+						]
+					},
+					"checkCharacterName": {
+						"required": [
+							"characterName"
+						]
+					},
+					"checkAccountName": {
+						"required": [
+							"accountName"
+						]
+					}
 				}
 			}
 		},
@@ -1125,7 +1266,8 @@
 					"type": "boolean"
 				},
 				"hotkey": {
-					"type": "number"
+					"type": "number",
+					"minimum": 1
 				},
 				"showButton": {
 					"type": "boolean"
@@ -1203,6 +1345,13 @@
 							}
 						}
 					}
+				}
+			},
+			"dependentSchemas": {
+				"useCustomFormat": {
+					"required": [
+						"customFormat"
+					]
 				}
 			}
 		},

@@ -1,6 +1,19 @@
 {
 	"$schema": "http://json-schema.org/draft-07/schema#",
 	"definitions": {
+		"color": {
+			"oneOf": [
+				{
+					"type": "string",
+					"pattern": "^0x[0-9a-f]{1,6}$"
+				},
+				{
+					"type": "number",
+					"minimum": 0,
+					"maximum": 16777215
+				}
+			]
+		},
 		"point": {
 			"type": "object",
 			"properties": {
@@ -57,7 +70,8 @@
 								"maximum": 100
 							},
 							"alpha": {
-								"type": "number"
+								"type": "number",
+								"minimum": 0
 							}
 						}
 					}
@@ -117,7 +131,8 @@
 					}
 				},
 				"alpha": {
-					"type": "number"
+					"type": "number",
+					"minimum": 0
 				}
 			}
 		}
@@ -131,7 +146,8 @@
 			"type": "number"
 		},
 		"textSize": {
-			"type": "number"
+			"type": "number",
+			"minimum": 6
 		},
 		"textFont": {
 			"type": "string",
@@ -172,22 +188,14 @@
 			]
 		},
 		"textColor": {
-			"oneOf": [
-				{
-					"type": "string"
-				},
-				{
-					"type": "number",
-					"minimum": 0,
-					"maximum": 16777215
-				}
-			]
+			"$ref": "#/definitions/color"
 		},
 		"textShadow": {
 			"type": "boolean"
 		},
 		"alpha": {
-			"type": "number"
+			"type": "number",
+			"minimum": 0
 		},
 		"blendMode": {
 			"type": "string",
@@ -236,7 +244,8 @@
 			"type": "boolean"
 		},
 		"refresh": {
-			"type": "number"
+			"type": "number",
+			"minimum": 0
 		},
 		"debug": {
 			"type": "boolean"
@@ -267,16 +276,7 @@
 						"minimum": 0
 					},
 					"color": {
-						"oneOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "number",
-								"minimum": 0,
-								"maximum": 16777215
-							}
-						]
+						"$ref": "#/definitions/color"
 					}
 				}
 			}
@@ -291,7 +291,8 @@
 					"$ref": "#/definitions/point"
 				},
 				"textLength": {
-					"type": "number"
+					"type": "number",
+					"minimum": 0
 				}
 			}
 		},

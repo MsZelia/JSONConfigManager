@@ -557,6 +557,7 @@ namespace JSONConfigManager
             // 
             // txtJson
             // 
+            this.txtJson.AcceptsTab = true;
             this.txtJson.BackColor = System.Drawing.SystemColors.Window;
             this.txtJson.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtJson.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -567,6 +568,8 @@ namespace JSONConfigManager
             this.txtJson.Size = new System.Drawing.Size(634, 721);
             this.txtJson.TabIndex = 0;
             this.txtJson.Text = "";
+            this.txtJson.TextChanged += new System.EventHandler(this.txtJson_TextChanged);
+            this.txtJson.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtJson_KeyDown);
             this.txtJson.Leave += new System.EventHandler(this.txtJson_Leave);
             // 
             // Form1

@@ -130,12 +130,17 @@ namespace JSONConfigManager
 
         private bool isOnlyTextEdit = false;
 
+        private Undoer undoer;
+
+        private bool undoing = false;
+
         public Form1()
         {
             InitializeComponent();
             LoadSettings();
             InitUserControls();
             Text += $" - {Version}";
+            this.undoer = new Undoer(ref txtJson);
         }
 
         public string Version => Assembly.GetEntryAssembly().GetName().Version.ToString();
@@ -238,7 +243,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                if (MessageBox.Show($"Error loading settings:{Environment.NewLine}{ex/*.Message*/}{Environment.NewLine}{Environment.NewLine}Choosing No will exit the program!{Environment.NewLine}You can try to manually repair your config file.{Environment.NewLine}{Environment.NewLine}Do you want to restore default settings?", "Restore Default Settings?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                if (MessageBox.Show($"Error loading settings:{Environment.NewLine}{ex}{Environment.NewLine}{Environment.NewLine}Choosing No will exit the program!{Environment.NewLine}You can try to manually repair your config file.{Environment.NewLine}{Environment.NewLine}Do you want to restore default settings?", "Restore Default Settings?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     SaveSettings();
                 }
@@ -279,7 +284,7 @@ namespace JSONConfigManager
             catch (Exception ex)
             {
                 logStatus = $"Error saving settings";
-                MessageBox.Show($"Error saving settings:{Environment.NewLine}{ex/*.Message*/}", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error saving settings:{Environment.NewLine}{ex}", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         #endregion
@@ -494,7 +499,7 @@ namespace JSONConfigManager
             catch (Exception ex)
             {
                 logStatus = $"Backup restore failed";
-                MessageBox.Show($"Error restoring files:{Environment.NewLine}{ex/*.Message*/}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error restoring files:{Environment.NewLine}{ex}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -545,7 +550,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading backups:{Environment.NewLine}{ex/*.Message*/}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading backups:{Environment.NewLine}{ex}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -599,7 +604,7 @@ namespace JSONConfigManager
             catch (Exception ex)
             {
                 logStatus = $"Open URL failed";
-                MessageBox.Show($"Error opening URL:{Environment.NewLine}{ex/*.Message*/}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error opening URL:{Environment.NewLine}{ex}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -620,7 +625,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error opening mod URL:{Environment.NewLine}{ex/*.Message*/}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error opening mod URL:{Environment.NewLine}{ex}", "Web error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -690,7 +695,7 @@ namespace JSONConfigManager
             catch (Exception ex)
             {
                 logStatus = $"File not saved";
-                MessageBox.Show($"Error Saving file:{Environment.NewLine}{ex/*.Message*/}", "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error Saving file:{Environment.NewLine}{ex}", "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -708,7 +713,7 @@ namespace JSONConfigManager
             catch (Exception ex)
             {
                 logStatus = $"Config file not added";
-                MessageBox.Show($"Error adding config file:{Environment.NewLine}{ex/*.Message*/}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error adding config file:{Environment.NewLine}{ex}", "Config error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -732,6 +737,7 @@ namespace JSONConfigManager
             txtJson.Text = string.Empty;
             lastJsonText = string.Empty;
             logStatus = $"Config file removed";
+            undoer.Clear();
         }
 
         private void LoadModConfigFiles()
@@ -755,7 +761,7 @@ namespace JSONConfigManager
             catch (Exception ex)
             {
                 logStatus = "Config files not loaded";
-                MessageBox.Show($"Error loading config files:{Environment.NewLine}{ex/*.Message*/}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading config files:{Environment.NewLine}{ex}", "Restore error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -814,8 +820,16 @@ namespace JSONConfigManager
                 {
                     try
                     {
+                        ClearJsonSearchSelection();
                         var configJson = JObject.Parse(txtJson.Text.Trim());
                         ValidateBySchema(configJson);
+                    }
+                    catch (JsonReaderException iex)
+                    {
+                        if (!isIni && !isXml)
+                        {
+                            log = $"Invalid JSON{Environment.NewLine}{iex}";
+                        }
                     }
                     catch (Exception) { }
                     return;
@@ -834,7 +848,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                log = $"Invalid Json from manual changes!{Environment.NewLine}{ex/*.Message*/}";
+                log = $"Invalid JSON from manual changes!{Environment.NewLine}{ex}";
             }
         }
 
@@ -979,7 +993,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                log = $"Error changing decimal value:{Environment.NewLine}{ex/*.Message*/}";
+                log = $"Error changing decimal value:{Environment.NewLine}{ex}";
             }
         }
 
@@ -994,7 +1008,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                log = $"Error changing integer value:{Environment.NewLine}{ex/*.Message*/}";
+                log = $"Error changing integer value:{Environment.NewLine}{ex}";
             }
         }
 
@@ -1009,7 +1023,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                log = $"Error changing bool value:{Environment.NewLine}{ex/*.Message*/}";
+                log = $"Error changing bool value:{Environment.NewLine}{ex}";
             }
 
         }
@@ -1025,7 +1039,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                log = $"Error changing string value:{Environment.NewLine}{ex/*.Message*/}";
+                log = $"Error changing string value:{Environment.NewLine}{ex}";
             }
         }
 
@@ -1047,7 +1061,7 @@ namespace JSONConfigManager
                     value = MapArray(txtValue);
                     if (value == null)
                     {
-                        log = $"Error adding array: Invalid Json string!";
+                        log = $"Error adding array: Invalid JSON string!";
                         return;
                     }
                 }
@@ -1058,7 +1072,7 @@ namespace JSONConfigManager
                     value = MapObject(txtValue);
                     if (value == null)
                     {
-                        log = $"Error adding object: Invalid Json string!";
+                        log = $"Error adding object: Invalid JSON string!";
                         return;
                     }
                 }
@@ -1077,7 +1091,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                log = $"Error changing array value:{Environment.NewLine}{ex/*.Message*/}";
+                log = $"Error changing array value:{Environment.NewLine}{ex}";
             }
         }
 
@@ -1105,7 +1119,7 @@ namespace JSONConfigManager
                     value = MapArray(txtValue);
                     if (value == null)
                     {
-                        log = $"Error adding array: Invalid Json string!";
+                        log = $"Error adding array: Invalid JSON string!";
                         return;
                     }
                 }
@@ -1115,7 +1129,7 @@ namespace JSONConfigManager
                     value = MapObject(txtValue);
                     if (value == null)
                     {
-                        log = $"Error adding object: Invalid Json string!";
+                        log = $"Error adding object: Invalid JSON string!";
                         return;
                     }
                 }
@@ -1135,7 +1149,7 @@ namespace JSONConfigManager
             }
             catch (Exception ex)
             {
-                log = $"Error adding property value:{Environment.NewLine}{ex/*.Message*/}";
+                log = $"Error adding property value:{Environment.NewLine}{ex}";
             }
         }
 
@@ -1229,6 +1243,8 @@ namespace JSONConfigManager
             }
             configEdited = false;
             txtLog.Text = string.Empty;
+            txtJson.Text = string.Empty;
+            undoer.Clear();
             UpdateToolbarButtons();
 
             if (ddlSelectedMod.SelectedIndex == -1)
@@ -1251,10 +1267,18 @@ namespace JSONConfigManager
                     configIni = txtJson.Text;
                     jsonTreeView.Nodes.Clear();
                     ResetSelectedConfigControls();
+                    ClearJsonSearchSelection();
                     try
                     {
                         var configJson = JObject.Parse(configIni);
                         ValidateBySchema(configJson, true);
+                    }
+                    catch (JsonReaderException iex)
+                    {
+                        if (!isIni && !isXml)
+                        {
+                            log = $"Invalid JSON{Environment.NewLine}{iex}";
+                        }
                     }
                     catch (Exception) { }
                 }
@@ -1631,12 +1655,56 @@ namespace JSONConfigManager
 
         private void ClearJsonSearchSelection()
         {
-            txtJson.SelectionStart = 0;
-            txtJson.SelectionLength = txtJson.TextLength;
+            bool unfocused = false;
+            if (txtJson.Focused)
+            {
+                unfocused = true;
+                statusStrip.Focus();
+            }
+            var selectionStart = txtJson.SelectionStart;
+            var selectionLength = txtJson.SelectionLength;
+
+            txtJson.Select(0, txtJson.TextLength);
             txtJson.SelectionColor = txtJson.ForeColor;
             txtJson.SelectionBackColor = txtJson.BackColor;
-            txtJson.SelectionStart = 0;
-            txtJson.SelectionLength = 0;
+            if (isIni)
+            {
+                ApplyCommentsSelection(";");
+            }
+            else if (isXml)
+            {
+                ApplyCommentsSelection("<!--", "-->");
+            }
+            else
+            {
+                ApplyCommentsSelection("/*", "*/");
+                ApplyCommentsSelection("//");
+            }
+            txtJson.Select(selectionStart, selectionLength);
+            if (unfocused)
+            {
+                txtJson.Focus();
+            }
+        }
+
+        private void ApplyCommentsSelection(string startElement, string endElement = "\n")
+        {
+            var text = txtJson.Text;
+            int startIndex = 0;
+            int matches = 0;
+            int index;
+            while ((index = text.IndexOf(startElement, startIndex)) != -1)
+            {
+                int endIndex = text.IndexOf(endElement, index + endElement.Length);
+                if (endIndex == -1)
+                {
+                    endIndex = text.Length - endElement.Length;
+                }
+                txtJson.Select(index, endIndex - index + endElement.Length);
+                txtJson.SelectionColor = IsDarkMode ? Color.LimeGreen : Color.Green;
+                startIndex = endIndex + endElement.Length;
+                matches++;
+            }
         }
         #endregion
 
@@ -1676,7 +1744,7 @@ namespace JSONConfigManager
             {
                 case Keys.F:
                     {
-                        if (e.Control)
+                        if (e.Control && !e.Alt)
                         {
                             txtSearch.Focus();
                         }
@@ -1787,6 +1855,37 @@ namespace JSONConfigManager
         }
 
         private void txtJson_Leave(object sender, EventArgs e) => ApplyManualEditChanges();
+
+        private void txtJson_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control)
+            {
+                if (e.KeyCode == Keys.Z)
+                {
+                    undoing = true;
+                    undoer.Undo();
+                    ClearJsonSearchSelection();
+                    undoing = false;
+                    e.Handled = true;
+                }
+                if (e.KeyCode == Keys.Y)
+                {
+                    undoing = true;
+                    undoer.Redo();
+                    ClearJsonSearchSelection();
+                    undoing = false;
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void txtJson_TextChanged(object sender, EventArgs e)
+        {
+            if (!undoing)
+            {
+                undoer.Save();
+            }
+        }
 
         private void btnDarkMode_Click(object sender, EventArgs e) => IsDarkMode = !IsDarkMode;
 

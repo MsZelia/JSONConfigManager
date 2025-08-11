@@ -455,7 +455,7 @@ namespace JSONConfigManager
             this.splitContainer1.Panel1.AllowDrop = true;
             this.splitContainer1.Panel1.Controls.Add(this.jsonTreeView);
             this.splitContainer1.Panel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.splitContainer1.Panel1MinSize = 400;
+            this.splitContainer1.Panel1MinSize = 70;
             // 
             // splitContainer1.Panel2
             // 
@@ -561,7 +561,7 @@ namespace JSONConfigManager
             this.txtJson.BackColor = System.Drawing.SystemColors.Window;
             this.txtJson.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtJson.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtJson.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.txtJson.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.txtJson.Location = new System.Drawing.Point(0, 0);
             this.txtJson.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtJson.Name = "txtJson";

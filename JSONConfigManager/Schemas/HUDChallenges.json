@@ -407,6 +407,22 @@
 				}
 			}
 		},
+		"countdownTimerForEvents": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": "boolean"
+				},
+				"events": {
+					"type": "object",
+					"patternProperties": {
+						".*": {
+							"type": "number"
+						}
+					}
+				}
+			}
+		},
 		"displayData": {
 			"type": "array",
 			"items": {

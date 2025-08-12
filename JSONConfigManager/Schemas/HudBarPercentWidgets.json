@@ -1,0 +1,290 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"definitions": {
+		"color": {
+			"type": "string",
+			"pattern": "^[0-9a-fA-F]{1,6}$"
+		}
+	},
+	"type": "object",
+	"properties": {
+		"Ap_Widget": {
+			"type": "object",
+			"properties": {
+				"Enable": {
+					"type": "boolean"
+				},
+				"Sync": {
+					"type": "boolean"
+				},
+				"Scale": {
+					"type": "number"
+				},
+				"X": {
+					"type": "number"
+				},
+				"Y": {
+					"type": "number"
+				},
+				"OnlyShow": {
+					"type": "boolean"
+				},
+				"EnableCustomText": {
+					"type": "boolean"
+				},
+				"Prefix": {
+					"type": "string"
+				},
+				"Suffix": {
+					"type": "string"
+				},
+				"Color": {
+					"$ref": "#/definitions/color"
+				}
+			}
+		},
+		"Feral_Meter_Widget": {
+			"type": "object",
+			"properties": {
+				"Enable": {
+					"type": "boolean"
+				},
+				"Sync": {
+					"type": "boolean"
+				},
+				"Scale": {
+					"type": "number"
+				},
+				"X": {
+					"type": "number"
+				},
+				"Y": {
+					"type": "number"
+				},
+				"OnlyShow": {
+					"type": "boolean"
+				},
+				"ShowSkull": {
+					"type": "boolean"
+				},
+				"EnableCustomText": {
+					"type": "boolean"
+				},
+				"Prefix": {
+					"type": "string"
+				},
+				"Suffix": {
+					"type": "string"
+				},
+				"Color": {
+					"$ref": "#/definitions/color"
+				}
+			}
+		},
+		"Fusion_Core_Meter_Widget": {
+			"type": "object",
+			"properties": {
+				"Enable": {
+					"type": "boolean"
+				},
+				"Sync": {
+					"type": "boolean"
+				},
+				"Scale": {
+					"type": "number"
+				},
+				"X": {
+					"type": "number"
+				},
+				"Y": {
+					"type": "number"
+				},
+				"OnlyShow": {
+					"type": "boolean"
+				},
+				"ShowCountIcon": {
+					"type": "boolean"
+				},
+				"EnableCustomText": {
+					"type": "boolean"
+				},
+				"Prefix": {
+					"type": "string"
+				},
+				"Suffix": {
+					"type": "string"
+				},
+				"Color": {
+					"$ref": "#/definitions/color"
+				}
+			}
+		},
+		"Glow_Meter_Widget": {
+			"type": "object",
+			"properties": {
+				"Enable": {
+					"type": "boolean"
+				},
+				"Sync": {
+					"type": "boolean"
+				},
+				"Scale": {
+					"type": "number"
+				},
+				"X": {
+					"type": "number"
+				},
+				"Y": {
+					"type": "number"
+				},
+				"OnlyShow": {
+					"type": "boolean"
+				},
+				"SeperateGlowMeter": {
+					"type": "boolean"
+				},
+				"SeperateGlowMeterYOffset": {
+					"type": "number"
+				},
+				"SeperateGlowMeterXOffset": {
+					"type": "number"
+				},
+				"EnableCustomText": {
+					"type": "boolean"
+				},
+				"Prefix": {
+					"type": "string"
+				},
+				"Suffix": {
+					"type": "string"
+				},
+				"Color": {
+					"$ref": "#/definitions/color"
+				}
+			}
+		},
+		"Hp_Widget": {
+			"type": "object",
+			"properties": {
+				"Enable": {
+					"type": "boolean"
+				},
+				"Sync": {
+					"type": "boolean"
+				},
+				"Scale": {
+					"type": "number"
+				},
+				"X": {
+					"type": "number"
+				},
+				"Y": {
+					"type": "number"
+				},
+				"OnlyShow": {
+					"type": "boolean"
+				},
+				"EnableCustomText": {
+					"type": "boolean"
+				},
+				"Prefix": {
+					"type": "string"
+				},
+				"Suffix": {
+					"type": "string"
+				},
+				"Color": {
+					"$ref": "#/definitions/color"
+				}
+			}
+		},
+		"Improved_HealthBar_Widget": {
+			"type": "object",
+			"properties": {
+				"Enable": {
+					"type": "boolean"
+				},
+				"Sync": {
+					"type": "boolean"
+				},
+				"Scale": {
+					"type": "number"
+				},
+				"X": {
+					"type": "number"
+				},
+				"Y": {
+					"type": "number"
+				},
+				"Hide": {
+					"type": "boolean"
+				}
+			}
+		},
+		"RefreshRate": {
+			"type": "number",
+			"minimum": 20
+		},
+		"ShowtoFirstPoint": {
+			"type": "boolean"
+		},
+		"HUDModesState": {
+			"type": "string",
+			"enum": [
+				"shown",
+				"hidden",
+				"SHOWN",
+				"HIDDEN"
+			]
+		},
+		"HUDModes": {
+			"type": "array",
+			"items": {
+				"type": "string",
+				"enum": [
+					"ActivateTypeMode",
+					"All",
+					"AutoVanity",
+					"CameraScopeMenu",
+					"CampPlacement",
+					"CampPlacementMode",
+					"ContainerMode",
+					"CrosshairAndActivateOnly",
+					"DeathRespawnMode",
+					"DefaultScopeMenu",
+					"DialogueMode",
+					"EndOfMatch",
+					"ExamineConfirmMode",
+					"Fishing",
+					"FurnitureEnterExit",
+					"InsideMemory",
+					"InspectMode",
+					"IronSights",
+					"LegendaryPerksMode",
+					"Loading",
+					"LockpickingMode",
+					"LooksMenu",
+					"MapMenu",
+					"MessageMode",
+					"MovementDisabled",
+					"NoHud",
+					"PauseMode",
+					"PerksMode",
+					"Pipboy",
+					"PowerArmor",
+					"RadialMenu",
+					"ScopeMenu",
+					"SelfieMode",
+					"SitWaitMode",
+					"SpectatorMode",
+					"TerminalMode",
+					"VATS",
+					"VATSPlayback",
+					"VertibirdMode",
+					"WorkshopCaravanMode",
+					"WorkshopMode"
+				]
+			}
+		}
+	}
+}

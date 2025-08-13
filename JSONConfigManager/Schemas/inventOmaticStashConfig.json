@@ -1075,6 +1075,9 @@
 					"onlyHighlightedItem": {
 						"type": "boolean"
 					},
+					"onlyCurrentCategory": {
+						"type": "boolean"
+					},
 					"transferEquipped": {
 						"type": "boolean"
 					},
@@ -1122,6 +1125,17 @@
 								"MISC",
 								"MODS",
 								"JUNK"
+							]
+						}
+					},
+					"weaponTypes": {
+						"type": "array",
+						"items": {
+							"type": "string",
+							"enum": [
+								"THROWN",
+								"RANGED",
+								"MELEE"
 							]
 						}
 					},

@@ -1181,11 +1181,13 @@ namespace JSONConfigManager
             {
                 try
                 {
+                    JToken prevNode = selectedNodeToken.Previous;
                     if (selectedNodeToken.Parent.Type == JTokenType.Array)
                     {
                         string type = selectedNodeToken.Type.ToString();
                         string path = selectedNodeToken.Parent.Path;
                         selectedNodeToken.Remove();
+                        selectedNodeToken = prevNode;
                         RefreshConfigTree();
                         log = $"Removed {type} from array {path}";
                         return;
@@ -1211,8 +1213,11 @@ namespace JSONConfigManager
 
                     if (!(selectedNodeToken is JProperty) && selectedNodeToken.Parent is JProperty)
                     {
-                        (parent as JObject).Property((selectedNodeToken.Parent as JProperty).Name).Remove();
+                        JProperty nodeToRemove = (parent as JObject).Property((selectedNodeToken.Parent as JProperty).Name);
+                        prevNode = nodeToRemove.Previous;
+                        nodeToRemove.Remove();
                         log = $"Removed {(selectedNodeToken.Parent as JProperty).Name} from {(parent.Path.Length == 0 ? "root" : parent.Path)}";
+                        selectedNodeToken = prevNode;
                     }
                     RefreshConfigTree();
                 }

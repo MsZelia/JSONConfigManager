@@ -55,6 +55,34 @@
 				"checkOnSelectionChange": {
 					"type": "boolean"
 				},
+				"itemLocking": {
+					"type": "object",
+					"properties": {
+						"enabled": {
+							"type": "boolean"
+						},
+						"debug": {
+							"type": "boolean"
+						},
+						"showButton": {
+							"type": "boolean"
+						},
+						"showMessage": {
+							"type": "boolean"
+						},
+						"name": {
+							"type": "string"
+						},
+						"hotkey": {
+							"type": "number",
+							"minimum": 1
+						},
+						"delay": {
+							"type": "number",
+							"minimum": 1
+						}
+					}
+				},
 				"dropProtection": {
 					"type": "object",
 					"properties": {

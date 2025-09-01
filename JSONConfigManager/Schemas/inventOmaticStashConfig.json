@@ -237,6 +237,47 @@
 				"checkOnSelectionChange": {
 					"type": "boolean"
 				},
+				"itemLocking": {
+					"type": "object",
+					"properties": {
+						"testRun": {
+							"type": "boolean"
+						},
+						"enabled": {
+							"type": "boolean"
+						},
+						"debug": {
+							"type": "boolean"
+						},
+						"showButton": {
+							"type": "boolean"
+						},
+						"showMessage": {
+							"oneOf": [
+								{
+									"type": "boolean"
+								},
+								{
+									"type": "string",
+									"enum": [
+										"FULL"
+									]
+								}
+							]
+						},
+						"name": {
+							"type": "string"
+						},
+						"hotkey": {
+							"type": "number",
+							"minimum": 1
+						},
+						"delay": {
+							"type": "number",
+							"minimum": 1
+						}
+					}
+				},
 				"saleProtection": {
 					"type": "object",
 					"properties": {

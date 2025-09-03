@@ -164,7 +164,17 @@
 			"type": "object"
 		},
 		"enableManualPipBuffDataSync": {
-			"type": "boolean"
+			"oneOf": [
+				{
+					"type": "boolean"
+				},
+				{
+					"type": "string",
+					"enum": [
+						"AUTO"
+					]
+				}
+			]
 		},
 		"pipBuffDataSyncHotkey": {
 			"type": "number",

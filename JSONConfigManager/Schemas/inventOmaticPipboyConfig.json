@@ -13,6 +13,18 @@
 					}
 				}
 			]
+		},
+		"hotkey": {
+			"oneOf": [
+				{
+					"type": "string",
+					"minLength": 1
+				},
+				{
+					"type": "number",
+					"minimum": 1
+				}
+			]
 		}
 	},
 	"type": "object",
@@ -24,10 +36,17 @@
 			"type": "boolean"
 		},
 		"toggleDebugHotkey": {
-			"type": "number"
+			"$ref": "#/definitions/hotkey"
 		},
 		"hideLoadMessage": {
 			"type": "boolean"
+		},
+		"disableScrollWrap": {
+			"type": "boolean"
+		},
+		"dropItemCountThresholdPopup": {
+			"type": "number",
+			"minimum": 1
 		},
 		"orderButtons": {
 			"type": "array",
@@ -74,8 +93,7 @@
 							"type": "string"
 						},
 						"hotkey": {
-							"type": "number",
-							"minimum": 1
+							"$ref": "#/definitions/hotkey"
 						},
 						"delay": {
 							"type": "number",
@@ -169,8 +187,7 @@
 					"type": "boolean"
 				},
 				"hotkey": {
-					"type": "number",
-					"minimum": 1
+					"$ref": "#/definitions/hotkey"
 				},
 				"types": {
 					"type": "array",
@@ -226,8 +243,7 @@
 								"type": "boolean"
 							},
 							"hotkey": {
-								"type": "number",
-								"minimum": 1
+								"$ref": "#/definitions/hotkey"
 							},
 							"delay": {
 								"type": "number"
@@ -341,8 +357,7 @@
 								"type": "boolean"
 							},
 							"hotkey": {
-								"type": "number",
-								"minimum": 1
+								"$ref": "#/definitions/hotkey"
 							},
 							"delay": {
 								"type": "number"

@@ -26,6 +26,18 @@
 					"maximum": 16777215
 				}
 			]
+		},
+		"hotkey": {
+			"oneOf": [
+				{
+					"type": "string",
+					"minLength": 1
+				},
+				{
+					"type": "number",
+					"minimum": 1
+				}
+			]
 		}
 	},
 	"type": "object",
@@ -43,7 +55,7 @@
 			"type": "boolean"
 		},
 		"toggleDebugHotkey": {
-			"type": "number"
+			"$ref": "#/definitions/hotkey"
 		},
 		"hideLoadMessage": {
 			"type": "boolean"
@@ -73,13 +85,21 @@
 			"type": "boolean"
 		},
 		"swapToPlayerInventoryHotkey": {
-			"type": "number"
+			"$ref": "#/definitions/hotkey"
 		},
 		"swapToContainerInventoryHotkey": {
-			"type": "number"
+			"$ref": "#/definitions/hotkey"
 		},
 		"hideUnknownGamepadButtonIcons": {
 			"type": "boolean"
+		},
+		"scrapItemCountThresholdPopup": {
+			"type": "number",
+			"minimum": 1
+		},
+		"transferItemCountThresholdPopup": {
+			"type": "number",
+			"minimum": 1
 		},
 		"defaultSelectedTab": {
 			"type": "string",
@@ -197,8 +217,7 @@
 					"type": "boolean"
 				},
 				"hotkey": {
-					"type": "number",
-					"minimum": 1
+					"$ref": "#/definitions/hotkey"
 				},
 				"weightLabelWidth": {
 					"type": "number"
@@ -269,8 +288,7 @@
 							"type": "string"
 						},
 						"hotkey": {
-							"type": "number",
-							"minimum": 1
+							"$ref": "#/definitions/hotkey"
 						},
 						"delay": {
 							"type": "number",
@@ -477,8 +495,7 @@
 					"type": "boolean"
 				},
 				"hotkey": {
-					"type": "number",
-					"minimum": 1
+					"$ref": "#/definitions/hotkey"
 				},
 				"amount": {
 					"type": "number",
@@ -488,12 +505,7 @@
 					"type": "number",
 					"minimum": 1
 				}
-			},
-			"required": [
-				"enabled",
-				"amount",
-				"delay"
-			]
+			}
 		},
 		"buyConfig": {
 			"type": "object",
@@ -527,8 +539,7 @@
 					]
 				},
 				"hotkey": {
-					"type": "number",
-					"minimum": 1
+					"$ref": "#/definitions/hotkey"
 				},
 				"maxItems": {
 					"type": "number"
@@ -664,8 +675,7 @@
 					]
 				},
 				"hotkey": {
-					"type": "number",
-					"minimum": 1
+					"$ref": "#/definitions/hotkey"
 				},
 				"maxItems": {
 					"type": "number"
@@ -801,8 +811,7 @@
 					"type": "boolean"
 				},
 				"hotkey": {
-					"type": "number",
-					"minimum": 1
+					"$ref": "#/definitions/hotkey"
 				},
 				"maxItems": {
 					"type": "number"
@@ -949,8 +958,7 @@
 					]
 				},
 				"hotkey": {
-					"type": "number",
-					"minimum": 1
+					"$ref": "#/definitions/hotkey"
 				},
 				"maxItems": {
 					"type": "number"
@@ -1095,8 +1103,7 @@
 						]
 					},
 					"hotkey": {
-						"type": "number",
-						"minimum": 1
+						"$ref": "#/definitions/hotkey"
 					},
 					"maxItems": {
 						"type": "number"
@@ -1321,8 +1328,7 @@
 					"type": "boolean"
 				},
 				"hotkey": {
-					"type": "number",
-					"minimum": 1
+					"$ref": "#/definitions/hotkey"
 				},
 				"showButton": {
 					"type": "boolean"
